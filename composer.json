@@ -1,0 +1,24 @@
+{
+    "name": "flywp/flywp",
+    "description": "Helper plugin for FlyWP",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "FlyWP",
+            "email": "contact@flywp.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "FlyWP\\": "includes/"
+        }
+    },
+    "require-dev": {
+        "tareq1988/wp-php-cs-fixer": "dev-master",
+        "wp-coding-standards/wpcs": "dev-master",
+        "phpcompatibility/php-compatibility": "9.*",
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7"
+    }
+}
