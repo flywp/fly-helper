@@ -5,7 +5,6 @@
  * Description: Helper plugin for FlyWP
  * Version: 1.0.0
  * Author: FlyWP
- * Author URI: https://flywp.com
  * License: GPL2
  */
 
@@ -107,6 +106,15 @@ final class FlyWP_Plugin {
      */
     public function has_api_key() {
         return FLYWP_API_KEY !== '';
+    }
+
+    /**
+     * Get API key.
+     *
+     * @return string
+     */
+    public function get_api_key() {
+        return FLYWP_API_KEY;
     }
 }
 

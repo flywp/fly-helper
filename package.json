@@ -1,0 +1,12 @@
+{
+  "name": "flywp",
+  "version": "1.0.0",
+  "description": "Helper plugin for FlyWP",
+  "main": "index.js",
+  "repository": "https://github.com/flywp/fly-helper.git",
+  "author": "FlyWP <hello@flywp.com>",
+  "license": "MIT",
+  "scripts": {
+    "makepot": "wp i18n make-pot --exclude='dist,node_modules,vendors' . --headers='{\"Last-Translator\":\"support@flywp.com\",\"Report-Msgid-Bugs-To\":\"https://github.com/flywp/flywp-helper/issues\"}' --file-comment=\"Copyright (c) $(date +'%Y') FlyWP. All Rights Reserved.\" languages/flywp.pot"
+  }
+}

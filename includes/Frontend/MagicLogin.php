@@ -66,7 +66,7 @@ class MagicLogin {
             $this->redirect_to_home();
         }
 
-        if ( $api_key !== FLYWP_API_KEY ) {
+        if ( $api_key !== flywp()->get_api_key() ) {
             $this->redirect_to_home();
         }
 
