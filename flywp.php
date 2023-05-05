@@ -3,7 +3,7 @@
  * Plugin Name: FlyWP
  * Plugin URI: https://flywp.com
  * Description: Helper plugin for FlyWP
- * Version: 1.0.0
+ * Version: 0.1
  * Author: FlyWP
  * License: GPL2
  */
@@ -77,9 +77,9 @@ final class FlyWP_Plugin {
      * @return void
      */
     public function admin_notice() {
-        $message = __( 'Missing <strong>FlyWP</strong> API key, plugin requires an API key.', 'flywp' );
+        $message = __( 'Missing FlyWP API key, plugin requires an API key.', 'flywp' );
 
-        echo '<div class="notice notice-error"><p>' . $message . '</p></div>';
+        echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
     }
 
     /**
