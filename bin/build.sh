@@ -29,7 +29,7 @@ warning() {
     echo -e "\n${YELLOW_BOLD}$1${COLOR_RESET}\n"
 }
 
-status "💃 Time to build the FlyWP Pro ZIP file 🕺"
+status "💃 Time to build the FlyWP ZIP file 🕺"
 
 # remove the build directory if exists and create one
 rm -rf "$DIR/build"
@@ -40,11 +40,11 @@ mkdir -p "$BUILD_DIR"
 # npm install
 
 status "Generating build... 👷‍♀️"
-yarn makepot
+yarn build
 
 # Copy all files
 status "Copying files... ✌️"
-FILES=(flywp.php readme.txt includes languages composer.json composer.lock)
+FILES=(flywp.php readme.txt assets views includes languages composer.json composer.lock)
 
 for file in ${FILES[@]}; do
     cp -R $file $BUILD_DIR
@@ -55,8 +55,8 @@ status "Installing dependencies... 📦"
 cd $BUILD_DIR
 composer install --optimize-autoloader --no-dev -q
 
-# Remove composer files
-rm composer.json composer.lock
+# Remove unnecessary files
+rm composer.json composer.lock assets/css/tailwind-base.css
 
 # go one up, to the build dir
 status "Creating archive... 🎁"

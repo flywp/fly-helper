@@ -22,7 +22,7 @@ final class FlyWP_Plugin {
      *
      * @var string
      */
-    private $version = '1.0.0';
+    public $version = '1.0.0';
 
     /**
      * The single instance of the class.
@@ -30,6 +30,20 @@ final class FlyWP_Plugin {
      * @var FlyWP
      */
     private static $instance = null;
+
+    /**
+     * FastCGI Cache helper instance.
+     *
+     * @var FlyWP\Fastcgi_Cache
+     */
+    public $fastcgi = null;
+
+    /**
+     * Admin instance.
+     *
+     * @var FlyWP\Admin
+     */
+    public $admin = null;
 
     /**
      * Plugin Constructor.
@@ -57,6 +71,11 @@ final class FlyWP_Plugin {
         return self::$instance;
     }
 
+    /**
+     * Initialize plugin.
+     *
+     * @return void
+     */
     public function init_plugin() {
         if ( ! $this->has_api_key() ) {
             add_action( 'admin_notices', [ $this, 'admin_notice' ] );
@@ -65,10 +84,12 @@ final class FlyWP_Plugin {
         }
 
         if ( is_admin() ) {
-            new FlyWP\Admin();
+            $this->admin = new FlyWP\Admin();
         } else {
             new FlyWP\Frontend();
         }
+
+        $this->fastcgi = new FlyWP\Fastcgi_Cache();
     }
 
     /**

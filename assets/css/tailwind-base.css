@@ -1,0 +1,15 @@
+.flywp-settings *,
+.flywp-settings ::before,
+.flywp-settings ::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+}
+
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+
+body.tools_page_flywp #wpcontent {
+  padding-left: 0;
+}
