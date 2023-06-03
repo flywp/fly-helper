@@ -89,6 +89,8 @@ final class FlyWP_Plugin {
             new FlyWP\Frontend();
         }
 
+        new FlyWP\Api();
+
         $this->fastcgi = new FlyWP\Fastcgi_Cache();
     }
 
@@ -136,6 +138,15 @@ final class FlyWP_Plugin {
      */
     public function get_api_key() {
         return FLYWP_API_KEY;
+    }
+
+    /**
+     * Get router instance.
+     *
+     * @return FlyWP\Router
+     */
+    public function api() {
+        return FlyWP\Router::get_instance();
     }
 }
 
