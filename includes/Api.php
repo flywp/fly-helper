@@ -22,7 +22,7 @@ class Api {
      * @return bool
      */
     public function has_valid_key() {
-        if ( flywp()->has_key() && flywp()->get_key() == $this->get_bearer_token() ) {
+        if ( flywp()->has_key() && flywp()->get_key() === $this->get_bearer_token() ) {
             return true;
         }
 

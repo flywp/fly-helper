@@ -55,7 +55,7 @@ class Router {
             // Check if the requested route exists
             if ( isset( $this->routes[ $route ] ) ) {
                 $callback       = $this->routes[ $route ];
-                $request_method = $_SERVER['REQUEST_METHOD'];
+                $request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : 'GET';
 
                 // Check if the route is allowed for the current request method
                 if ( $this->is_route_method_allowed( $callback, $request_method ) ) {
@@ -71,10 +71,10 @@ class Router {
                             $method = $callback['callback'][1];
 
                             if ( is_object( $class ) && method_exists( $class, $method ) ) {
-                                call_user_func_array( [ $class, $method ], [$request_args] );
+                                call_user_func_array( [ $class, $method ], [ $request_args ] );
                             }
                         } else {
-                            call_user_func_array( $callback['callback'], [$request_args] );
+                            call_user_func_array( $callback['callback'], [ $request_args ] );
                         }
                     }
 
@@ -149,7 +149,7 @@ class Router {
      * @return bool
      */
     private function is_route_method_allowed( $callback, $request_method ) {
-        return  $callback['method'] === 'ANY' || $callback['method'] === $request_method;
+        return $callback['method'] === 'ANY' || $callback['method'] === $request_method;
     }
 
     /**
@@ -163,11 +163,11 @@ class Router {
         $request_args = [];
 
         if ( 'GET' === $request_method ) {
-            $request_args = $_GET;
+            $request_args = wp_unslash( $_GET );
         } elseif ( 'POST' === $request_method ) {
-            $request_args = $_POST;
+            $request_args = wp_unslash( $_POST );
         } else {
-            $request_args = $_REQUEST;
+            $request_args = wp_unslash( $_REQUEST );
         }
 
         return $request_args;

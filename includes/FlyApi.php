@@ -21,9 +21,12 @@ class FlyApi {
      * @return array|false
      */
     public function cache_toggle( $action = 'enable' ) {
-        return $this->post( '/cache-toggle', [
-            'action' => $action,
-        ] );
+        return $this->post(
+            '/cache-toggle',
+            [
+                'action' => $action,
+            ]
+        );
     }
 
     /**
@@ -45,11 +48,14 @@ class FlyApi {
     public function get( $path ) {
         $url = $this->get_endpoint() . $path;
 
-        $response = wp_remote_get( $url, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . flywp()->get_key(),
-            ],
-        ] );
+        $response = wp_remote_get(
+            $url,
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . flywp()->get_key(),
+                ],
+            ]
+        );
 
         if ( is_wp_error( $response ) ) {
             // Handle error if needed
@@ -73,13 +79,15 @@ class FlyApi {
     public function post( $path, $data = [] ) {
         $url = $this->get_endpoint() . $path;
 
-        $response = wp_remote_post( $url, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . flywp()->get_key(),
-                // 'Content-Type'  => 'application/json',
-            ],
-            'body' => $data,
-        ] );
+        $response = wp_remote_post(
+            $url,
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . flywp()->get_key(),
+                ],
+                'body' => $data,
+            ]
+        );
 
         if ( is_wp_error( $response ) ) {
             // Handle error if needed

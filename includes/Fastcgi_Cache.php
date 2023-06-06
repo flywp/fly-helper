@@ -61,7 +61,7 @@ class Fastcgi_Cache {
      * @return mixed
      */
     public function get_setting( $key ) {
-        return isset( $this->settings()[$key] ) ? $this->settings()[$key] : false;
+        return isset( $this->settings()[ $key ] ) ? $this->settings()[ $key ] : false;
     }
 
     /**
@@ -109,7 +109,7 @@ class Fastcgi_Cache {
         // cache key format (without space): $protocal $method $host $path
         // because of nginx-proxy, all request will be http, so we don't need to check protocal
         // $method is always GET as we only cache GET request
-        $hash   = md5( 'httpGET' . $parsed['host'] . $path );
+        $hash = md5( 'httpGET' . $parsed['host'] . $path );
 
         $cache_path = self::CACHE_PATH . '/' . substr( $hash, -1 ) . '/' . substr( $hash, -3, 2 ) . '/' . $hash;
 

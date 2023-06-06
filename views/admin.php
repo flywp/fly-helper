@@ -1,6 +1,3 @@
-<?php
-
-?>
 <div class="flywp-settings" id="flywp-settings">
     <div class="fw-mb-8 fw-bg-white fw-border-b fw-border-solid fw-border-gray-200">
         <div class="fw-max-w-xl fw-mx-auto">
@@ -15,7 +12,7 @@
     </div>
 
     <div class="fw-max-w-xl fw-mx-auto">
-        <?php include __DIR__ . '/page-cache.php'; ?>
+        <?php require __DIR__ . '/page-cache.php'; ?>
     </div>
 
 </div>

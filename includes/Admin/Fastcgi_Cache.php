@@ -67,7 +67,7 @@ class Fastcgi_Cache {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'fly-fastcgi-purge-cache' ) ) {
+        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( $_GET['_wpnonce'], 'fly-fastcgi-purge-cache' ) ) {
             return;
         }
 
@@ -130,7 +130,7 @@ class Fastcgi_Cache {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'fly-fastcgi-toggle-cache' ) ) {
+        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( $_GET['_wpnonce'], 'fly-fastcgi-toggle-cache' ) ) {
             return;
         }
 

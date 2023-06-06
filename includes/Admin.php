@@ -67,7 +67,7 @@ class Admin {
     public function enqueue_styles() {
         $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-        wp_enqueue_style( 'flywp-admin-styles', FLYWP_PLUGIN_URL . '/assets/css/app' . $min . '.css' );
+        wp_enqueue_style( 'flywp-admin-styles', FLYWP_PLUGIN_URL . '/assets/css/app' . $min . '.css', [], FLYWP_VERSION );
     }
 
     /**
