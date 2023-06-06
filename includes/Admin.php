@@ -18,6 +18,7 @@ class Admin {
         add_action( 'admin_menu', [ $this, 'register_admin_page' ] );
 
         $this->fastcgi = new Admin\Fastcgi_Cache();
+        new Admin\Adminbar();
     }
 
     /**

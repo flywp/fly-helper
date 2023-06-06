@@ -2,6 +2,8 @@
 
 namespace FlyWP\Admin;
 
+use FlyWP\Helper;
+
 class Fastcgi_Cache {
 
     /**
@@ -101,8 +103,8 @@ class Fastcgi_Cache {
         $keys     = [
             'home-purge-created'  => 'home_created',
             'home-purge-deleted'  => 'home_deleted',
-            'single-post-created' => 'single_modified',
-            'single-post-comment' => 'single_comment',
+            // 'single-post-created' => 'single_modified',
+            // 'single-post-comment' => 'single_comment',
         ];
 
         foreach ( $keys as $form_key => $settings_key ) {
@@ -142,6 +144,10 @@ class Fastcgi_Cache {
         $settings            = flywp()->fastcgi->settings();
         $settings['enabled'] = $type === 'enable' ? true : false;
         $notice              = $type === 'enable' ? 'fastcgi-enabled' : 'fastcgi-disabled';
+
+        // Toggle cache in the API
+        $reponse = flywp()->flyapi->cache_toggle( $type );
+        // Helper::dd( $reponse );
 
         update_option( flywp()->fastcgi::SETTINGS_KEY, $settings );
 

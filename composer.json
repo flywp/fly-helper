@@ -9,10 +9,18 @@
         }
     ],
     "minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
     "autoload": {
         "psr-4": {
             "FlyWP\\": "includes/"
         }
+    },
+    "require": {
+        "wedevs/wp-utils": "dev-main"
     },
     "require-dev": {
         "tareq1988/wp-php-cs-fixer": "dev-master",

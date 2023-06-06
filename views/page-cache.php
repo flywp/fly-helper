@@ -16,8 +16,8 @@ if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[$_GET['fly-notice']]
 
 <div class="fw-bg-white fw-shadow fw-rounded fw-sm:rounded-lg fw-mb-4">
     <div class="">
-        <div class="fw-flex fw-px-4 fw-py-5 fw-fw-sm:p-6 fw-items-center fw-justify-between fw-border-b fw-border-gray-200">
-            <h3 class="fw-text-xl fw-font-semibold fw-leading-6 fw-text-gray-900 fw-m-0">
+        <div class="fw-flex fw-px-4 fw-py-4 fw-fw-sm:p-6 fw-items-center fw-justify-between fw-border-b fw-border-gray-200">
+            <h3 class="fw-text-lg fw-font-semibold fw-leading-6 fw-text-gray-900 fw-m-0">
                 <?php _e( 'Page Cache', 'flywp' ); ?>
             </h3>
 
@@ -77,14 +77,15 @@ if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[$_GET['fly-notice']]
                 
                 <label for="home-purge-created" class="fw-block fw-pb-3">
                     <input name="home-purge-created" type="checkbox" <?php checked( flywp()->fastcgi->get_setting( 'home_created' ), true ); ?> id="home-purge-created" value="1">
-                    Flush homepage when a post is published or modified
+                    <?php _e( 'Flush homepage when a post is published or modified', 'flywp' ); ?>
                 </label>
                     
                 <label for="home-purge-deleted" class="fw-block fw-pb-3">
                     <input name="home-purge-deleted" type="checkbox" <?php checked( flywp()->fastcgi->get_setting( 'home_deleted' ), true ); ?> id="home-purge-deleted" value="1">
-                    Flush homepage when a post is deleted
+                    <?php _e( 'Flush homepage when a post is deleted', 'flywp' ); ?>
                 </label>
 
+                <!--
                 <p><strong>Single Post</strong></p>
                 
                 <label for="single-post-created" class="fw-block fw-pb-3">
@@ -96,6 +97,7 @@ if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[$_GET['fly-notice']]
                     <input name="single-post-comment" type="checkbox" <?php checked( flywp()->fastcgi->get_setting( 'single_comment' ), true ); ?> id="single-post-comment" value="1">
                     Flush the single post page when a comment is added or deleted
                 </label>
+                -->
 
                 <div class="fw-pt-4 fw-text-right">
                     <button type="button" class="button button-secondary button-large" id="fastcgi-settings-close">

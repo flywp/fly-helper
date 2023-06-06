@@ -21,9 +21,10 @@ class Fastcgi_Cache {
     const SETTINGS_KEY = 'flywp_fastcgi_cache';
 
     public function __construct() {
-        add_action( 'save_post', [ $this, 'purge_post_cache' ], 10, 2 );
-        add_action( 'edited_term', [ $this, 'purge_taxonomy_cache' ], 10, 2 );
-        add_action( 'wp_update_nav_menu', [ $this, 'purge_home_cache' ], 10, 2 );
+        add_action( 'save_post', [ $this, 'on_save_post' ], 10, 2 );
+        add_action( 'delete_post', [ $this, 'wp_trash_post' ], 10, 2 );
+        // add_action( 'edited_term', [ $this, 'purge_taxonomy_cache' ], 10, 2 );
+        // add_action( 'wp_update_nav_menu', [ $this, 'purge_home_cache' ], 10, 2 );
     }
 
     /**
@@ -45,8 +46,8 @@ class Fastcgi_Cache {
             'enabled'         => true,
             'home_created'    => true,
             'home_deleted'    => true,
-            'single_modified' => true,
-            'single_comment'  => true,
+            // 'single_modified' => true,
+            // 'single_comment'  => true,
         ];
 
         return get_option( self::SETTINGS_KEY, $default );
@@ -117,10 +118,32 @@ class Fastcgi_Cache {
         }
     }
 
+    /**
+     * Purge homepage cache.
+     *
+     * @return void
+     */
     public function purge_home_cache() {
+        $this->purge_cache_by_url( home_url() );
     }
 
-    public function purge_post_cache( $post_id, $post ) {
+    /**
+     * Purge cache when a post is trashed.
+     *
+     * @param int $post_id Post ID
+     *
+     * @return void
+     */
+    public function wp_trash_post( $post_id ) {
+        $post = get_post( $post_id );
+
+        if ( $this->get_setting( 'single_modified' ) ) {
+            $this->purge_cache_by_url( get_permalink( $post ) );
+        }
+
+        if ( $this->get_setting( 'home_created' ) && $post->post_status === 'publish' ) {
+            $this->purge_home_cache();
+        }
     }
 
     public function purge_taxonomy_cache( $term_id, $taxonomy ) {

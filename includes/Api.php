@@ -13,11 +13,7 @@ class Api {
      * API constructor.
      */
     public function __construct() {
-        flywp()->api()->init();
-
-        // if ( $this->has_valid_key() ) {
-        //     new Api\Ping();
-        // }
+        flywp()->router->init();
     }
 
     /**
@@ -26,7 +22,7 @@ class Api {
      * @return bool
      */
     public function has_valid_key() {
-        if ( flywp()->has_api_key() && flywp()->get_api_key() == $this->get_bearer_token() ) {
+        if ( flywp()->has_key() && flywp()->get_key() == $this->get_bearer_token() ) {
             return true;
         }
 

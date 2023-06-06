@@ -15,7 +15,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require __DIR__ . '/vendor/autoload.php';
 
+use WeDevs\WpUtils\ContainerTrait;
+use WeDevs\WpUtils\HookTrait;
+use WeDevs\WpUtils\SingletonTrait;
+
+/**
+ * Main FlyWP Class.
+ *
+ * @var admin   FlyWP\Admin
+ * @var rest    FlyWP\Api
+ * @var fastcgi FlyWP\Fastcgi_Cache
+ * @var router  FlyWP\Router
+ *
+ * @class FlyWP
+ */
 final class FlyWP_Plugin {
+
+    use SingletonTrait;
+    use ContainerTrait;
+    use HookTrait;
 
     /**
      * Plugin version.
@@ -25,27 +43,6 @@ final class FlyWP_Plugin {
     public $version = '1.0.0';
 
     /**
-     * The single instance of the class.
-     *
-     * @var FlyWP
-     */
-    private static $instance = null;
-
-    /**
-     * FastCGI Cache helper instance.
-     *
-     * @var FlyWP\Fastcgi_Cache
-     */
-    public $fastcgi = null;
-
-    /**
-     * Admin instance.
-     *
-     * @var FlyWP\Admin
-     */
-    public $admin = null;
-
-    /**
      * Plugin Constructor.
      *
      * @return void
@@ -53,56 +50,8 @@ final class FlyWP_Plugin {
     private function __construct() {
         $this->define_constants();
 
-        add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
-    }
-
-    /**
-     * Main FlyWP Instance.
-     *
-     * Ensures only one instance of FlyWP is loaded or can be loaded.
-     *
-     * @return flyWP - Main instance
-     */
-    public static function instance() {
-        if ( null === self::$instance ) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-
-    /**
-     * Initialize plugin.
-     *
-     * @return void
-     */
-    public function init_plugin() {
-        if ( ! $this->has_api_key() ) {
-            add_action( 'admin_notices', [ $this, 'admin_notice' ] );
-
-            return;
-        }
-
-        if ( is_admin() ) {
-            $this->admin = new FlyWP\Admin();
-        } else {
-            new FlyWP\Frontend();
-        }
-
-        new FlyWP\Api();
-
-        $this->fastcgi = new FlyWP\Fastcgi_Cache();
-    }
-
-    /**
-     * Show admin notice if API key is not set.
-     *
-     * @return void
-     */
-    public function admin_notice() {
-        $message = __( 'Missing FlyWP API key, plugin requires an API key.', 'flywp' );
-
-        echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
+        $this->add_action( 'plugins_loaded', 'init_plugin' );
+        register_activation_hook( __FILE__, [ $this, 'activate' ] );
     }
 
     /**
@@ -123,11 +72,58 @@ final class FlyWP_Plugin {
     }
 
     /**
+     * Plugin activation hook.
+     *
+     * @return void
+     */
+    public function activate() {
+        $router = new FlyWP\Router();
+        $router->init();
+
+        flush_rewrite_rules();
+    }
+
+    /**
+     * Initialize plugin.
+     *
+     * @return void
+     */
+    public function init_plugin() {
+        if ( ! $this->has_key() ) {
+            $this->add_action( 'admin_notices', 'admin_notice' );
+
+            return;
+        }
+
+        if ( is_admin() ) {
+            $this->admin = new FlyWP\Admin();
+        } else {
+            $this->frontend = new FlyWP\Frontend();
+        }
+
+        $this->router  = new FlyWP\Router();
+        $this->rest    = new FlyWP\Api();
+        $this->fastcgi = new FlyWP\Fastcgi_Cache();
+        $this->flyapi  = new FlyWP\FlyAPI();
+    }
+
+    /**
+     * Show admin notice if API key is not set.
+     *
+     * @return void
+     */
+    public function admin_notice() {
+        $message = __( 'Missing FlyWP API key, plugin requires an API key.', 'flywp' );
+
+        echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
+    }
+
+    /**
      * Check if API key is set.
      *
      * @return bool
      */
-    public function has_api_key() {
+    public function has_key() {
         return FLYWP_API_KEY !== '';
     }
 
@@ -136,24 +132,15 @@ final class FlyWP_Plugin {
      *
      * @return string
      */
-    public function get_api_key() {
+    public function get_key() {
         return FLYWP_API_KEY;
-    }
-
-    /**
-     * Get router instance.
-     *
-     * @return FlyWP\Router
-     */
-    public function api() {
-        return FlyWP\Router::get_instance();
     }
 }
 
 /**
  * Returns the main instance of FlyWP to prevent the need to use globals.
  *
- * @return FlyWP
+ * @return FlyWP_Plugin
  */
 function flywp() {
     return FlyWP_Plugin::instance();

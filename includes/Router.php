@@ -7,13 +7,6 @@ use WP;
 class Router {
 
     /**
-     * The single instance of the class.
-     *
-     * @var Router
-     */
-    private static $instance;
-
-    /**
      * Base route for API.
      *
      * @var string
@@ -26,19 +19,6 @@ class Router {
      * @var array
      */
     private $routes = [];
-
-    /**
-     * Get the singleton instance of the class.
-     *
-     * @return Router
-     */
-    public static function get_instance() {
-        if ( null === self::$instance ) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
 
     /**
      * Initialize the class.

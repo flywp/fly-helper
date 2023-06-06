@@ -4,8 +4,61 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f21653d43d65c926117056c1794037d",
-    "packages": [],
+    "content-hash": "07881764bb3c7f5808b2fc92be0cbc44",
+    "packages": [
+        {
+            "name": "wedevs/wp-utils",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/weDevsOfficial/wp-utils.git",
+                "reference": "e5d072e9ed80b8af8fcd3cb0ca7a8a749568fa5f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/weDevsOfficial/wp-utils/zipball/e5d072e9ed80b8af8fcd3cb0ca7a8a749568fa5f",
+                "reference": "e5d072e9ed80b8af8fcd3cb0ca7a8a749568fa5f",
+                "shasum": ""
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+                "phpcompatibility/php-compatibility": "9.*",
+                "phpcompatibility/phpcompatibility-wp": "*",
+                "tareq1988/wp-php-cs-fixer": "dev-master",
+                "wp-coding-standards/wpcs": "dev-master"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WeDevs\\WpUtils\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Tareq Hasan",
+                    "email": "tareq@wedevs.com"
+                }
+            ],
+            "description": "Various WordPress classes and traits for WordPress",
+            "homepage": "https://wedevs.com/",
+            "keywords": [
+                "classes",
+                "traits",
+                "utils",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/weDevsOfficial/wp-utils/issues",
+                "source": "https://github.com/weDevsOfficial/wp-utils/tree/main"
+            },
+            "time": "2023-06-06T13:37:32+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -415,5 +468,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
