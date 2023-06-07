@@ -80,14 +80,12 @@ class Router {
 
                     exit;
                 } else {
-                    status_header( 405 );
-                    die( 'Method Not Allowed' );
+                    wp_send_json_error( 'Method not allowed', 405 );
                 }
             }
 
             // If the route doesn't exist, return a 404 response
-            status_header( 404 );
-            die( 'Invalid API route' );
+            wp_send_json_error( 'Invalid API route', 404 );
         }
     }
 

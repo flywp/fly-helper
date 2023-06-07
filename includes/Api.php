@@ -13,7 +13,18 @@ class Api {
      * API constructor.
      */
     public function __construct() {
-        flywp()->router->init();
+        $router = flywp()->router;
+        $router->init();
+
+        new Api\Ping();
+
+        if ( ! $this->has_valid_key() ) {
+            // return;
+        }
+
+        new Api\Plugins();
+        new Api\Themes();
+        new Api\Updates();
     }
 
     /**
@@ -35,13 +46,11 @@ class Api {
      * @return string|bool
      */
     public function get_bearer_token() {
-        $headers = \getallheaders();
-
-        if ( ! isset( $headers['Authorization'] ) ) {
-            return 'false';
+        if ( ! isset( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
+            return false;
         }
 
-        $auth_header = $headers['Authorization'];
+        $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
 
         if ( ! preg_match( '/Bearer\s(\S+)/', $auth_header, $matches ) ) {
             return false;

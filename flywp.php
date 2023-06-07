@@ -5,6 +5,7 @@
  * Description: Helper plugin for FlyWP
  * Version: 0.1
  * Author: FlyWP
+ * Author URI: https://flywp.com/?utm_source=wporg&utm_medium=banner&utm_campaign=author-uri
  * License: GPL2
  */
 
