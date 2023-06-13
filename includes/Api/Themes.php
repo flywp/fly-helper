@@ -25,7 +25,7 @@ class Themes {
         foreach ( $themes as $key => $theme ) {
             $update = $this->get_update( $key, $updates );
 
-            $response[ $key ] = [
+            $response[] = [
                 'name'                 => $key,
                 'version'              => $theme->get( 'Version' ),
                 'description'          => $theme->get( 'Description' ),

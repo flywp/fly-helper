@@ -53,7 +53,7 @@ done
 # Install composer dependencies
 status "Installing dependencies... 📦"
 cd $BUILD_DIR
-composer install --optimize-autoloader --no-dev -q
+composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
 # Remove unnecessary files
 rm composer.json composer.lock assets/css/tailwind-base.css

@@ -41,7 +41,7 @@ class Plugins {
 
             $update = $this->get_update( $file, $updates );
 
-            $response[ $file ] = [
+            $response[] = [
                 'name'             => $details['Name'],
                 'version'          => $details['Version'],
                 'url'              => $details['PluginURI'],

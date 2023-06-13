@@ -3,7 +3,7 @@
  * Plugin Name: FlyWP
  * Plugin URI: https://flywp.com
  * Description: Helper plugin for FlyWP
- * Version: 0.1
+ * Version: 0.2.0
  * Author: FlyWP
  * Author URI: https://flywp.com/?utm_source=wporg&utm_medium=banner&utm_campaign=author-uri
  * License: GPL2
@@ -41,7 +41,7 @@ final class FlyWP_Plugin {
      *
      * @var string
      */
-    public $version = '1.0.0';
+    public $version = '0.2.0';
 
     /**
      * Plugin Constructor.
@@ -79,9 +79,9 @@ final class FlyWP_Plugin {
      */
     public function activate() {
         $router = new FlyWP\Router();
-        $router->init();
+        $router->register_routes();
 
-        flush_rewrite_rules();
+        flush_rewrite_rules( false );
     }
 
     /**
@@ -105,7 +105,7 @@ final class FlyWP_Plugin {
         $this->router  = new FlyWP\Router();
         $this->rest    = new FlyWP\Api();
         $this->fastcgi = new FlyWP\Fastcgi_Cache();
-        $this->flyapi  = new FlyWP\FlyAPI();
+        $this->flyapi  = new FlyWP\FlyApi();
     }
 
     /**
