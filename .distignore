@@ -6,6 +6,7 @@
 /build
 /tests
 
+/assets/css/tailwind-base.css
 .distignore
 .gitignore
 .DS_Store
