@@ -15,15 +15,9 @@ jobs:
           php-version: "7.4"
           coverage: none
           tools: composer:v2
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
       - name: Build
         run: |
           composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
-          yarn install
-          yarn build
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
