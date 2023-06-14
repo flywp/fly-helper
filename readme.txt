@@ -4,7 +4,7 @@ Tags: cache, helper, performance, hosting
 Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 Requires PHP: 7.1 or higher
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -55,6 +55,10 @@ The plugin allows you to control and purge nginx caching and redis object cache,
 3. Caching settings and controls.
 
 == Changelog ==
+
+= v0.2.1 (14 June, 2023) = 
+
+ * **Fix:** API should respond to authenticated requests only, it was bypassed during development.
 
 = v0.2.0 (13 June, 2023) = 
 
