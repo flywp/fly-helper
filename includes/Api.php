@@ -19,7 +19,7 @@ class Api {
         new Api\Ping();
 
         if ( ! $this->has_valid_key() ) {
-            // return;
+            return;
         }
 
         new Api\Plugins();
