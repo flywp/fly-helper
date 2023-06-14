@@ -3,6 +3,12 @@ on:
   push:
     tags:
       - "*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to deploy"
+        required: true
+
 jobs:
   tag:
     name: New tag
