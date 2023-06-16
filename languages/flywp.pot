@@ -1,14 +1,14 @@
 # Copyright (c) 2023 FlyWP. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: FlyWP 0.3.1\n"
+"Project-Id-Version: FlyWP 0.3.2\n"
 "Report-Msgid-Bugs-To: https://github.com/flywp/flywp-helper/issues\n"
 "Last-Translator: support@flywp.com\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-16T09:23:52+00:00\n"
+"POT-Creation-Date: 2023-06-16T15:39:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: flywp\n"
@@ -33,16 +33,22 @@ msgstr ""
 msgid "Missing FlyWP API key, plugin requires an API key."
 msgstr ""
 
+msgid "Clear This Page Cache"
+msgstr ""
+
 msgid "Clear Page Cache"
+msgstr ""
+
+msgid "Clear OPcache"
+msgstr ""
+
+msgid "Settings"
 msgstr ""
 
 msgid "Nonce verification failed."
 msgstr ""
 
 msgid "You do not have permission to purge the opcache."
-msgstr ""
-
-msgid "Settings"
 msgstr ""
 
 msgid "Cache directory does not exist."
@@ -54,10 +60,13 @@ msgstr ""
 msgid "Cache directory is not writable."
 msgstr ""
 
+msgid "FlyWP Dashboard"
+msgstr ""
+
 msgid "PHP OPcache has been cleared."
 msgstr ""
 
-msgid "PHP Opcache"
+msgid "PHP OPcache"
 msgstr ""
 
 msgid "Enabled"
@@ -67,6 +76,21 @@ msgid "Disabled"
 msgstr ""
 
 msgid "OPcache improves PHP performance by storing precompiled script bytecode in shared memory, thereby removing the need for PHP to load and parse scripts on each request."
+msgstr ""
+
+msgid "Hit Rate"
+msgstr ""
+
+msgid "Cached Scripts"
+msgstr ""
+
+msgid "Memory"
+msgstr ""
+
+msgid "Keys"
+msgstr ""
+
+msgid "Engine"
 msgstr ""
 
 msgid "Clear Cache"
