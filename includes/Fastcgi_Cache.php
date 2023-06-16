@@ -128,6 +128,26 @@ class Fastcgi_Cache {
     }
 
     /**
+     * Purge cache when a post is saved.
+     *
+     * @param int    $post_id Post ID
+     * @param object $post    Post object
+     *
+     * @return void
+     */
+    public function on_save_post( $post_id, $post ) {
+        if ( $post->post_status !== 'publish' ) {
+            return;
+        }
+
+        if ( $this->get_setting( 'home_created' ) ) {
+            $this->purge_home_cache();
+        }
+
+        $this->purge_cache_by_url( get_permalink( $post ) );
+    }
+
+    /**
      * Purge cache when a post is trashed.
      *
      * @param int $post_id Post ID
@@ -147,8 +167,10 @@ class Fastcgi_Cache {
     }
 
     public function purge_taxonomy_cache( $term_id, $taxonomy ) {
+        // :TODO
     }
 
     public function purge_archive_cache() {
+        // :TODO
     }
 }

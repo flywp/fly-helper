@@ -14,7 +14,7 @@ if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice']
 }
 ?>
 
-<div class="fw-bg-white fw-shadow fw-rounded fw-sm:rounded-lg fw-mb-4">
+<div class="fw-bg-white fw-shadow fw-rounded fw-sm:rounded-lg fw-mb-6">
     <div class="">
         <div class="fw-flex fw-px-4 fw-py-4 fw-fw-sm:p-6 fw-items-center fw-justify-between fw-border-b fw-border-gray-200">
             <h3 class="fw-text-lg fw-font-semibold fw-leading-6 fw-text-gray-900 fw-m-0">

@@ -105,6 +105,7 @@ final class FlyWP_Plugin {
         $this->router  = new FlyWP\Router();
         $this->rest    = new FlyWP\Api();
         $this->fastcgi = new FlyWP\Fastcgi_Cache();
+        $this->opcache = new FlyWP\Opcache();
         $this->flyapi  = new FlyWP\FlyApi();
     }
 

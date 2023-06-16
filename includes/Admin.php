@@ -9,6 +9,13 @@ class Admin {
      */
     const PAGE_SLUG = 'flywp';
 
+    /**
+     * Screen name.
+     *
+     * @var string
+     */
+    const SCREEN_NAME = 'tools_page_flywp';
+
     public $fastcgi = null;
 
     /**
@@ -18,7 +25,10 @@ class Admin {
         add_action( 'admin_menu', [ $this, 'register_admin_page' ] );
 
         $this->fastcgi = new Admin\Fastcgi_Cache();
+
         new Admin\Adminbar();
+        new Admin\Opcache();
+        new Admin\Plugins();
     }
 
     /**
@@ -76,7 +86,8 @@ class Admin {
     public function enqueue_js() {
         $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-        wp_enqueue_script( 'flywp-admin-js', FLYWP_PLUGIN_URL . '/assets/js/admin' . $min . '.js', [ 'jquery' ], FLYWP_VERSION, true );
+        wp_enqueue_script( 'flywp-chart', FLYWP_PLUGIN_URL . '/assets/js/chart.min.js', [], FLYWP_VERSION, true );
+        wp_enqueue_script( 'flywp-admin-js', FLYWP_PLUGIN_URL . '/assets/js/admin' . $min . '.js', [ 'jquery', 'flywp-chart' ], FLYWP_VERSION, true );
     }
 
     /**

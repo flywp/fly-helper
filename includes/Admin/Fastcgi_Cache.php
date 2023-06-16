@@ -2,24 +2,18 @@
 
 namespace FlyWP\Admin;
 
+use FlyWP\Admin;
 use FlyWP\Helper;
 
 class Fastcgi_Cache {
 
     /**
-     * Screen name.
-     *
-     * @var string
-     */
-    const SCREEN_NAME = 'tools_page_flywp';
-
-    /**
      * Class constructor.
      */
     public function __construct() {
-        add_action( 'load-' . self::SCREEN_NAME, [ $this, 'save_settings' ] );
-        add_action( 'load-' . self::SCREEN_NAME, [ $this, 'handle_cleanup' ] );
-        add_action( 'load-' . self::SCREEN_NAME, [ $this, 'handle_enable_disable' ] );
+        add_action( 'load-' . Admin::SCREEN_NAME, [ $this, 'save_settings' ] );
+        add_action( 'load-' . Admin::SCREEN_NAME, [ $this, 'handle_cleanup' ] );
+        add_action( 'load-' . Admin::SCREEN_NAME, [ $this, 'handle_enable_disable' ] );
     }
 
     /**

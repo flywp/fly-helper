@@ -13,6 +13,7 @@
 
     <div class="fw-max-w-xl fw-mx-auto">
         <?php require __DIR__ . '/page-cache.php'; ?>
+        <?php require __DIR__ . '/op-cache.php'; ?>
     </div>
 
 </div>
