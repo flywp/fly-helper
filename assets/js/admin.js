@@ -28,45 +28,4 @@
     }, 2000);
   }
 
-  var colors = ['#F87171', '#16a34a', '#FBBF24',];
-  var opcacheMemory = $('#opcache-memory'),
-    opcacheKeys = $('#opcache-keys'),
-    opcacheHits = $('#opcache-hits');
-
-  new Chart(opcacheMemory, {
-    type: 'doughnut',
-    data: {
-      labels: ['Used', 'Free', 'Wasted'],
-      datasets: [{
-        data: [80, 15, 5],
-        backgroundColor: colors,
-      }],
-      hoverOffset: 10
-    },
-  });
-
-  new Chart(opcacheKeys, {
-    type: 'doughnut',
-    data: {
-      labels: ['Used', 'Free', 'Wasted'],
-      datasets: [{
-        data: [80, 15, 5],
-        backgroundColor: colors,
-      }],
-      hoverOffset: 10
-    },
-  });
-
-  new Chart(opcacheHits, {
-    type: 'doughnut',
-    data: {
-      labels: ['Used', 'Free', 'Wasted'],
-      datasets: [{
-        data: [80, 15, 5],
-        backgroundColor: colors,
-      }],
-      hoverOffset: 10
-    },
-  });
-
 })(jQuery);

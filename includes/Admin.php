@@ -86,7 +86,6 @@ class Admin {
     public function enqueue_js() {
         $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-        wp_enqueue_script( 'flywp-chart', FLYWP_PLUGIN_URL . '/assets/js/chart.min.js', [], FLYWP_VERSION, true );
         wp_enqueue_script( 'flywp-admin-js', FLYWP_PLUGIN_URL . '/assets/js/admin' . $min . '.js', [ 'jquery', 'flywp-chart' ], FLYWP_VERSION, true );
     }
 
