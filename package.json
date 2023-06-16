@@ -1,6 +1,6 @@
 {
   "name": "flywp",
-  "version": "0.2.1",
+  "version": "0.3",
   "description": "Helper plugin for FlyWP",
   "main": "index.js",
   "repository": "https://github.com/flywp/fly-helper.git",
