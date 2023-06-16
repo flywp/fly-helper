@@ -14,7 +14,7 @@ class Admin {
      *
      * @var string
      */
-    const SCREEN_NAME = 'tools_page_flywp';
+    const SCREEN_NAME = 'dashboard_page_flywp';
 
     public $fastcgi = null;
 
@@ -35,8 +35,7 @@ class Admin {
      * Register admin page.
      */
     public function register_admin_page() {
-        $hook = add_submenu_page(
-            'tools.php',
+        $hook = add_dashboard_page(
             __( 'FlyWP', 'flywp' ),
             __( 'FlyWP', 'flywp' ),
             'manage_options',
@@ -55,7 +54,7 @@ class Admin {
      * @return string
      */
     public function page_url() {
-        return admin_url( 'tools.php?page=' . self::PAGE_SLUG );
+        return admin_url( 'index.php?page=' . self::PAGE_SLUG );
     }
 
     /**
@@ -86,7 +85,7 @@ class Admin {
     public function enqueue_js() {
         $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-        wp_enqueue_script( 'flywp-admin-js', FLYWP_PLUGIN_URL . '/assets/js/admin' . $min . '.js', [ 'jquery', 'flywp-chart' ], FLYWP_VERSION, true );
+        wp_enqueue_script( 'flywp-admin-js', FLYWP_PLUGIN_URL . '/assets/js/admin' . $min . '.js', [ 'jquery' ], FLYWP_VERSION, true );
     }
 
     /**

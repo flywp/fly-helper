@@ -33,7 +33,7 @@ class Opcache {
 
         flywp()->opcache->clear();
 
-        wp_safe_redirect( admin_url( 'tools.php?page=flywp&fly-notice=opcache-purged' ) );
+        wp_safe_redirect( admin_url( 'index.php?page=flywp&fly-notice=opcache-purged' ) );
         exit;
     }
 }

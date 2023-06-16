@@ -90,7 +90,6 @@ class FlyApi {
         );
 
         if ( is_wp_error( $response ) ) {
-            // Handle error if needed
             return false;
         }
 

@@ -28,6 +28,21 @@ class Fastcgi_Cache {
     }
 
     /**
+     * FastCGI cache purge url.
+     *
+     * @return string
+     */
+    public function purge_cache_url() {
+        return wp_nonce_url(
+            add_query_arg(
+                [ 'flywp-action' => 'purge-fastcgi-cache' ],
+                admin_url( 'index.php?page=flywp' )
+            ),
+            'fly-fastcgi-purge-cache'
+        );
+    }
+
+    /**
      * Check if the cache is enabled.
      *
      * @return bool

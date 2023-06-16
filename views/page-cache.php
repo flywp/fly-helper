@@ -41,14 +41,14 @@ if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice']
             </div>
         <?php } ?>
 
-        <div class="fw-mt-2 fw-px-4 fw-py-4 fw-fw-sm:p-6 fw-text-sm fw-text-gray-500 fw-flex">
-            <div class="fw-w-2/3">
+        <div class="fw-mt-2 fw-px-4 fw-py-4 fw-fw-sm:p-6 fw-text-sm fw-text-gray-500 md:fw-flex">
+            <div class="md:fw-w-2/3">
                 <p class="fw-mt-0"><?php esc_html_e( 'Nginx FastCGI Cache is a very fast page caching system that boosts up your website page load speed. It\'s recommended to enable the page cache.', 'flywp' ); ?></p>
             </div>
 
             <?php if ( flywp()->fastcgi->enabled() ) { ?>
-                <div class="fw-w-1/3 fw-text-right">
-                    <a href="<?php echo esc_url( $this->fastcgi->purge_cache_url() ); ?>" class="button button-primary button-hero"><?php esc_html_e( 'Clear Cache', 'flywp' ); ?></a>
+                <div class="md:fw-w-1/3 fw-text-center md:fw-text-right">
+                    <a href="<?php echo esc_url( flywp()->fastcgi->purge_cache_url() ); ?>" class="button button-primary button-hero"><?php esc_html_e( 'Clear Cache', 'flywp' ); ?></a>
                 </div>
             <?php } ?>
         </div>

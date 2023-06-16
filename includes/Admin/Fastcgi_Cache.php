@@ -3,7 +3,6 @@
 namespace FlyWP\Admin;
 
 use FlyWP\Admin;
-use FlyWP\Helper;
 
 class Fastcgi_Cache {
 
@@ -14,21 +13,6 @@ class Fastcgi_Cache {
         add_action( 'load-' . Admin::SCREEN_NAME, [ $this, 'save_settings' ] );
         add_action( 'load-' . Admin::SCREEN_NAME, [ $this, 'handle_cleanup' ] );
         add_action( 'load-' . Admin::SCREEN_NAME, [ $this, 'handle_enable_disable' ] );
-    }
-
-    /**
-     * FastCGI cache purge url.
-     *
-     * @return string
-     */
-    public function purge_cache_url() {
-        return wp_nonce_url(
-            add_query_arg(
-                [ 'flywp-action' => 'purge-fastcgi-cache' ],
-                flywp()->admin->page_url()
-            ),
-            'fly-fastcgi-purge-cache'
-        );
     }
 
     /**
@@ -69,9 +53,15 @@ class Fastcgi_Cache {
             return;
         }
 
-        flywp()->fastcgi->clear_cache();
+        $page_id = isset( $_GET['page_id'] ) ? absint( $_GET['page_id'] ) : 0;
 
-        wp_safe_redirect( admin_url( 'tools.php?page=flywp&fly-notice=fastcgi-purged' ) );
+        if ( $page_id ) {
+            flywp()->fastcgi->purge_cache_by_url( get_permalink( $page_id ) );
+        } else {
+            flywp()->fastcgi->clear_cache();
+        }
+
+        wp_safe_redirect( admin_url( 'index.php?page=flywp&fly-notice=fastcgi-purged' ) );
         exit;
     }
 
@@ -110,7 +100,7 @@ class Fastcgi_Cache {
 
         update_option( flywp()->fastcgi::SETTINGS_KEY, $settings );
 
-        wp_safe_redirect( admin_url( 'tools.php?page=flywp&fly-notice=fastcgi-saved' ) );
+        wp_safe_redirect( admin_url( 'index.php?page=flywp&fly-notice=fastcgi-saved' ) );
         exit;
     }
 
@@ -139,13 +129,11 @@ class Fastcgi_Cache {
         $settings['enabled'] = $type === 'enable' ? true : false;
         $notice              = $type === 'enable' ? 'fastcgi-enabled' : 'fastcgi-disabled';
 
-        // Toggle cache in the API
         $reponse = flywp()->flyapi->cache_toggle( $type );
-        // Helper::dd( $reponse );
 
         update_option( flywp()->fastcgi::SETTINGS_KEY, $settings );
 
-        wp_safe_redirect( admin_url( 'tools.php?page=flywp&fly-notice=' . $notice ) );
+        wp_safe_redirect( admin_url( 'index.php?page=flywp&fly-notice=' . $notice ) );
         exit;
     }
 }

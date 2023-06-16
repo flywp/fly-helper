@@ -51,8 +51,6 @@ The plugin allows you to control and purge nginx caching and redis object cache,
 == Screenshots ==
 
 1. FlyWP settings page.
-2. Cloud server management dashboard.
-3. Caching settings and controls.
 
 == Changelog ==
 
