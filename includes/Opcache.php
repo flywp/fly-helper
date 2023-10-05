@@ -44,13 +44,13 @@ class Opcache {
      * @return bool
      */
     public function enabled() {
-        if ( ! $this->has_opcache() ) {
+        if ( !$this->has_opcache() ) {
             return false;
         }
 
         $status = $this->get_status();
 
-        return $status['opcache_enabled'] === true;
+        return isset( $status['opcache_enabled'] ) && $status['opcache_enabled'] === true;
     }
 
     /**
@@ -61,7 +61,7 @@ class Opcache {
     public function purge_cache_url() {
         return wp_nonce_url(
             add_query_arg(
-                [ 'flywp-action' => 'purge-opcache' ],
+                ['flywp-action' => 'purge-opcache'],
                 admin_url( 'index.php?page=flywp' ),
             ),
             'fly-opcache-purge'
