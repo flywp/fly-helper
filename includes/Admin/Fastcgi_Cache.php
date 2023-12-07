@@ -129,7 +129,7 @@ class Fastcgi_Cache {
         $settings['enabled'] = $type === 'enable' ? true : false;
         $notice              = $type === 'enable' ? 'fastcgi-enabled' : 'fastcgi-disabled';
 
-        $reponse = flywp()->flyapi->cache_toggle( $type );
+        flywp()->flyapi->cache_toggle( $type );
 
         update_option( flywp()->fastcgi::SETTINGS_KEY, $settings );
 
