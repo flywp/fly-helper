@@ -37,4 +37,6 @@ jobs:
           echo "files=$FILES" >> $GITHUB_OUTPUT
       
       - name: Detect coding standard violations
-        run: phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
+        run: |
+          phpcs -i
+          phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
