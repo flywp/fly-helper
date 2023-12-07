@@ -28,9 +28,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer
 
       - name: Install dependencies
-        run: |
-          composer install --prefer-dist --no-progress
-          composer require --dev phpcompatibility/phpcompatibility-wp:"*"
+        run: composer install --prefer-dist --no-progress
 
       - id: changes
         run: |
@@ -41,5 +39,4 @@ jobs:
       - name: Detect coding standard violations
         run: |
           phpcs -i
-          vendor/bin/phpcs -i
-          phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
+          vendor/bin/phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
