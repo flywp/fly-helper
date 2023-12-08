@@ -2,8 +2,8 @@
 
 namespace FlyWP\Api;
 
-class Fastcgi_Cache
-{
+class Fastcgi_Cache {
+    
     /**
      * API constructor.
      */
