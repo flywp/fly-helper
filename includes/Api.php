@@ -25,6 +25,7 @@ class Api {
         new Api\Plugins();
         new Api\Themes();
         new Api\Updates();
+        new Api\Fastcgi_Cache();
     }
 
     /**
