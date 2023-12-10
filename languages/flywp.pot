@@ -1,20 +1,23 @@
 # Copyright (c) 2023 FlyWP. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: FlyWP 0.3.2\n"
+"Project-Id-Version: FlyWP 0.3.4\n"
 "Report-Msgid-Bugs-To: https://github.com/flywp/flywp-helper/issues\n"
 "Last-Translator: support@flywp.com\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-16T15:39:14+00:00\n"
+"POT-Creation-Date: 2023-12-10T09:42:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.7.1\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: flywp\n"
 
 #. Plugin Name of the plugin
 #. Author of the plugin
+#: includes/Admin.php:39
+#: includes/Admin.php:40
+#: includes/Admin/Adminbar.php:32
 msgid "FlyWP"
 msgstr ""
 
@@ -30,107 +33,147 @@ msgstr ""
 msgid "https://flywp.com/?utm_source=wporg&utm_medium=banner&utm_campaign=author-uri"
 msgstr ""
 
+#: flywp.php:118
 msgid "Missing FlyWP API key, plugin requires an API key."
 msgstr ""
 
+#: includes/Admin/Adminbar.php:44
 msgid "Clear This Page Cache"
 msgstr ""
 
+#: includes/Admin/Adminbar.php:54
 msgid "Clear Page Cache"
 msgstr ""
 
+#: includes/Admin/Adminbar.php:65
 msgid "Clear OPcache"
 msgstr ""
 
+#: includes/Admin/Adminbar.php:75
+#: includes/Admin/Plugins.php:25
+#: views/page-cache.php:70
 msgid "Settings"
 msgstr ""
 
+#: includes/Admin/Opcache.php:27
 msgid "Nonce verification failed."
 msgstr ""
 
+#: includes/Admin/Opcache.php:31
 msgid "You do not have permission to purge the opcache."
 msgstr ""
 
+#: includes/Fastcgi_Cache.php:96
 msgid "Cache directory does not exist."
 msgstr ""
 
+#: includes/Fastcgi_Cache.php:100
 msgid "Cache directory is not a directory."
 msgstr ""
 
+#: includes/Fastcgi_Cache.php:104
 msgid "Cache directory is not writable."
 msgstr ""
 
+#: views/admin.php:10
 msgid "FlyWP Dashboard"
 msgstr ""
 
+#: views/op-cache.php:8
 msgid "PHP OPcache has been cleared."
 msgstr ""
 
+#: views/op-cache.php:20
 msgid "PHP OPcache"
 msgstr ""
 
+#: views/op-cache.php:26
+#: views/page-cache.php:27
 msgid "Enabled"
 msgstr ""
 
+#: views/op-cache.php:32
+#: views/page-cache.php:33
 msgid "Disabled"
 msgstr ""
 
+#: views/op-cache.php:44
 msgid "OPcache improves PHP performance by storing precompiled script bytecode in shared memory, thereby removing the need for PHP to load and parse scripts on each request."
 msgstr ""
 
+#: views/op-cache.php:51
 msgid "Hit Rate"
 msgstr ""
 
+#: views/op-cache.php:56
 msgid "Cached Scripts"
 msgstr ""
 
+#: views/op-cache.php:61
 msgid "Memory"
 msgstr ""
 
+#: views/op-cache.php:66
 msgid "Keys"
 msgstr ""
 
+#: views/op-cache.php:71
 msgid "Engine"
 msgstr ""
 
+#: views/op-cache.php:78
+#: views/page-cache.php:51
 msgid "Clear Cache"
 msgstr ""
 
+#: views/page-cache.php:6
 msgid "Cache settings has been updated."
 msgstr ""
 
+#: views/page-cache.php:7
 msgid "Cache has been cleared."
 msgstr ""
 
+#: views/page-cache.php:8
 msgid "Page Caching has been enabled."
 msgstr ""
 
+#: views/page-cache.php:9
 msgid "Page Caching has been disabled."
 msgstr ""
 
+#: views/page-cache.php:21
 msgid "Page Cache"
 msgstr ""
 
+#: views/page-cache.php:46
 msgid "Nginx FastCGI Cache is a very fast page caching system that boosts up your website page load speed. It's recommended to enable the page cache."
 msgstr ""
 
+#: views/page-cache.php:59
 msgid "Disable"
 msgstr ""
 
+#: views/page-cache.php:64
 msgid "Enable Cache"
 msgstr ""
 
+#: views/page-cache.php:76
 msgid "Homepage Settings"
 msgstr ""
 
+#: views/page-cache.php:80
 msgid "Flush homepage when a post is published or modified"
 msgstr ""
 
+#: views/page-cache.php:85
 msgid "Flush homepage when a post is deleted"
 msgstr ""
 
+#: views/page-cache.php:104
 msgid "Close"
 msgstr ""
 
+#: views/page-cache.php:106
 msgid "Save Changes"
 msgstr ""
