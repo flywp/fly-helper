@@ -3,7 +3,7 @@
  * Plugin Name: FlyWP
  * Plugin URI: https://flywp.com
  * Description: Helper plugin for FlyWP
- * Version: 0.4
+ * Version: 0.4.1
  * Author: FlyWP
  * Author URI: https://flywp.com/?utm_source=wporg&utm_medium=banner&utm_campaign=author-uri
  * License: GPL2
@@ -41,7 +41,7 @@ final class FlyWP_Plugin {
      *
      * @var string
      */
-    public $version = '0.4';
+    public $version = '0.4.1';
 
     /**
      * Plugin Constructor.
