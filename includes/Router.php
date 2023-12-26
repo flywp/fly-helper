@@ -61,9 +61,6 @@ class Router {
                 if ( $this->is_route_method_allowed( $callback, $request_method ) ) {
                     $request_args = $this->get_request_args( $request_method );
 
-                    // var_dump( $request_args );
-                    // die;
-
                     // Call the callback function with request arguments
                     if ( is_callable( $callback['callback'] ) ) {
                         if ( is_array( $callback['callback'] ) ) {

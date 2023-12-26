@@ -17,7 +17,7 @@ class Plugins {
      * @return void
      */
     public function respond( $args ) {
-        $valid_statuses = [ 'all', 'active', 'inactive' ];
+        $valid_statuses = [ 'all', 'active', 'inactive', 'upgrade' ];
         $status         = isset( $args['status'] ) && in_array( $args['status'], $valid_statuses, true ) ? $args['status'] : 'all';
 
         if ( ! function_exists( 'get_plugins' ) ) {
@@ -34,12 +34,12 @@ class Plugins {
 
         foreach ( $plugins as $file => $details ) {
             $plugin_status = $this->get_status( $file );
+            $update        = $this->get_update( $file, $updates );
 
-            if ( 'all' !== $status && $status !== $plugin_status ) {
+            // skip if 'all', status mismatch, or needs the 'upgrade' status, which matches truthy $update.
+            if ( 'all' !== $status && $status !== $plugin_status && ( 'upgrade' !== $status || ! $update ) ) {
                 continue;
             }
-
-            $update = $this->get_update( $file, $updates );
 
             $response[] = [
                 'name'             => $details['Name'],
