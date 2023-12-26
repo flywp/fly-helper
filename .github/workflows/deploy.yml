@@ -21,9 +21,11 @@ jobs:
           php-version: "7.4"
           coverage: none
           tools: composer:v2
+
       - name: Build
         run: |
           composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
@@ -31,3 +33,17 @@ jobs:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SLUG: flywp
           VERSION: ${{ github.event.inputs.tag }}
+
+      - name: Notify Slack
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          MSG_MINIMAL: true
+          SLACK_CHANNEL: "flywp-ops"
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://github.com/flywp.png?size=48
+          SLACK_TITLE: FlyWP Helper
+          SLACK_MESSAGE: |
+            New version deployed to WordPress.org: ${{ github.event.inputs.tag }}
+            Plugin URL: [FlyWP Plugin](https://wordpress.org/plugins/flywp/)
+          SLACK_USERNAME: flybot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
