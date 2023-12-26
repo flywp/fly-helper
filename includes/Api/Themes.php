@@ -34,7 +34,7 @@ class Themes {
                 'author_uri'           => $theme->get( 'AuthorURI' ),
                 'status'               => $this->get_status( $theme ),
                 'update_available'     => $update ? true : false,
-                'new_version'          => $update ? $update['new_version'] : null,
+                'new_version'          => $update && isset( $update['new_version'] ) ? $update['new_version'] : null,
             ];
         }
 
