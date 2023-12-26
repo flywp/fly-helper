@@ -2,7 +2,11 @@
 
 namespace FlyWP\Api;
 
+use Core_Upgrader;
+use Exception;
 use Plugin_Upgrader;
+use Theme_Upgrader;
+use Throwable;
 use WP_Ajax_Upgrader_Skin;
 
 class Updates {
@@ -12,7 +16,9 @@ class Updates {
      */
     public function __construct() {
         flywp()->router->get( 'updates', [ $this, 'respond' ] );
-        flywp()->router->post( 'update-plugin', [ $this, 'update_plugin' ] );
+        flywp()->router->post( 'update-plugins', [ $this, 'update_plugins' ] );
+        flywp()->router->post( 'update-themes', [ $this, 'update_themes' ] );
+        flywp()->router->post( 'update-core', [ $this, 'update_core' ] );
     }
 
     /**
@@ -37,53 +43,149 @@ class Updates {
      *
      * @return void
      */
-    public function update_plugin( $args ) {
-        if ( ! isset( $args['plugin'] ) ) {
-            wp_send_json_error( 'Missing plugin name' );
+    public function update_plugins( $args ) {
+        if ( ! isset( $args['plugins'] ) || ! is_array( $args['plugins'] ) ) {
+            wp_send_json_error( 'Missing plugin name(s)' );
         }
 
-        $plugin_file = sanitize_text_field( wp_unslash( $args['plugin'] ) );
-        $plugin      = plugin_basename( $plugin_file );
+        $plugins = array_map( 'sanitize_text_field', wp_unslash( $args['plugins'] ) );
 
+        try {
+            $this->update_item( $plugins, 'plugin' );
+        } catch ( Throwable $th ) {
+            wp_send_json_error( [
+                'message' => $th->getMessage(),
+            ], 500 );
+        }
+
+        wp_send_json_success( [
+            'message' => 'Updated successfully.',
+        ] );
+    }
+
+    /**
+     * Update a theme.
+     *
+     * @param array $args
+     *
+     * @return void
+     */
+    public function update_theme( $args ) {
+        if ( ! isset( $args['themes'] ) || ! is_array( $args['themes'] ) ) {
+            wp_send_json_error( 'Missing theme name(s)' );
+        }
+
+        $themes = array_map( 'sanitize_text_field', wp_unslash( $args['themes'] ) );
+
+        try {
+            $this->update_item( $themes, 'theme' );
+        } catch ( Throwable $th ) {
+            wp_send_json_error( [
+                'message' => $th->getMessage(),
+            ], 500 );
+        }
+
+        wp_send_json_success( [
+            'message' => 'Updated successfully.',
+        ] );
+    }
+
+    /**
+     * Update WordPress core.
+     *
+     * @param array $args
+     *
+     * @return void
+     */
+    public function update_core( $args ) {
+        $version = isset( $args['version'] ) ? sanitize_text_field( $args['version'] ) : false;
+        $locale  = isset( $args['locale'] ) ? sanitize_text_field( $args['locale'] ) : get_locale();
+
+        if ( ! function_exists( 'find_core_update' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/update.php';
+        }
+
+        if ( ! $version ) {
+            $updates = get_core_updates();
+            $version = $updates[0]->current;
+        }
+
+        $update  = find_core_update( $version, $locale );
+
+        if ( ! $update ) {
+            wp_send_json_error( [
+                'message' => 'Update not found.',
+            ] );
+        }
+
+        $this->include_files();
+        $this->extend_time_limit();
+
+        $upgrader = new Core_Upgrader( new WP_Ajax_Upgrader_Skin() );
+        $result   = $upgrader->upgrade( $update );
+
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( [
+                'message' => $result->get_error_message(),
+            ], 500 );
+        }
+
+        wp_send_json_success( [
+            'message' => 'Updated successfully.',
+        ] );
+    }
+
+    /**
+     * Include required files.
+     *
+     * @return void
+     */
+    private function include_files() {
         require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
         require_once ABSPATH . 'wp-admin/includes/class-automatic-upgrader-skin.php';
         require_once ABSPATH . 'wp-admin/includes/class-wp-ajax-upgrader-skin.php';
         require_once ABSPATH . 'wp-admin/includes/update.php';
         require_once ABSPATH . 'wp-admin/includes/file.php';
-        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
 
-        $plugin_info = get_plugin_updates();
+    /**
+     * Increase execution time limit.
+     *
+     * @return void
+     */
+    public function extend_time_limit() {
+        set_time_limit( 300 );
+    }
 
-        if ( isset( $plugin_info[$plugin_file] ) && isset( $plugin_info[$plugin_file]->update ) ) {
-            $skin     = new WP_Ajax_Upgrader_Skin();
-            $upgrader = new Plugin_Upgrader( $skin );
-            $result   = $upgrader->bulk_upgrade( [$plugin_file] );
+    /**
+     * Update plugins or themes.
+     *
+     * @param string $type the type of update ('plugin' or 'theme')
+     * @param array  $args the update arguments
+     *
+     * @return void
+     */
+    private function update_item( $items, $type = 'plugin' ) {
+        $this->include_files();
 
-            if ( is_wp_error( $skin->result ) ) {
-                wp_send_json_error( [
-                    'code'    => $skin->result->get_error_code(),
-                    'message' => $skin->result->get_error_message(),
-                ] );
-            } elseif ( $skin->get_errors()->has_errors() ) {
-                wp_send_json_error( [
-                    'message' => $skin->result->get_error_message(),
-                ] );
-            } elseif ( is_array( $result ) && !empty( $result[ $plugin ] ) ) {
-                if ( true === $result[ $plugin ] ) {
-                    wp_send_json_error( [
-                        'message' => $upgrader->strings['up_to_date'],
-                    ] );
-                }
+        $skin = new WP_Ajax_Upgrader_Skin();
 
-                wp_send_json_success( [
-                    'message' => 'Plugin updated successfully.',
-                ] );
-            }
+        if ( $type === 'plugin' ) {
+            $upgrader  = new Plugin_Upgrader( $skin );
+        } elseif ( $type === 'theme' ) {
+            $upgrader  = new Theme_Upgrader( $skin );
+        } else {
+            throw new Exception( 'Invalid update type' );
         }
 
-        wp_send_json_error( [
-            'message' => 'Plugin update failed.',
-        ] );
+        $this->extend_time_limit();
+        $result = $upgrader->bulk_upgrade( $items );
+
+        if ( false === $result ) {
+            throw new Exception( 'Update failed' );
+        }
+
+        return true;
     }
 
     /**
