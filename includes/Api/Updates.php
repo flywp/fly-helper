@@ -185,6 +185,13 @@ class Updates {
             throw new Exception( 'Update failed' );
         }
 
+        // refresh the update cache
+        if ( $type === 'plugin' ) {
+            wp_update_plugins();
+        } elseif ( $type === 'theme' ) {
+            wp_update_themes();
+        }
+
         return true;
     }
 
