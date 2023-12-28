@@ -59,7 +59,7 @@ class Updates {
         }
 
         wp_send_json_success( [
-            'message' => 'Updated successfully.',
+            'message' => 'Plugins updated successfully.',
         ] );
     }
 
@@ -70,7 +70,7 @@ class Updates {
      *
      * @return void
      */
-    public function update_theme( $args ) {
+    public function update_themes( $args ) {
         if ( ! isset( $args['themes'] ) || ! is_array( $args['themes'] ) ) {
             wp_send_json_error( 'Missing theme name(s)' );
         }
@@ -86,7 +86,7 @@ class Updates {
         }
 
         wp_send_json_success( [
-            'message' => 'Updated successfully.',
+            'message' => 'Themes updated successfully.',
         ] );
     }
 
@@ -131,7 +131,7 @@ class Updates {
         }
 
         wp_send_json_success( [
-            'message' => 'Updated successfully.',
+            'message' => 'WordPress core updated successfully.',
         ] );
     }
 
