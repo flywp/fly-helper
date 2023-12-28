@@ -28,6 +28,11 @@ class Plugins {
             require_once ABSPATH . 'wp-admin/includes/update.php';
         }
 
+        // Update the update cache if requested.
+        if ( isset( $args['force'] ) && $args['force'] === 'true' ) {
+            wp_update_plugins();
+        }
+
         $response = [];
         $plugins  = get_plugins();
         $updates  = get_plugin_updates();
