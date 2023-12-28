@@ -19,6 +19,11 @@ class Themes {
     public function respond( $args ) {
         $response = [];
 
+        // Update the update cache if requested.
+        if ( isset( $args['force'] ) && $args['force'] === 'true' ) {
+            wp_update_themes();
+        }
+
         $themes  = wp_get_themes();
         $updates = get_site_transient( 'update_themes' );
 
