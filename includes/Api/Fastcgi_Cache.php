@@ -8,7 +8,7 @@ class Fastcgi_Cache {
      * API constructor.
      */
     public function __construct() {
-        flywp()->router->get( 'fastcgi-cache', [ $this, 'handle_cache_setting' ] );
+        flywp()->router->post( 'fastcgi-cache', [ $this, 'handle_cache_setting' ] );
     }
 
     /**
@@ -17,19 +17,18 @@ class Fastcgi_Cache {
      * @return void
      */
     public function handle_cache_setting( $args ) {
-        if ( ! isset( $args['cache'] ) ) {
+        if ( ! isset( $args['status'] ) ) {
             wp_send_json_error(
                 [
-					'message' => 'Missing cache.',
+					'message' => 'Missing status.',
 				]
             );
         }
 
-        $valid_types = [ 'fastcgi', 'none' ];
-        $cache       = isset( $args['cache'] ) && in_array( $args['cache'], $valid_types, true ) ? $args['cache'] : 'none';
+        $enabled = isset( $args['status'] ) && $args['status'] === 'enabled' ? true : false;
 
         $settings            = flywp()->fastcgi->settings();
-        $settings['enabled'] = $cache === 'fastcgi' ? true : false;
+        $settings['enabled'] = $enabled;
 
         update_option( flywp()->fastcgi::SETTINGS_KEY, $settings );
 
