@@ -26,7 +26,7 @@ class Fastcgi_Cache {
         }
 
         $valid_types = [ 'fastcgi', 'none' ];
-        $cache       = isset( $args['cache'] ) && in_array( $args['cache'], $valid_types ) ? $args['cache'] : 'none';
+        $cache       = isset( $args['cache'] ) && in_array( $args['cache'], $valid_types, true ) ? $args['cache'] : 'none';
 
         $settings            = flywp()->fastcgi->settings();
         $settings['enabled'] = $cache === 'fastcgi' ? true : false;
