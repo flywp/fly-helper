@@ -1,14 +1,14 @@
-# Copyright (c) 2023 FlyWP. All Rights Reserved.
+# Copyright (c) 2024 FlyWP. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: FlyWP 0.4.2\n"
+"Project-Id-Version: FlyWP 0.4.3\n"
 "Report-Msgid-Bugs-To: https://github.com/flywp/flywp-helper/issues\n"
 "Last-Translator: support@flywp.com\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-12-28T09:57:15+00:00\n"
+"POT-Creation-Date: 2024-01-24T08:44:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: flywp\n"
