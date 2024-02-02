@@ -9,7 +9,7 @@ $settings = flywp()->email->settings();
             </h3>
 
             <div class="">
-                <a href="https://app.flywp.com/" target="_blank" class="fw-no-underline fw-text-indigo-600">
+                <a href="<?php echo esc_url( $app_site_url ); ?>/email" target="_blank" class="fw-no-underline fw-text-indigo-600">
                     <span class="dashicons dashicons-external"></span>
                     <?php esc_html_e( 'SMTP Configuration', 'flywp' ); ?>
                 </a>

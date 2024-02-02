@@ -7,7 +7,7 @@
                 </h1>
 
                 <div class="">
-                    <a href="https://app.flywp.com" target="_blank" class="button button-secondary"><span class="dashicons dashicons-external fw-mt-1"></span> <?php esc_html_e( 'FlyWP Dashboard', 'flywp' ); ?></a>
+                    <a href="<?php echo esc_url( $app_site_url ); ?>" target="_blank" class="button button-secondary"><span class="dashicons dashicons-external fw-mt-1"></span> <?php esc_html_e( 'FlyWP Dashboard', 'flywp' ); ?></a>
                 </div>
             </div>
 

@@ -98,8 +98,51 @@ class Admin {
             'email' => __( 'Email', 'flywp' ),
         ];
 
-        $active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? $_GET['tab'] : 'cache';
+        $active_tab     = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? $_GET['tab'] : 'cache';
+        $site_info      = $this->fetch_site_info();
+        $app_site_url   = $this->get_site_url( $site_info );
 
         include FLYWP_PLUGIN_DIR . '/views/admin.php';
+    }
+
+    /**
+     * Fetch site info.
+     *
+     * @return array|false
+     */
+    private function fetch_site_info() {
+        $transient_key = 'flywp_site_info';
+        $site_info     = get_transient( $transient_key );
+
+        if ( false === $site_info ) {
+            $site_info = flywp()->flyapi->site_info();
+
+            if ( isset( $site_info['error'] ) ) {
+                return false;
+            }
+
+            set_transient( $transient_key, $site_info, DAY_IN_SECONDS );
+        }
+
+        return $site_info;
+    }
+
+    /**
+     * Get site URL.
+     *
+     * @param array|false $info
+     *
+     * @return string
+     */
+    private function get_site_url( $info ) {
+        if ( false === $info ) {
+            return 'https://app.flywp.com';
+        }
+
+        return sprintf(
+            'https://app.flywp.com/servers/%d/sites/%d',
+            $info['server_id'],
+            $info['id']
+        );
     }
 }
