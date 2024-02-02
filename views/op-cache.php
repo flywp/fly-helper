@@ -8,8 +8,8 @@ $cache_messages = [
     'opcache-purged'   => __( 'PHP OPcache has been cleared.', 'flywp' ),
 ];
 
-if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice'] ] ) ) {
-    $notice = $cache_messages[ $_GET['fly-notice'] ];
+if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[$_GET['fly-notice']] ) ) {
+    $notice = $cache_messages[$_GET['fly-notice']];
 }
 ?>
 
@@ -41,8 +41,8 @@ if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice']
         <?php } ?>
 
         <div class="fw-mt-2 fw-px-4 fw-py-4 fw-fw-sm:p-6 fw-text-sm fw-text-gray-500">
-            <p class="fw-mt-0"><?php esc_html_e( 'OPcache improves PHP performance by storing precompiled script bytecode in shared memory, thereby removing the need for PHP to load and parse scripts on each request.', 'flywp' ); ?></p>
-            
+            <p class="fw-mt-0 fw-text-sm"><?php esc_html_e( 'OPcache improves PHP performance by storing precompiled script bytecode in shared memory, thereby removing the need for PHP to load and parse scripts on each request.', 'flywp' ); ?></p>
+
             <?php if ( flywp()->opcache->enabled() ) { ?>
                 <div class="md:fw-flex fw-w-full fw-mb-4 fw-gap-3 fw-items-center">
                     <div class="sm:fw-w-2/3 fw-mb-6 sm:fw-mb-0">
@@ -75,7 +75,7 @@ if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice']
                     </div>
 
                     <div class="sm:fw-w-1/3 fw-text-center sm:fw-text-right">
-                        <a href="<?php echo esc_url( flywp()->opcache->purge_cache_url() ); ?>" class="button button-primary button-hero"><?php esc_html_e( 'Clear Cache', 'flywp' ); ?></a>
+                        <a href="<?php echo esc_url( flywp()->opcache->purge_cache_url() ); ?>" class="button button-primary button-hero !fw-bg-indigo-600 hover:!fw-bg-indigo-700"><?php esc_html_e( 'Clear Cache', 'flywp' ); ?></a>
                     </div>
                 </div>
             <?php } ?>

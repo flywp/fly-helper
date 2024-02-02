@@ -29,6 +29,7 @@ class Admin {
         new Admin\Adminbar();
         new Admin\Opcache();
         new Admin\Plugins();
+        new Admin\Email();
     }
 
     /**
@@ -40,12 +41,12 @@ class Admin {
             __( 'FlyWP', 'flywp' ),
             'manage_options',
             self::PAGE_SLUG,
-            [ $this, 'render_admin_page' ]
+            [$this, 'render_admin_page']
         );
 
-        add_action( "admin_print_styles-{$hook}", [ $this, 'enqueue_styles' ] );
-        add_action( "admin_print_scripts-{$hook}", [ $this, 'enqueue_js' ] );
-        add_filter( 'removable_query_args', [ $this, 'removable_query_args' ] );
+        add_action( "admin_print_styles-{$hook}", [$this, 'enqueue_styles'] );
+        add_action( "admin_print_scripts-{$hook}", [$this, 'enqueue_js'] );
+        add_filter( 'removable_query_args', [$this, 'removable_query_args'] );
     }
 
     /**
@@ -85,13 +86,63 @@ class Admin {
     public function enqueue_js() {
         $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-        wp_enqueue_script( 'flywp-admin-js', FLYWP_PLUGIN_URL . '/assets/js/admin' . $min . '.js', [ 'jquery' ], FLYWP_VERSION, true );
+        wp_enqueue_script( 'flywp-admin-js', FLYWP_PLUGIN_URL . '/assets/js/admin' . $min . '.js', ['jquery'], FLYWP_VERSION, true );
     }
 
     /**
      * Render admin page.
      */
     public function render_admin_page() {
+        $tabs = [
+            'cache' => __( 'Caching', 'flywp' ),
+            'email' => __( 'Email', 'flywp' ),
+        ];
+
+        $active_tab     = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? $_GET['tab'] : 'cache';
+        $site_info      = $this->fetch_site_info();
+        $app_site_url   = $this->get_site_url( $site_info );
+
         include FLYWP_PLUGIN_DIR . '/views/admin.php';
+    }
+
+    /**
+     * Fetch site info.
+     *
+     * @return array|false
+     */
+    private function fetch_site_info() {
+        $transient_key = 'flywp_site_info';
+        $site_info     = get_transient( $transient_key );
+
+        if ( false === $site_info ) {
+            $site_info = flywp()->flyapi->site_info();
+
+            if ( isset( $site_info['error'] ) ) {
+                return false;
+            }
+
+            set_transient( $transient_key, $site_info, DAY_IN_SECONDS );
+        }
+
+        return $site_info;
+    }
+
+    /**
+     * Get site URL.
+     *
+     * @param array|false $info
+     *
+     * @return string
+     */
+    private function get_site_url( $info ) {
+        if ( false === $info ) {
+            return 'https://app.flywp.com';
+        }
+
+        return sprintf(
+            'https://app.flywp.com/servers/%d/sites/%d',
+            $info['server_id'],
+            $info['id']
+        );
     }
 }

@@ -107,6 +107,7 @@ final class FlyWP_Plugin {
         $this->fastcgi = new FlyWP\Fastcgi_Cache();
         $this->opcache = new FlyWP\Opcache();
         $this->flyapi  = new FlyWP\FlyApi();
+        $this->email   = new FlyWP\Email();
     }
 
     /**
@@ -136,6 +137,24 @@ final class FlyWP_Plugin {
      */
     public function get_key() {
         return FLYWP_API_KEY;
+    }
+
+    /**
+     * Debugging helper.
+     *
+     * @param mixed $value
+     * @param bool  $die
+     *
+     * @return void
+     */
+    public function debug( $value, $die = false ) {
+        echo '<pre>';
+        print_r( $value );
+        echo '</pre>';
+
+        if ( $die ) {
+            die();
+        }
     }
 }
 
