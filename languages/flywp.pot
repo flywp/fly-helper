@@ -8,15 +8,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-01-24T08:44:00+00:00\n"
+"POT-Creation-Date: 2024-02-02T13:15:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: flywp\n"
 
 #. Plugin Name of the plugin
 #. Author of the plugin
-#: includes/Admin.php:39
 #: includes/Admin.php:40
+#: includes/Admin.php:41
 #: includes/Admin/Adminbar.php:32
 msgid "FlyWP"
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 msgid "https://flywp.com/?utm_source=wporg&utm_medium=banner&utm_campaign=author-uri"
 msgstr ""
 
-#: flywp.php:118
+#: flywp.php:119
 msgid "Missing FlyWP API key, plugin requires an API key."
 msgstr ""
 
@@ -53,6 +53,10 @@ msgstr ""
 #: includes/Admin/Plugins.php:25
 #: views/page-cache.php:70
 msgid "Settings"
+msgstr ""
+
+#: includes/Admin/Email.php:71
+msgid "Test Email from FlyWP"
 msgstr ""
 
 #: includes/Admin/Opcache.php:27
@@ -77,6 +81,71 @@ msgstr ""
 
 #: views/admin.php:10
 msgid "FlyWP Dashboard"
+msgstr ""
+
+#: views/email.php:8
+msgid "Email Settings"
+msgstr ""
+
+#: views/email.php:14
+msgid "SMTP Configuration"
+msgstr ""
+
+#: views/email.php:21
+msgid "Email settings have been saved."
+msgstr ""
+
+#: views/email.php:30
+msgid "With FlyWP, you don’t need a 3rd-party SMTP plugin to send emails. Just configure your connection from the FlyWP dashboard, all your emails will go through the configured gateway without needing a plugin."
+msgstr ""
+
+#: views/email.php:35
+msgid "From Name"
+msgstr ""
+
+#: views/email.php:39
+msgid "This name will be used as the sender name for all outgoing emails."
+msgstr ""
+
+#: views/email.php:44
+msgid "From Email"
+msgstr ""
+
+#: views/email.php:48
+msgid "This email will be used as the sender email for all outgoing emails."
+msgstr ""
+
+#: views/email.php:55
+#: views/page-cache.php:106
+msgid "Save Changes"
+msgstr ""
+
+#: views/email.php:68
+msgid "Test Email"
+msgstr ""
+
+#: views/email.php:74
+msgid "Test email has been sent."
+msgstr ""
+
+#: views/email.php:80
+msgid "Test email could not be sent."
+msgstr ""
+
+#: views/email.php:87
+msgid "Send To"
+msgstr ""
+
+#: views/email.php:91
+msgid "Enter email address where the test email will be sent."
+msgstr ""
+
+#: views/email.php:103
+msgid "Send HTML Email"
+msgstr ""
+
+#: views/email.php:111
+msgid "Send Test Email"
 msgstr ""
 
 #: views/op-cache.php:8
@@ -172,8 +241,4 @@ msgstr ""
 
 #: views/page-cache.php:104
 msgid "Close"
-msgstr ""
-
-#: views/page-cache.php:106
-msgid "Save Changes"
 msgstr ""

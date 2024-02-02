@@ -107,6 +107,7 @@ final class FlyWP_Plugin {
         $this->fastcgi = new FlyWP\Fastcgi_Cache();
         $this->opcache = new FlyWP\Opcache();
         $this->flyapi  = new FlyWP\FlyApi();
+        $this->email   = new FlyWP\Email();
     }
 
     /**

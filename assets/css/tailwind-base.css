@@ -13,3 +13,50 @@
 body.dashboard_page_flywp #wpcontent {
   padding-left: 0;
 }
+
+.fw-switch-input {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.fw-switch {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  width: 36px;
+  /* Width of the switch */
+  height: 18px;
+  /* Height of the switch */
+}
+
+.fw-switch-toggle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 18px;
+  transition: 0.2s;
+}
+
+.fw-switch-toggle:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.2s;
+  border-radius: 50%;
+}
+
+.fw-switch-input:checked+.fw-switch-toggle {
+  background-color: #4f46e5;
+}
+
+.fw-switch-input:checked+.fw-switch-toggle:before {
+  transform: translateX(18px);
+}
