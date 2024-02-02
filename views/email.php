@@ -25,11 +25,9 @@ $settings = flywp()->email->settings();
         <form method="POST" action="">
             <div class="fw-mt-2 fw-px-6 fw-py-4 fw-fw-sm:p-6 fw-text-sm fw-text-gray-500">
 
-                <!--
-                <div class="fw-text-sm fw-border fw-border-yellow-200 fw-rounded fw-px-4 fw-py-4 fw-bg-yellow-100 fw-text-yellow-900 fw-mb-4">
-                    <?php esc_html_e( 'With FlyWP, you don’t need a 3rd-party SMTP plugin to send emails. Just configure your connection from the FlyWP dashboard, all your emails will go through the configured gateway without needing a plugin.', 'flywp' ); ?>
+                <div class="fw-text-sm fw-border fw-border-indigo-200 fw-rounded fw-px-4 fw-py-4 fw-bg-indigo-100 fw-text-indigo-900 fw-mb-4">
+                    <?php esc_html_e( 'With FlyWP, you don’t need a 3rd-party SMTP plugin to send emails. Just configure your connection from the FlyWP site dashboard, all your emails will go through the configured gateway without needing a plugin.', 'flywp' ); ?>
                 </div>
-                -->
 
                 <div class="fw-mb-4">
                     <label for="from-name" class="fw-font-medium fw-text-gray-700"><?php esc_html_e( 'From Name', 'flywp' ); ?></label>

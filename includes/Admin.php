@@ -94,8 +94,8 @@ class Admin {
      */
     public function render_admin_page() {
         $tabs = [
-            'cache' => 'Caching',
-            'email' => 'Email',
+            'cache' => __( 'Caching', 'flywp' ),
+            'email' => __( 'Email', 'flywp' ),
         ];
 
         $active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? $_GET['tab'] : 'cache';
