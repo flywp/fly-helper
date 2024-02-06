@@ -37,7 +37,6 @@ jobs:
       - name: Notify Slack
         uses: rtCamp/action-slack-notify@v2
         with:
-          MSG_MINIMAL: true
           SLACK_CHANNEL: "flywp-ops"
           SLACK_ICON: https://github.com/flywp.png?size=48
           SLACK_TITLE: FlyWP Helper
