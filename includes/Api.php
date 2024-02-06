@@ -26,6 +26,7 @@ class Api {
         new Api\Themes();
         new Api\Updates();
         new Api\Fastcgi_Cache();
+        new Api\Health();
     }
 
     /**
