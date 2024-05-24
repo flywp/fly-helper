@@ -1,8 +1,8 @@
 === FlyWP Helper ===
 Contributors: flywp, tareq1988
-Tags: cache, helper, performance, hosting, opcache, page cache
+Tags: cache, performance, hosting, opcache, page cache
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.4
 Stable tag: 1.1
 Requires PHP: 7.1 or higher
