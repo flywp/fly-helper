@@ -4,7 +4,7 @@ Tags: cache, helper, performance, hosting, opcache, page cache
 Requires at least: 5.0
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.0
+Stable tag: 1.1
 Requires PHP: 7.1 or higher
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -53,6 +53,10 @@ The plugin allows you to control and purge nginx caching and redis object cache,
 1. FlyWP settings page.
 
 == Changelog ==
+
+= v1.1 (24 May, 2024) =
+
+ * **Improved:** Magic login wasn't working when a site was migrated due to username mismatch. Now it'll work nevertheless.
 
 = v1.0 (06 February, 2024) =
 

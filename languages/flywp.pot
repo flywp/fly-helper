@@ -1,20 +1,21 @@
 # Copyright (c) 2024 FlyWP. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: FlyWP 1.0\n"
+"Project-Id-Version: FlyWP 1.1\n"
 "Report-Msgid-Bugs-To: https://github.com/flywp/flywp-helper/issues\n"
 "Last-Translator: support@flywp.com\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-02-06T13:21:16+00:00\n"
+"POT-Creation-Date: 2024-05-24T07:30:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.9.0\n"
+"X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: flywp\n"
 
 #. Plugin Name of the plugin
 #. Author of the plugin
+#: flywp.php
 #: includes/Admin.php:40
 #: includes/Admin.php:41
 #: includes/Admin/Adminbar.php:32
@@ -22,14 +23,17 @@ msgid "FlyWP"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: flywp.php
 msgid "https://flywp.com"
 msgstr ""
 
 #. Description of the plugin
+#: flywp.php
 msgid "Helper plugin for FlyWP"
 msgstr ""
 
 #. Author URI of the plugin
+#: flywp.php
 msgid "https://flywp.com/?utm_source=wporg&utm_medium=banner&utm_campaign=author-uri"
 msgstr ""
 
