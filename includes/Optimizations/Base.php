@@ -39,7 +39,9 @@ abstract class Base {
 
         foreach ( $this->features as $feature => $method ) {
             if ( $this->optimizations->feature_enabled( $feature, $this->group ) ) {
-                $this->$method();
+                if ( method_exists( $this, $method ) ) {
+                    $this->$method();
+                }
             }
         }
     }

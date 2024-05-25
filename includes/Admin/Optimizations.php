@@ -29,11 +29,11 @@ class Optimizations {
         }
 
         if ( ! wp_verify_nonce( $_POST['flywp-optimizations-nonce'], 'flywp-optimizations-settings' ) ) {
-            return;
+            wp_die( 'Error: Invalid nonce specified in request', 'Invalid Request', 403 );
         }
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            return;
+            wp_die( 'Error: You are not allowed to perform this action.', 'Unauthorized Access', 403 );
         }
 
         $options = [
