@@ -17,7 +17,7 @@ $settings = flywp()->email->settings();
         </div>
 
         <?php if ( isset( $_GET['message'] ) && $_GET['message'] === 'email-settings-saved' ) { ?>
-            <div class="fw-bg-green-200 fw-text-green-800 fw-px-4 fw-py-1" id="fly-page-cache-notice">
+            <div class="fw-bg-green-200 fw-text-green-800 fw-px-4 fw-py-1 fly-form-notice">
                 <p><?php esc_html_e( 'Email settings have been saved.', 'flywp' ); ?></p>
             </div>
         <?php } ?>
@@ -68,13 +68,13 @@ $settings = flywp()->email->settings();
         </div>
 
         <?php if ( isset( $_GET['message'] ) && $_GET['message'] === 'test-mail-sent' ) { ?>
-            <div class="fw-bg-green-200 fw-text-green-800 fw-px-4 fw-py-1" id="fly-page-cache-notice">
+            <div class="fw-bg-green-200 fw-text-green-800 fw-px-4 fw-py-1 fly-form-notice">
                 <p><?php esc_html_e( 'Test email has been sent.', 'flywp' ); ?></p>
             </div>
         <?php } ?>
 
         <?php if ( isset( $_GET['message'] ) && $_GET['message'] === 'test-mail-failed' ) { ?>
-            <div class="fw-bg-red-200 fw-text-red-800 fw-px-4 fw-py-1" id="fly-page-cache-notice">
+            <div class="fw-bg-red-200 fw-text-red-800 fw-px-4 fw-py-1 fly-form-notice">
                 <p><?php esc_html_e( 'Test email could not be sent.', 'flywp' ); ?></p>
             </div>
         <?php } ?>

@@ -44,7 +44,7 @@ class Opcache {
      * @return bool
      */
     public function enabled() {
-        if ( !$this->has_opcache() ) {
+        if ( ! $this->has_opcache() ) {
             return false;
         }
 
@@ -61,7 +61,7 @@ class Opcache {
     public function purge_cache_url() {
         return wp_nonce_url(
             add_query_arg(
-                ['flywp-action' => 'purge-opcache'],
+                [ 'flywp-action' => 'purge-opcache' ],
                 admin_url( 'index.php?page=flywp' ),
             ),
             'fly-opcache-purge'

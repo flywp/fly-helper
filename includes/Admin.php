@@ -30,6 +30,7 @@ class Admin {
         new Admin\Opcache();
         new Admin\Plugins();
         new Admin\Email();
+        new Admin\Optimizations();
     }
 
     /**
@@ -41,12 +42,12 @@ class Admin {
             __( 'FlyWP', 'flywp' ),
             'manage_options',
             self::PAGE_SLUG,
-            [$this, 'render_admin_page']
+            [ $this, 'render_admin_page' ]
         );
 
-        add_action( "admin_print_styles-{$hook}", [$this, 'enqueue_styles'] );
-        add_action( "admin_print_scripts-{$hook}", [$this, 'enqueue_js'] );
-        add_filter( 'removable_query_args', [$this, 'removable_query_args'] );
+        add_action( "admin_print_styles-{$hook}", [ $this, 'enqueue_styles' ] );
+        add_action( "admin_print_scripts-{$hook}", [ $this, 'enqueue_js' ] );
+        add_filter( 'removable_query_args', [ $this, 'removable_query_args' ] );
     }
 
     /**
@@ -86,7 +87,7 @@ class Admin {
     public function enqueue_js() {
         $min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-        wp_enqueue_script( 'flywp-admin-js', FLYWP_PLUGIN_URL . '/assets/js/admin' . $min . '.js', ['jquery'], FLYWP_VERSION, true );
+        wp_enqueue_script( 'flywp-admin-js', FLYWP_PLUGIN_URL . '/assets/js/admin' . $min . '.js', [ 'jquery' ], FLYWP_VERSION, true );
     }
 
     /**
@@ -94,8 +95,9 @@ class Admin {
      */
     public function render_admin_page() {
         $tabs = [
-            'cache' => __( 'Caching', 'flywp' ),
-            'email' => __( 'Email', 'flywp' ),
+            'cache'         => __( 'Caching', 'flywp' ),
+            'email'         => __( 'Email', 'flywp' ),
+            'optimizations' => __( 'Optimizations', 'flywp' ),
         ];
 
         $active_tab     = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? $_GET['tab'] : 'cache';

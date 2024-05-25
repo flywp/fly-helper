@@ -15,7 +15,7 @@
                 <?php foreach ( $tabs as $key => $label ) { ?>
                     <a href="<?php echo esc_url( add_query_arg( [
                         'tab' => $key,
-                    ], $this->page_url() ) ); ?>" class="fw-block fw-px-4 fw-py-3 fw-text-sm -m fw-text-gray-800 fw-no-underline fw-outline-none focus:fw-outline-none <?php echo $key == $active_tab ? 'fw-border-b-2 fw-border-indigo-500 fw-font-semibold' : ''; ?>"><?php echo $label; ?></a>
+                    ], $this->page_url() ) ); ?>" class="fw-block fw-px-4 fw-py-3 fw-text-sm -m fw-text-gray-800 fw-no-underline fw-outline-none focus:fw-outline-none <?php echo $key === $active_tab ? 'fw-border-b-2 fw-border-indigo-500 fw-font-semibold' : ''; ?>"><?php echo $label; ?></a>
                 <?php } ?>
             </div>
         </div>
@@ -23,6 +23,8 @@
 
     <div class="fw-max-w-xl fw-mx-auto fw-px-4 sm:fw-px-0">
         <?php
+        do_action( 'flywp_admin_tab_content', $active_tab );
+
         if ( $active_tab === 'cache' ) {
             require __DIR__ . '/page-cache.php';
             require __DIR__ . '/op-cache.php';

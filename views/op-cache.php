@@ -35,7 +35,7 @@ if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[$_GET['fly-notice']]
         </div>
 
         <?php if ( $notice ) { ?>
-            <div class="fw-bg-green-200 fw-text-green-800 fw-px-4 fw-py-1" id="fly-page-cache-notice">
+            <div class="fw-bg-green-200 fw-text-green-800 fw-px-4 fw-py-1 fly-form-notice">
                 <p><?php echo esc_html( $notice ); ?></p>
             </div>
         <?php } ?>

@@ -78,7 +78,10 @@ class MagicLogin {
 
         // if user not found, use the first admin
         if ( ! $user ) {
-            $admins = get_users( [ 'role' => 'administrator', 'mumber' => 1 ] );
+            $admins = get_users( [
+                'role'   => 'administrator',
+                'mumber' => 1,
+            ] );
 
             if ( ! $admins ) {
                 $this->redirect_to_home();

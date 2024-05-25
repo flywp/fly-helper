@@ -25,6 +25,10 @@
   margin-bottom: 0.25rem;
 }
 
+.fw-mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .fw-mb-4 {
   margin-bottom: 1rem;
 }
@@ -57,6 +61,14 @@
   margin-top: 1.25rem;
 }
 
+.fw-mb-3 {
+  margin-bottom: 0.75rem;
+}
+
+.fw-mr-3 {
+  margin-right: 0.75rem;
+}
+
 .fw-block {
   display: block;
 }
@@ -85,6 +97,14 @@
   width: 100%;
 }
 
+.fw-w-10 {
+  width: 2.5rem;
+}
+
+.fw-w-12 {
+  width: 3rem;
+}
+
 .fw-max-w-xl {
   max-width: 36rem;
 }
@@ -107,6 +127,12 @@
 
 .fw-gap-3 {
   gap: 0.75rem;
+}
+
+.fw-space-y-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(2rem * var(--tw-space-y-reverse));
 }
 
 .fw-rounded {
@@ -199,6 +225,10 @@
   padding: 1rem;
 }
 
+.fw-p-0 {
+  padding: 0px;
+}
+
 .fw-px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
@@ -242,6 +272,10 @@
   padding-top: 1rem;
 }
 
+.fw-pb-4 {
+  padding-bottom: 1rem;
+}
+
 .fw-text-center {
   text-align: center;
 }
@@ -265,6 +299,11 @@
   line-height: 1.25rem;
 }
 
+.fw-text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
 .fw-font-medium {
   font-weight: 500;
 }
@@ -285,6 +324,11 @@
 .fw-text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
+.fw-text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
 .fw-text-gray-700 {
