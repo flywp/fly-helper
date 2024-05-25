@@ -21,10 +21,12 @@
     $fcgiSettings.slideUp('fast');
   });
 
-  // Remove page cache notice after 2 seconds
-  if ($('#fly-page-cache-notice').length) {
+  // Remove form update notice after 2 seconds
+  if ($('.fly-form-notice').length) {
     setTimeout(function () {
-      $('#fly-page-cache-notice').fadeOut('slow');
+      $('.fly-form-notice').fadeOut('slow', function () {
+        $(this).remove();
+      });
     }, 2000);
   }
 

@@ -23,6 +23,8 @@
 
     <div class="fw-max-w-xl fw-mx-auto fw-px-4 sm:fw-px-0">
         <?php
+        do_action( 'flywp_admin_tab_content', $active_tab );
+
         if ( $active_tab === 'cache' ) {
             require __DIR__ . '/page-cache.php';
             require __DIR__ . '/op-cache.php';

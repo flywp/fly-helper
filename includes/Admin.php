@@ -30,6 +30,7 @@ class Admin {
         new Admin\Opcache();
         new Admin\Plugins();
         new Admin\Email();
+        new Admin\Optimizations();
     }
 
     /**
@@ -94,8 +95,9 @@ class Admin {
      */
     public function render_admin_page() {
         $tabs = [
-            'cache' => __( 'Caching', 'flywp' ),
-            'email' => __( 'Email', 'flywp' ),
+            'cache'         => __( 'Caching', 'flywp' ),
+            'email'         => __( 'Email', 'flywp' ),
+            'optimizations' => __( 'Optimizations', 'flywp' ),
         ];
 
         $active_tab     = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? $_GET['tab'] : 'cache';
