@@ -94,6 +94,10 @@ class Optimizations {
                         'label'       => __( 'Disable RSS Feed', 'flywp' ),
                         'description' => __( 'Disable the RSS and Atom feeds from the site.', 'flywp' ),
                     ],
+                    'xmlrpc' => [
+                        'label'       => __( 'Disable XML-RPC', 'flywp' ),
+                        'description' => __( 'Disable XML-RPC from the site.', 'flywp' ),
+                    ],
                 ],
             ],
             'admin' => [

@@ -39,7 +39,9 @@ class Optimizations {
      * @return bool
      */
     public function feature_enabled( $feature, $group ) {
-        return $this->get_option( $group, false ) && $this->get_option( $group )[ $feature ];
+        $value = $this->get_option( $group );
+
+        return $value[ $feature ] ?? false;
     }
 
     /**
@@ -72,6 +74,7 @@ class Optimizations {
                 'jquery_migrate' => true,
                 'clean_nav_menu' => true,
                 'rss_feed'       => false,
+                'xmlrpc'         => true,
             ],
             'admin' => [
                 'wp_logo'           => true,

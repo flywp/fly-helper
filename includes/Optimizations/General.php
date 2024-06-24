@@ -24,6 +24,7 @@ class General extends Base {
         'jquery_migrate'  => 'remove_jquery_migrate',
         'clean_nav_menu'  => 'clean_nav_menu',
         'rss_feed'        => 'remove_rss_feed',
+        'xmlrpc'          => 'remove_xmlrpc',
     ];
 
     /**
@@ -141,5 +142,14 @@ class General extends Base {
                 exit;
             }
         }, 1 );
+    }
+
+    /**
+     * Remove XML-RPC.
+     *
+     * @return void
+     */
+    public function remove_xmlrpc() {
+        add_filter( 'xmlrpc_enabled', '__return_false' );
     }
 }
