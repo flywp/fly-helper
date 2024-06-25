@@ -1,14 +1,14 @@
 # Copyright (c) 2024 FlyWP. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: FlyWP 1.1\n"
+"Project-Id-Version: FlyWP 1.2\n"
 "Report-Msgid-Bugs-To: https://github.com/flywp/flywp-helper/issues\n"
 "Last-Translator: support@flywp.com\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-24T07:30:23+00:00\n"
+"POT-Creation-Date: 2024-06-25T16:47:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: flywp\n"
@@ -16,8 +16,8 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: flywp.php
-#: includes/Admin.php:40
 #: includes/Admin.php:41
+#: includes/Admin.php:42
 #: includes/Admin/Adminbar.php:32
 msgid "FlyWP"
 msgstr ""
@@ -37,16 +37,20 @@ msgstr ""
 msgid "https://flywp.com/?utm_source=wporg&utm_medium=banner&utm_campaign=author-uri"
 msgstr ""
 
-#: flywp.php:119
+#: flywp.php:120
 msgid "Missing FlyWP API key, plugin requires an API key."
 msgstr ""
 
-#: includes/Admin.php:97
+#: includes/Admin.php:98
 msgid "Caching"
 msgstr ""
 
-#: includes/Admin.php:98
+#: includes/Admin.php:99
 msgid "Email"
+msgstr ""
+
+#: includes/Admin.php:100
+msgid "Optimizations"
 msgstr ""
 
 #: includes/Admin/Adminbar.php:44
@@ -77,6 +81,166 @@ msgstr ""
 
 #: includes/Admin/Opcache.php:31
 msgid "You do not have permission to purge the opcache."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:66
+msgid "General"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:67
+msgid "General optimizations."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:70
+msgid "Disable Emojis"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:71
+msgid "Remove extra JavaScript that adds support for emojis in older browsers. Native emoji's will still work."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:74
+msgid "Disable Embeds"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:75
+msgid "Prevent others from embedding your site."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:78
+msgid "Disable Self Pingbacks"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:79
+msgid "Disable self pingbacks from your own site."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:82
+msgid "Disable Comments"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:83
+msgid "Disable comments from the site."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:86
+msgid "Disable jQuery Migrate"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:87
+msgid "Disable jQuery Migrate from the site frontend and admin panel."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:90
+msgid "Clean Navigation Menu"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:91
+msgid "Remove unnecessary classes from the navigation menu."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:94
+msgid "Disable RSS Feed"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:95
+msgid "Disable the RSS and Atom feeds from the site."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:98
+msgid "Disable XML-RPC"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:99
+msgid "Disable XML-RPC from the site."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:104
+msgid "Admin"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:105
+msgid "Customize the WordPress admin area."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:108
+msgid "Remove WordPress Logo"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:109
+msgid "Remove the WordPress logo from the admin bar."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:112
+msgid "Show Login Logo"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:113
+msgid "Show the site logo on the login page."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:116
+msgid "Remove Dashboard Widgets"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:117
+msgid "Remove all default dashboard widgets from the WordPress admin."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:122
+msgid "Site Header"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:123
+msgid "Customize the site header."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:126
+msgid "Remove Feed Links"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:127
+msgid "Remove the RSS and Atom feed links from the site header."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:130
+msgid "Remove RSD Link"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:131
+msgid "Remove the RSD link from the site header."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:134
+msgid "Remove WP Version Number"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:135
+msgid "Remove the WordPress version from the site header. It helps improving the site security by not exposing your current WordPress version number."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:138
+msgid "Remove REST API Links"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:139
+msgid "Remove the REST API links from the site header."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:142
+msgid "Remove Shortlink"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:143
+msgid "Remove the shortlink tag from the site header."
+msgstr ""
+
+#: includes/Admin/Optimizations.php:146
+msgid "Remove oEmbed Discovery Links"
+msgstr ""
+
+#: includes/Admin/Optimizations.php:147
+msgid "Remove the oEmbed discovery links from the site header."
 msgstr ""
 
 #: includes/Fastcgi_Cache.php:96
@@ -169,11 +333,13 @@ msgid "PHP OPcache"
 msgstr ""
 
 #: views/op-cache.php:26
+#: views/optimizations.php:11
 #: views/page-cache.php:27
 msgid "Enabled"
 msgstr ""
 
 #: views/op-cache.php:32
+#: views/optimizations.php:17
 #: views/page-cache.php:33
 msgid "Disabled"
 msgstr ""
@@ -205,6 +371,22 @@ msgstr ""
 #: views/op-cache.php:78
 #: views/page-cache.php:51
 msgid "Clear Cache"
+msgstr ""
+
+#: views/optimizations.php:5
+msgid "WordPress Optimizations"
+msgstr ""
+
+#: views/optimizations.php:24
+msgid "Optimization settings have been saved."
+msgstr ""
+
+#: views/optimizations.php:42
+msgid "Enable or disable WordPress optimizations."
+msgstr ""
+
+#: views/optimizations.php:82
+msgid "Save Settings"
 msgstr ""
 
 #: views/page-cache.php:6
