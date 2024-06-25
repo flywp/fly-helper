@@ -25,11 +25,11 @@
             </div>
         <?php } ?>
 
-        <div class="fw-mt-2 fw-px-4 fw-py-4 fw-fw-sm:p-6 fw-text-sm fw-text-gray-500 fw-space-y-8">
+        <div class="fw-mt-2 fw-px-4 fw-py-4 fw-fw-sm:p-6 fw-text-sm fw-text-gray-500 fw-space-y-8" id="optimization-wrapper">
 
             <div class="fw-flex fw-gap-3 fw-mb-4">
-                <label for="enabled" class="fw-block fw-switch fw-mt-1">
-                    <input type="checkbox" id="enabled" name="enabled" class="fw-switch-input" <?php checked( flywp()->optimize->enabled() ); ?> />
+                <label for="enable-optimization" class="fw-block fw-switch fw-mt-1">
+                    <input type="checkbox" id="enable-optimization" name="enabled" class="fw-switch-input" <?php checked( flywp()->optimize->enabled() ); ?> />
                     <span class="fw-switch-toggle"></span>
                 </label>
 
@@ -44,8 +44,9 @@
                 </div>
             </div>  
 
+            <?php $show_class = flywp()->optimize->enabled() ? '' : 'style="display:none"'; ?>
             <?php foreach ( self::options() as $section => $data ) { ?>
-                <div class="">
+                <div class="section section-<?php echo esc_attr( $section ); ?>" <?php echo $show_class; ?>>
                     <div class="fw-border-b fw-border-gray-200 fw-mb-6 fw-pb-3">
                         <h3 class="fw-text-base fw-font-semibold fw-m-0"><?php echo esc_html( $data['title'] ); ?></h3>
                         <p class="fw-text-gray-600 fw-m-0"><?php echo esc_html( $data['description'] ); ?></p>

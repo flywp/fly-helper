@@ -30,4 +30,16 @@
     }, 2000);
   }
 
+  if ($('#optimization-wrapper').length) {
+    let sections = $('#optimization-wrapper .section');
+
+    $('input[id="enable-optimization"]').on('change', function () {
+      if ($(this).is(':checked')) {
+        sections.slideDown('fast');
+      } else {
+        sections.slideUp('fast');
+      }
+    });
+  }
+
 })(jQuery);
