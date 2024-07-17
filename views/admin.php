@@ -1,3 +1,8 @@
+<?php
+use FlyWP\Helper;
+
+?>
+
 <div class="flywp-settings" id="flywp-settings">
     <div class="fw-mb-8 fw-bg-white fw-border-b fw-border-solid fw-border-gray-200">
         <div class="fw-max-w-xl fw-mx-auto fw-px-4 sm:fw-px-0">
@@ -26,9 +31,9 @@
         do_action( 'flywp_admin_tab_content', $active_tab );
 
         if ( $active_tab === 'cache' ) {
-            if ( flywp()->is_nginx() ) {
+            if ( Helper::is_nginx() ) {
                 require __DIR__ . '/page-cache.php';
-            } elseif ( flywp()->litespeed->is_server() ) {
+            } elseif ( Helper::is_litespeed() ) {
                 require __DIR__ . '/litespeed.php';
             }
 

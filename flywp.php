@@ -109,7 +109,7 @@ final class FlyWP_Plugin {
         $this->flyapi    = new FlyWP\FlyApi();
         $this->email     = new FlyWP\Email();
         $this->optimize  = new FlyWP\Optimizations();
-        $this->litespeed = new FlyWP\LiteSpeed();
+        $this->litespeed = new FlyWP\Litespeed();
     }
 
     /**
@@ -139,33 +139,6 @@ final class FlyWP_Plugin {
      */
     public function get_key() {
         return FLYWP_API_KEY;
-    }
-
-    /**
-     * Check if server is running Nginx.
-     *
-     * @return bool
-     */
-    public function is_nginx() {
-        return isset( $_SERVER['SERVER_SOFTWARE'] ) && false !== strpos( $_SERVER['SERVER_SOFTWARE'], 'nginx' );
-    }
-
-    /**
-     * Debugging helper.
-     *
-     * @param mixed $value
-     * @param bool  $die
-     *
-     * @return void
-     */
-    public function debug( $value, $die = false ) {
-        echo '<pre>';
-        print_r( $value );
-        echo '</pre>';
-
-        if ( $die ) {
-            die();
-        }
     }
 }
 

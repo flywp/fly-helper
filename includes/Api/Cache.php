@@ -48,8 +48,6 @@ class Cache {
      * @return void
      */
     public function lscache_setting( $args ) {
-        print_r( $args );
-
         if ( ! isset( $args['status'] ) ) {
             wp_send_json_error(
                 [
@@ -60,7 +58,7 @@ class Cache {
 
         $status = isset( $args['status'] ) && $args['status'] === 'enabled' ? '1' : '0';
 
-        update_option( LiteSpeed::SETTINGS_KEY, $status );
+        update_option( LiteSpeed::OPTION_KEY, $status );
 
         wp_send_json_success(
             [

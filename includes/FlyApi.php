@@ -20,11 +20,12 @@ class FlyApi {
      *
      * @return array|false
      */
-    public function cache_toggle( $action = 'enable' ) {
+    public function cache_toggle( $action = 'enable', $type = 'fastcgi' ) {
         return $this->post(
             '/cache-toggle',
             [
                 'action' => $action,
+                'type'   => $type,
             ]
         );
     }

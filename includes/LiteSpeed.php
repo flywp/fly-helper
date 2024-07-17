@@ -2,19 +2,10 @@
 
 namespace FlyWP;
 
-class LiteSpeed {
+class Litespeed {
 
     public const PLUGIN_SLUG  = 'litespeed-cache/litespeed-cache.php';
-    public const SETTINGS_KEY = 'litespeed.conf.cache';
-
-    /**
-     * Check if server is running LiteSpeed.
-     *
-     * @return bool
-     */
-    public function is_server() {
-        return isset( $_SERVER['SERVER_SOFTWARE'] ) && false !== strpos( $_SERVER['SERVER_SOFTWARE'], 'LiteSpeed' );
-    }
+    public const OPTION_KEY   = 'litespeed.conf.cache';
 
     /**
      * Check if LiteSpeed Cache plugin is enabled.
@@ -25,6 +16,11 @@ class LiteSpeed {
         return is_plugin_active( self::PLUGIN_SLUG );
     }
 
+    /**
+     * Check if LiteSpeed Cache plugin is installed.
+     *
+     * @return bool
+     */
     public function is_plugin_installed() {
         if ( ! function_exists( 'get_plugins' ) ) {
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -41,7 +37,7 @@ class LiteSpeed {
      * @return bool
      */
     public function cache_enabled() {
-        return get_option( self::SETTINGS_KEY ) === '1';
+        return $this->is_plugin_active() && get_option( self::OPTION_KEY ) === '1';
     }
 
     /**
@@ -61,6 +57,11 @@ class LiteSpeed {
         );
     }
 
+    /**
+     * Get settings URL.
+     *
+     * @return array
+     */
     public function settings_url() {
         if ( $this->is_plugin_active() ) {
             return [

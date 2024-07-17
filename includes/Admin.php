@@ -7,16 +7,17 @@ class Admin {
     /**
      * Admin page slug.
      */
-    const PAGE_SLUG = 'flywp';
+    public const PAGE_SLUG = 'flywp';
 
     /**
      * Screen name.
      *
      * @var string
      */
-    const SCREEN_NAME = 'dashboard_page_flywp';
+    public const SCREEN_NAME = 'dashboard_page_flywp';
 
-    public $fastcgi = null;
+    public $fastcgi   = null;
+    public $litespeed = null;
 
     /**
      * Admin constructor.
@@ -24,7 +25,8 @@ class Admin {
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'register_admin_page' ] );
 
-        $this->fastcgi = new Admin\Fastcgi_Cache();
+        $this->fastcgi   = new Admin\Fastcgi_Cache();
+        $this->litespeed = new Admin\Litespeed();
 
         new Admin\Adminbar();
         new Admin\Opcache();
