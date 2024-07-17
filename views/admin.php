@@ -26,7 +26,12 @@
         do_action( 'flywp_admin_tab_content', $active_tab );
 
         if ( $active_tab === 'cache' ) {
-            require __DIR__ . '/page-cache.php';
+            if ( flywp()->is_nginx() ) {
+                require __DIR__ . '/page-cache.php';
+            } elseif ( flywp()->litespeed->is_server() ) {
+                require __DIR__ . '/litespeed.php';
+            }
+
             require __DIR__ . '/op-cache.php';
         } elseif ( $active_tab === 'email' ) {
             require __DIR__ . '/email.php';

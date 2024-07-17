@@ -13,7 +13,7 @@
 .browserlistrc
 .editorconfig
 .eslintrc
-.prettierrc.js
+.prettierrc
 composer.json
 composer.lock
 package.json
@@ -21,3 +21,5 @@ phpcs.xml
 README.md
 tailwind.config.js
 yarn.lock
+RELEASE.md
+.php-cs-fixer.dist.php

@@ -102,13 +102,14 @@ final class FlyWP_Plugin {
             $this->frontend = new FlyWP\Frontend();
         }
 
-        $this->router   = new FlyWP\Router();
-        $this->rest     = new FlyWP\Api();
-        $this->fastcgi  = new FlyWP\Fastcgi_Cache();
-        $this->opcache  = new FlyWP\Opcache();
-        $this->flyapi   = new FlyWP\FlyApi();
-        $this->email    = new FlyWP\Email();
-        $this->optimize = new FlyWP\Optimizations();
+        $this->router    = new FlyWP\Router();
+        $this->rest      = new FlyWP\Api();
+        $this->fastcgi   = new FlyWP\Fastcgi_Cache();
+        $this->opcache   = new FlyWP\Opcache();
+        $this->flyapi    = new FlyWP\FlyApi();
+        $this->email     = new FlyWP\Email();
+        $this->optimize  = new FlyWP\Optimizations();
+        $this->litespeed = new FlyWP\LiteSpeed();
     }
 
     /**
@@ -138,6 +139,15 @@ final class FlyWP_Plugin {
      */
     public function get_key() {
         return FLYWP_API_KEY;
+    }
+
+    /**
+     * Check if server is running Nginx.
+     *
+     * @return bool
+     */
+    public function is_nginx() {
+        return isset( $_SERVER['SERVER_SOFTWARE'] ) && false !== strpos( $_SERVER['SERVER_SOFTWARE'], 'nginx' );
     }
 
     /**
