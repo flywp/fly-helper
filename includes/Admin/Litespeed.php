@@ -47,7 +47,7 @@ class Litespeed {
             return;
         }
 
-        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( $_GET['_wpnonce'], 'flywp-litespeed-nonce' ) ) {
+        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'flywp-litespeed-nonce' ) ) {
             return;
         }
 
@@ -56,13 +56,13 @@ class Litespeed {
         }
 
         $valid_types = [ 'enable', 'disable' ];
-        $type        = isset( $_GET['type'] ) && in_array( $_GET['type'], $valid_types ) ? $_GET['type'] : 'enable';
+        $type        = isset( $_GET['type'] ) && in_array( wp_unslash( $_GET['type'] ), $valid_types, true ) ? wp_unslash( $_GET['type'] ) : 'enable';
         $status      = $type === 'enable' ? '1' : '0';
         $notice      = $type === 'enable' ? 'lscache-enabled' : 'lscache-disabled';
 
         update_option( FlyWPLiteSpeed::OPTION_KEY, $status );
 
-        flywp()->flyapi->cache_toggle( $type, 'litespeed' );
+        flywp()->flyapi->cache_toggle( $type, 'lscache' );
 
         wp_safe_redirect( admin_url( 'index.php?page=flywp&fly-notice=' . $notice ) );
         exit;
