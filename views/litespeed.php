@@ -7,8 +7,8 @@ $cache_messages = [
     'lscache-disabled' => __( 'Page Caching has been disabled.', 'flywp' ),
 ];
 
-if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[$_GET['fly-notice']] ) ) {
-    $notice = $cache_messages[$_GET['fly-notice']];
+if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice'] ] ) ) {
+    $notice = $cache_messages[ $_GET['fly-notice'] ];
 }
 ?>
 

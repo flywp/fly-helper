@@ -47,6 +47,7 @@ class Litespeed {
             return;
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'flywp-litespeed-nonce' ) ) {
             return;
         }
@@ -56,6 +57,8 @@ class Litespeed {
         }
 
         $valid_types = [ 'enable', 'disable' ];
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $type        = isset( $_GET['type'] ) && in_array( wp_unslash( $_GET['type'] ), $valid_types, true ) ? wp_unslash( $_GET['type'] ) : 'enable';
         $status      = $type === 'enable' ? '1' : '0';
         $notice      = $type === 'enable' ? 'lscache-enabled' : 'lscache-disabled';

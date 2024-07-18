@@ -8,8 +8,8 @@ $cache_messages = [
     'opcache-purged'   => __( 'PHP OPcache has been cleared.', 'flywp' ),
 ];
 
-if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[$_GET['fly-notice']] ) ) {
-    $notice = $cache_messages[$_GET['fly-notice']];
+if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice'] ] ) ) {
+    $notice = $cache_messages[ $_GET['fly-notice'] ];
 }
 ?>
 

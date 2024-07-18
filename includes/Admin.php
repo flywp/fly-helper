@@ -102,6 +102,7 @@ class Admin {
             'optimizations' => __( 'Optimizations', 'flywp' ),
         ];
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $active_tab     = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? $_GET['tab'] : 'cache';
         $site_info      = $this->fetch_site_info();
         $app_site_url   = $this->get_site_url( $site_info );
