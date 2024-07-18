@@ -102,13 +102,14 @@ final class FlyWP_Plugin {
             $this->frontend = new FlyWP\Frontend();
         }
 
-        $this->router   = new FlyWP\Router();
-        $this->rest     = new FlyWP\Api();
-        $this->fastcgi  = new FlyWP\Fastcgi_Cache();
-        $this->opcache  = new FlyWP\Opcache();
-        $this->flyapi   = new FlyWP\FlyApi();
-        $this->email    = new FlyWP\Email();
-        $this->optimize = new FlyWP\Optimizations();
+        $this->router    = new FlyWP\Router();
+        $this->rest      = new FlyWP\Api();
+        $this->fastcgi   = new FlyWP\Fastcgi_Cache();
+        $this->opcache   = new FlyWP\Opcache();
+        $this->flyapi    = new FlyWP\FlyApi();
+        $this->email     = new FlyWP\Email();
+        $this->optimize  = new FlyWP\Optimizations();
+        $this->litespeed = new FlyWP\Litespeed();
     }
 
     /**
@@ -138,24 +139,6 @@ final class FlyWP_Plugin {
      */
     public function get_key() {
         return FLYWP_API_KEY;
-    }
-
-    /**
-     * Debugging helper.
-     *
-     * @param mixed $value
-     * @param bool  $die
-     *
-     * @return void
-     */
-    public function debug( $value, $die = false ) {
-        echo '<pre>';
-        print_r( $value );
-        echo '</pre>';
-
-        if ( $die ) {
-            die();
-        }
     }
 }
 

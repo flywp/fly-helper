@@ -25,7 +25,7 @@ class Api {
         new Api\Plugins();
         new Api\Themes();
         new Api\Updates();
-        new Api\Fastcgi_Cache();
+        new Api\Cache();
         new Api\Health();
     }
 
@@ -52,7 +52,7 @@ class Api {
             return false;
         }
 
-        $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
+        $auth_header = wp_unslash( $_SERVER['HTTP_AUTHORIZATION'] );
 
         if ( ! preg_match( '/Bearer\s(\S+)/', $auth_header, $matches ) ) {
             return false;
