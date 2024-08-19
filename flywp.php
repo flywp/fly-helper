@@ -60,7 +60,7 @@ final class FlyWP_Plugin {
 
         $this->add_action( 'plugins_loaded', 'init_plugin' );
         register_activation_hook( __FILE__, [ $this, 'activate' ] );
-        register_deactivation_hook(__FILE__, [ $this, 'deactivate']);
+        register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
     }
 
     /**
@@ -102,7 +102,7 @@ final class FlyWP_Plugin {
      * @return void
      */
     public function deactivate() {
-        (new FlyWP\Api\UpdatesData())->deactivate();
+        ( new FlyWP\Api\UpdatesData() )->deactivate();
     }
 
     /**

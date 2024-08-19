@@ -53,7 +53,7 @@ class Api {
             return false;
         }
 
-        $auth_header = wp_unslash( $_SERVER['HTTP_AUTHORIZATION'] );
+        $auth_header = sanitize_text_field( wp_unslash( $_SERVER['HTTP_AUTHORIZATION'] ) );
 
         if ( ! preg_match( '/Bearer\s(\S+)/', $auth_header, $matches ) ) {
             return false;

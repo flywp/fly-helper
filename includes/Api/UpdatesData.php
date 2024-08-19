@@ -10,11 +10,11 @@ class UpdatesData {
         flywp()->router->get( 'updates-data', [ $this, 'respond' ] );
 
         // Register the cron event
-        add_action('flywp_send_updates_data', [$this, 'send_updates_data_to_api']);
+        add_action( 'flywp_send_updates_data', [ $this, 'send_updates_data_to_api' ] );
 
         // Schedule the cron event if not already scheduled
-        if (!wp_next_scheduled('flywp_send_updates_data')) {
-            wp_schedule_event(time(), 'twicedaily', 'flywp_send_updates_data');
+        if ( ! wp_next_scheduled( 'flywp_send_updates_data' ) ) {
+            wp_schedule_event( time(), 'twicedaily', 'flywp_send_updates_data' );
         }
     }
 
