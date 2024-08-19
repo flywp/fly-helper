@@ -27,6 +27,7 @@ class Api {
         new Api\Updates();
         new Api\Cache();
         new Api\Health();
+        new Api\UpdatesData();
     }
 
     /**

@@ -44,6 +44,13 @@ final class FlyWP_Plugin {
     public $version = '1.3.1';
 
     /**
+     * API Endpoint.
+     *
+     * @var string
+     */
+    public $api_endpoint = 'https://app.flywp.com/api/site-api';
+
+    /**
      * Plugin Constructor.
      *
      * @return void
@@ -53,6 +60,7 @@ final class FlyWP_Plugin {
 
         $this->add_action( 'plugins_loaded', 'init_plugin' );
         register_activation_hook( __FILE__, [ $this, 'activate' ] );
+        register_deactivation_hook(__FILE__, [ $this, 'deactivate']);
     }
 
     /**
@@ -66,6 +74,10 @@ final class FlyWP_Plugin {
         define( 'FLYWP_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
         define( 'FLYWP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         define( 'FLYWP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+        if ( ! defined( 'FLYWP_API_ENDPOINT' ) ) {
+            define( 'FLYWP_API_ENDPOINT', $this->api_endpoint );
+        }
 
         if ( ! defined( 'FLYWP_API_KEY' ) ) {
             define( 'FLYWP_API_KEY', '' );
@@ -82,6 +94,15 @@ final class FlyWP_Plugin {
         $router->register_routes();
 
         flush_rewrite_rules( false );
+    }
+
+    /**
+     * Plugin activation hook.
+     *
+     * @return void
+     */
+    public function deactivate() {
+        (new FlyWP\Api\UpdatesData())->deactivate();
     }
 
     /**
@@ -102,14 +123,15 @@ final class FlyWP_Plugin {
             $this->frontend = new FlyWP\Frontend();
         }
 
-        $this->router    = new FlyWP\Router();
-        $this->rest      = new FlyWP\Api();
-        $this->fastcgi   = new FlyWP\Fastcgi_Cache();
-        $this->opcache   = new FlyWP\Opcache();
-        $this->flyapi    = new FlyWP\FlyApi();
-        $this->email     = new FlyWP\Email();
-        $this->optimize  = new FlyWP\Optimizations();
-        $this->litespeed = new FlyWP\Litespeed();
+        $this->router       = new FlyWP\Router();
+        $this->rest         = new FlyWP\Api();
+        $this->fastcgi      = new FlyWP\Fastcgi_Cache();
+        $this->opcache      = new FlyWP\Opcache();
+        $this->flyapi       = new FlyWP\FlyApi();
+        $this->email        = new FlyWP\Email();
+        $this->optimize     = new FlyWP\Optimizations();
+        $this->litespeed    = new FlyWP\Litespeed();
+        $this->updates_data = new FlyWP\Api\UpdatesData();
     }
 
     /**
