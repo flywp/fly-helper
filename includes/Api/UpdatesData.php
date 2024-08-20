@@ -3,47 +3,60 @@
 namespace FlyWP\Api;
 
 class UpdatesData {
+    private const CRON_HOOK = 'flywp_send_updates_data';
+    private const CRON_INTERVAL = 'twicedaily';
+
     /**
      * UpdatesData constructor.
      */
     public function __construct() {
-        flywp()->router->get( 'updates-data', [ $this, 'respond' ] );
+        $this->initializeRoutes();
+        $this->initializeCronJob();
+    }
 
-        // Register the cron event
-        add_action( 'flywp_send_updates_data', [ $this, 'send_updates_data_to_api' ] );
+    /**
+     * Initialize API routes.
+     */
+    private function initializeRoutes(): void {
+        flywp()->router->get( 'updates-data', [ $this, 'handleApiRequest' ] );
+    }
 
-        // Schedule the cron event if not already scheduled
-        if ( ! wp_next_scheduled( 'flywp_send_updates_data' ) ) {
-            wp_schedule_event( time(), 'twicedaily', 'flywp_send_updates_data' );
+    /**
+     * Initialize cron job for sending updates data.
+     */
+    private function initializeCronJob(): void {
+        add_action( self::CRON_HOOK, [ $this, 'sendUpdatesDataToApi' ] );
+
+        if ( ! wp_next_scheduled( self::CRON_HOOK ) ) {
+            wp_schedule_event( time(), self::CRON_INTERVAL, self::CRON_HOOK );
         }
     }
 
     /**
      * Send updates data to the remote API.
-     *
-     * @return void
      */
-    public function send_updates_data_to_api() {
-        $updates_data = [
-            'wp_version' => get_bloginfo( 'version' ),
-            'updates'    => $this->get_formatted_updates_data(),
-        ];
-
-        flywp()->flyapi->post( '/updates-data', $updates_data );
+    public function sendUpdatesDataToApi(): void {
+        $updatesData = $this->getUpdatesData();
+        flywp()->flyapi->post( '/updates-data', $updatesData );
     }
 
     /**
-     * Handle the request.
-     *
-     * @return void
+     * Handle the API request.
      */
-    public function respond() {
-        $response = [
-            'wp_version' => get_bloginfo( 'version' ),
-            'updates'    => $this->get_formatted_updates_data(),
-        ];
+    public function handleApiRequest(): void {
+        wp_send_json( $this->getUpdatesData() );
+    }
 
-        wp_send_json( $response );
+    /**
+     * Get updates data.
+     *
+     * @return array
+     */
+    private function getUpdatesData(): array {
+        return [
+            'wp_version' => get_bloginfo( 'version' ),
+            'updates'    => $this->getFormattedUpdatesData(),
+        ];
     }
 
     /**
@@ -51,11 +64,11 @@ class UpdatesData {
      *
      * @return array
      */
-    private function get_formatted_updates_data() {
+    private function getFormattedUpdatesData(): array {
         return [
-            'core'    => $this->get_formatted_core_updates(),
-            'plugins' => $this->get_formatted_plugin_updates(),
-            'themes'  => $this->get_formatted_theme_updates(),
+            'core'    => $this->getFormattedCoreUpdates(),
+            'plugins' => $this->getFormattedPluginUpdates(),
+            'themes'  => $this->getFormattedThemeUpdates(),
         ];
     }
 
@@ -64,16 +77,16 @@ class UpdatesData {
      *
      * @return array
      */
-    private function get_formatted_core_updates() {
-        $core_data = $this->core_updates();
+    private function getFormattedCoreUpdates(): array {
+        $coreData = $this->getCoreUpdates();
 
-        if ( ! $core_data['update_available'] ) {
+        if ( ! $coreData['update_available'] ) {
             return [];
         }
 
         return [
-            'installed_version' => $core_data['version'],
-            'latest_version'    => $core_data['new_version'],
+            'installed_version' => $coreData['version'],
+            'latest_version'    => $coreData['new_version'],
         ];
     }
 
@@ -82,48 +95,22 @@ class UpdatesData {
      *
      * @return array
      */
-    private function get_formatted_plugin_updates() {
-        if ( ! function_exists( 'get_plugins' ) ) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
-        if ( ! function_exists( 'get_plugin_updates' ) ) {
-            require_once ABSPATH . 'wp-admin/includes/update.php';
-        }
+    private function getFormattedPluginUpdates(): array {
+        $this->loadRequiredFiles();
 
-        $all_plugins    = get_plugins();
-        $plugin_updates = get_plugin_updates();
+        $allPlugins    = get_plugins();
+        $pluginUpdates = get_plugin_updates();
 
-        $formatted_plugins = [];
+        $formattedPlugins = [];
 
-        foreach ( $plugin_updates as $plugin_file => $plugin_data ) {
-            $plugin_info = $all_plugins[ $plugin_file ];
-            $slug        = dirname( $plugin_file );
+        foreach ( $pluginUpdates as $pluginFile => $pluginData ) {
+            $pluginInfo = $allPlugins[ $pluginFile ];
+            $slug       = dirname( $pluginFile );
 
-            $plugin_info = [
-                'slug'              => $slug,
-                'name'              => $plugin_info['Name'],
-                'installed_version' => $plugin_info['Version'],
-                'latest_version'    => $plugin_data->update->new_version,
-                'is_active'         => is_plugin_active( $plugin_file ),
-            ];
-
-            $extra = [
-                'url'         => $plugin_info['PluginURI'] ?? '',
-                'author'      => $plugin_info['Author'] ?? '',
-                'file'        => $plugin_file,
-                'textdomain'  => $plugin_info['TextDomain'] ?? '',
-                'description' => $plugin_info['Description'] ?? '',
-                'php'         => $plugin_info['RequiresPHP'] ?? '',
-            ];
-
-            if ( ! empty( array_filter( $extra ) ) ) {
-                $plugin_info['extra'] = array_filter( $extra );
-            }
-
-            $formatted_plugins[] = $plugin_info;
+            $formattedPlugins[] = $this->formatPluginData( $pluginInfo, $pluginData, $pluginFile, $slug );
         }
 
-        return $formatted_plugins;
+        return $formattedPlugins;
     }
 
     /**
@@ -131,34 +118,17 @@ class UpdatesData {
      *
      * @return array
      */
-    private function get_formatted_theme_updates() {
-        $theme_updates = get_theme_updates();
+    private function getFormattedThemeUpdates(): array {
+        $themeUpdates = get_theme_updates();
 
-        $formatted_themes = [];
+        $formattedThemes = [];
 
-        foreach ( $theme_updates as $theme_slug => $theme_data ) {
-            $theme = wp_get_theme( $theme_slug );
-
-            $theme_info = [
-                'slug'              => $theme_slug,
-                'name'              => $theme->get( 'Name' ),
-                'installed_version' => $theme->get( 'Version' ),
-                'latest_version'    => $theme_data->update['new_version'],
-                'is_active'         => ( get_stylesheet() === $theme_slug ),
-            ];
-
-            $extra = [
-                'url' => $theme->get( 'ThemeURI' ),
-            ];
-
-            if ( ! empty( array_filter( $extra ) ) ) {
-                $theme_info['extra'] = array_filter( $extra );
-            }
-
-            $formatted_themes[] = $theme_info;
+        foreach ( $themeUpdates as $themeSlug => $themeData ) {
+            $theme             = wp_get_theme( $themeSlug );
+            $formattedThemes[] = $this->formatThemeData( $theme, $themeData, $themeSlug );
         }
 
-        return $formatted_themes;
+        return $formattedThemes;
     }
 
     /**
@@ -166,12 +136,10 @@ class UpdatesData {
      *
      * @return array
      */
-    private function core_updates() {
+    private function getCoreUpdates(): array {
         $current = get_bloginfo( 'version' );
 
-        if ( ! function_exists( 'get_preferred_from_update_core' ) ) {
-            require_once ABSPATH . 'wp-admin/includes/update.php';
-        }
+        $this->loadRequiredFiles();
 
         $update = get_preferred_from_update_core();
 
@@ -181,7 +149,7 @@ class UpdatesData {
             'new_version'      => null,
         ];
 
-        if ( ! isset( $update->response ) || 'upgrade' !== $update->response ) {
+        if ( ! isset( $update->response ) || $update->response !== 'upgrade' ) {
             return $response;
         }
 
@@ -192,12 +160,88 @@ class UpdatesData {
     }
 
     /**
+     * Format plugin data.
+     *
+     * @param array $pluginInfo
+     * @param object $pluginData
+     * @param string $pluginFile
+     * @param string $slug
+     *
+     * @return array
+     */
+    private function formatPluginData( array $pluginInfo, object $pluginData, string $pluginFile, string $slug ): array {
+        $formattedPlugin = [
+            'slug'              => $slug,
+            'name'              => $pluginInfo['Name'],
+            'installed_version' => $pluginInfo['Version'],
+            'latest_version'    => $pluginData->update->new_version,
+            'is_active'         => is_plugin_active( $pluginFile ),
+        ];
+
+        $extra = [
+            'url'         => $pluginInfo['PluginURI'] ?? '',
+            'author'      => $pluginInfo['Author'] ?? '',
+            'file'        => $pluginFile,
+            'textdomain'  => $pluginInfo['TextDomain'] ?? '',
+            'description' => $pluginInfo['Description'] ?? '',
+            'php'         => $pluginInfo['RequiresPHP'] ?? '',
+        ];
+
+        if ( ! empty( array_filter( $extra ) ) ) {
+            $formattedPlugin['extra'] = array_filter( $extra );
+        }
+
+        return $formattedPlugin;
+    }
+
+    /**
+     * Format theme data.
+     *
+     * @param \WP_Theme $theme
+     * @param object $themeData
+     * @param string $themeSlug
+     *
+     * @return array
+     */
+    private function formatThemeData( \WP_Theme $theme, object $themeData, string $themeSlug ): array {
+        $formattedTheme = [
+            'slug'              => $themeSlug,
+            'name'              => $theme->get( 'Name' ),
+            'installed_version' => $theme->get( 'Version' ),
+            'latest_version'    => $themeData->update['new_version'],
+            'is_active'         => ( get_stylesheet() === $themeSlug ),
+        ];
+
+        $extra = [
+            'url' => $theme->get( 'ThemeURI' ),
+        ];
+
+        if ( ! empty( array_filter( $extra ) ) ) {
+            $formattedTheme['extra'] = array_filter( $extra );
+        }
+
+        return $formattedTheme;
+    }
+
+    /**
+     * Load required WordPress files.
+     */
+    private function loadRequiredFiles(): void {
+        if ( ! function_exists( 'get_plugins' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+        if ( ! function_exists( 'get_plugin_updates' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/update.php';
+        }
+    }
+
+    /**
      * Deactivate the scheduler when the plugin is deactivated.
      */
-    public function deactivate() {
-        $timestamp = wp_next_scheduled( 'flywp_send_updates_data' );
+    public function deactivate(): void {
+        $timestamp = wp_next_scheduled( self::CRON_HOOK );
         if ( $timestamp ) {
-            wp_unschedule_event( $timestamp, 'flywp_send_updates_data' );
+            wp_unschedule_event( $timestamp, self::CRON_HOOK );
         }
     }
 }
