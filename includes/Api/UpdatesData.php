@@ -25,7 +25,8 @@ class UpdatesData {
      */
     public function send_updates_data_to_api() {
         $updates_data = [
-            'updates' => $this->get_formatted_updates_data(),
+            'wp_version' => get_bloginfo( 'version' ),
+            'updates'    => $this->get_formatted_updates_data(),
         ];
 
         flywp()->flyapi->post( '/updates-data', $updates_data );
@@ -38,7 +39,8 @@ class UpdatesData {
      */
     public function respond() {
         $response = [
-            'updates' => $this->get_formatted_updates_data(),
+            'wp_version' => get_bloginfo( 'version' ),
+            'updates'    => $this->get_formatted_updates_data(),
         ];
 
         wp_send_json( $response );
@@ -65,9 +67,13 @@ class UpdatesData {
     private function get_formatted_core_updates() {
         $core_data = $this->core_updates();
 
+        if ( ! $core_data['update_available'] ) {
+            return [];
+        }
+
         return [
             'installed_version' => $core_data['version'],
-            'latest_version'    => $core_data['update_available'] ? $core_data['new_version'] : $core_data['version'],
+            'latest_version'    => $core_data['new_version'],
         ];
     }
 
@@ -89,25 +95,25 @@ class UpdatesData {
 
         $formatted_plugins = [];
 
-        foreach ( $all_plugins as $plugin_file => $plugin_data ) {
-            $slug                = dirname( $plugin_file );
-            $is_update_available = isset( $plugin_updates[ $plugin_file ] );
+        foreach ( $plugin_updates as $plugin_file => $plugin_data ) {
+            $plugin_info = $all_plugins[ $plugin_file ];
+            $slug        = dirname( $plugin_file );
 
             $plugin_info = [
                 'slug'              => $slug,
-                'name'              => $plugin_data['Name'],
-                'installed_version' => $plugin_data['Version'],
-                'latest_version'    => $is_update_available ? $plugin_updates[ $plugin_file ]->update->new_version : $plugin_data['Version'],
+                'name'              => $plugin_info['Name'],
+                'installed_version' => $plugin_info['Version'],
+                'latest_version'    => $plugin_data->update->new_version,
                 'is_active'         => is_plugin_active( $plugin_file ),
             ];
 
             $extra = [
-                'url'         => $plugin_data['PluginURI'] ?? '',
-                'author'      => $plugin_data['Author'] ?? '',
+                'url'         => $plugin_info['PluginURI'] ?? '',
+                'author'      => $plugin_info['Author'] ?? '',
                 'file'        => $plugin_file,
-                'textdomain'  => $plugin_data['TextDomain'] ?? '',
-                'description' => $plugin_data['Description'] ?? '',
-                'php'         => $plugin_data['RequiresPHP'] ?? '',
+                'textdomain'  => $plugin_info['TextDomain'] ?? '',
+                'description' => $plugin_info['Description'] ?? '',
+                'php'         => $plugin_info['RequiresPHP'] ?? '',
             ];
 
             if ( ! empty( array_filter( $extra ) ) ) {
@@ -126,19 +132,18 @@ class UpdatesData {
      * @return array
      */
     private function get_formatted_theme_updates() {
-        $all_themes    = wp_get_themes();
         $theme_updates = get_theme_updates();
 
         $formatted_themes = [];
 
-        foreach ( $all_themes as $theme_slug => $theme ) {
-            $is_update_available = isset( $theme_updates[ $theme_slug ] );
+        foreach ( $theme_updates as $theme_slug => $theme_data ) {
+            $theme = wp_get_theme( $theme_slug );
 
             $theme_info = [
                 'slug'              => $theme_slug,
                 'name'              => $theme->get( 'Name' ),
                 'installed_version' => $theme->get( 'Version' ),
-                'latest_version'    => $is_update_available ? $theme_updates[ $theme_slug ]->update['new_version'] : $theme->get( 'Version' ),
+                'latest_version'    => $theme_data->update['new_version'],
                 'is_active'         => ( get_stylesheet() === $theme_slug ),
             ];
 
