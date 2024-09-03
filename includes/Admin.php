@@ -145,8 +145,7 @@ class Admin {
         }
 
         return sprintf(
-            'https://app.flywp.com/servers/%d/sites/%d',
-            $info['server_id'],
+            'https://app.flywp.com/site/%d',
             $info['id']
         );
     }
