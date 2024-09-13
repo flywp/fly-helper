@@ -44,13 +44,6 @@ final class FlyWP_Plugin {
     public $version = '1.3.1';
 
     /**
-     * API Endpoint.
-     *
-     * @var string
-     */
-    public $api_endpoint = 'https://app.flywp.com/api/site-api';
-
-    /**
      * Plugin Constructor.
      *
      * @return void
@@ -74,10 +67,6 @@ final class FlyWP_Plugin {
         define( 'FLYWP_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
         define( 'FLYWP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
         define( 'FLYWP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-
-        if ( ! defined( 'FLYWP_API_ENDPOINT' ) ) {
-            define( 'FLYWP_API_ENDPOINT', $this->api_endpoint );
-        }
 
         if ( ! defined( 'FLYWP_API_KEY' ) ) {
             define( 'FLYWP_API_KEY', '' );

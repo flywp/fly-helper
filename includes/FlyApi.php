@@ -36,7 +36,7 @@ class FlyApi {
      * @return string
      */
     protected function get_endpoint() {
-        return apply_filters( 'flywp_api_endpoint', FLYWP_API_ENDPOINT );
+        return apply_filters( 'flywp_api_endpoint', 'https://app.flywp.com/api/site-api' );
     }
 
     /**
