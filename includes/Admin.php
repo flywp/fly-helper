@@ -16,7 +16,7 @@ class Admin {
      */
     public const SCREEN_NAME = 'dashboard_page_flywp';
 
-    public $fastcgi   = null;
+    public $fastcgi = null;
     public $litespeed = null;
 
     /**
@@ -103,9 +103,10 @@ class Admin {
         ];
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $active_tab     = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? $_GET['tab'] : 'cache';
-        $site_info      = $this->fetch_site_info();
-        $app_site_url   = $this->get_site_url( $site_info );
+        $tab          = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+        $active_tab   = array_key_exists( $tab, $tabs ) ? $tab : 'cache';
+        $site_info    = $this->fetch_site_info();
+        $app_site_url = $this->get_site_url( $site_info );
 
         include FLYWP_PLUGIN_DIR . '/views/admin.php';
     }
@@ -145,8 +146,7 @@ class Admin {
         }
 
         return sprintf(
-            'https://app.flywp.com/servers/%d/sites/%d',
-            $info['server_id'],
+            'https://app.flywp.com/site/%d',
             $info['id']
         );
     }
