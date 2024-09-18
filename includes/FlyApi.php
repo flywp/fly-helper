@@ -73,7 +73,7 @@ class FlyApi {
      * Send a POST request to the API.
      *
      * @param string $path
-     * @param array  $data
+     * @param array $data
      *
      * @return array|false
      */
@@ -86,11 +86,13 @@ class FlyApi {
                 'headers' => [
                     'Authorization' => 'Bearer ' . flywp()->get_key(),
                 ],
-                'body' => $data,
+                'body'    => $data,
             ]
         );
 
         if ( is_wp_error( $response ) ) {
+            error_log( print_r( $response, true ) );
+
             return false;
         }
 

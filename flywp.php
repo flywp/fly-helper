@@ -53,6 +53,7 @@ final class FlyWP_Plugin {
 
         $this->add_action( 'plugins_loaded', 'init_plugin' );
         register_activation_hook( __FILE__, [ $this, 'activate' ] );
+        register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
     }
 
     /**
@@ -85,6 +86,15 @@ final class FlyWP_Plugin {
     }
 
     /**
+     * Plugin activation hook.
+     *
+     * @return void
+     */
+    public function deactivate() {
+        ( new FlyWP\Api\UpdatesData() )->deactivate();
+    }
+
+    /**
      * Initialize plugin.
      *
      * @return void
@@ -102,14 +112,15 @@ final class FlyWP_Plugin {
             $this->frontend = new FlyWP\Frontend();
         }
 
-        $this->router    = new FlyWP\Router();
-        $this->rest      = new FlyWP\Api();
-        $this->fastcgi   = new FlyWP\Fastcgi_Cache();
-        $this->opcache   = new FlyWP\Opcache();
-        $this->flyapi    = new FlyWP\FlyApi();
-        $this->email     = new FlyWP\Email();
-        $this->optimize  = new FlyWP\Optimizations();
-        $this->litespeed = new FlyWP\Litespeed();
+        $this->router       = new FlyWP\Router();
+        $this->rest         = new FlyWP\Api();
+        $this->fastcgi      = new FlyWP\Fastcgi_Cache();
+        $this->opcache      = new FlyWP\Opcache();
+        $this->flyapi       = new FlyWP\FlyApi();
+        $this->email        = new FlyWP\Email();
+        $this->optimize     = new FlyWP\Optimizations();
+        $this->litespeed    = new FlyWP\Litespeed();
+        $this->updates_data = new FlyWP\Api\UpdatesData();
     }
 
     /**
