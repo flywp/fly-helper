@@ -9,7 +9,7 @@ Requires PHP: 7.1 or higher
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Easily manage and communicate with your FlyWP cloud servers, control server-level caching, purge nginx caching, and purge Redis object cache, optimize pagespeed for your WordPress sites.
+Optimize WordPress performance with server-level caching, Redis purging, and page speed tools for FlyWP-powered cloud servers.
 
 == Description ==
 
