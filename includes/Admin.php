@@ -120,7 +120,7 @@ class Admin {
         $transient_key = 'flywp_site_info';
         $site_info     = get_transient( $transient_key );
 
-        if ( false === $site_info ) {
+        if ( ! $site_info ) {
             $site_info = flywp()->flyapi->site_info();
 
             if ( isset( $site_info['error'] ) ) {
@@ -141,7 +141,7 @@ class Admin {
      * @return string
      */
     private function get_site_url( $info ) {
-        if ( false === $info ) {
+        if ( ! $info ) {
             return 'https://app.flywp.com';
         }
 
