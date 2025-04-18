@@ -86,7 +86,7 @@ final class FlyWP_Plugin {
     }
 
     /**
-     * Plugin activation hook.
+     * Plugin deactivation hook.
      *
      * @return void
      */
