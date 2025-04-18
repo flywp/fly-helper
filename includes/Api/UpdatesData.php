@@ -2,11 +2,9 @@
 
 namespace FlyWP\Api;
 
-use WP_Error;
-
 class UpdatesData {
-    private const CRON_HOOK = 'flywp_send_updates_data';
-    private const CRON_INTERVAL = 'twicedaily';
+    public const CRON_HOOK = 'flywp_send_updates_data';
+    public const CRON_INTERVAL = 'twicedaily';
 
     /**
      * UpdatesData constructor.
@@ -234,16 +232,6 @@ class UpdatesData {
         }
         if ( ! function_exists( 'get_plugin_updates' ) ) {
             require_once ABSPATH . 'wp-admin/includes/update.php';
-        }
-    }
-
-    /**
-     * Deactivate the scheduler when the plugin is deactivated.
-     */
-    public function deactivate(): void {
-        $timestamp = wp_next_scheduled( self::CRON_HOOK );
-        if ( $timestamp ) {
-            wp_unschedule_event( $timestamp, self::CRON_HOOK );
         }
     }
 }
