@@ -91,7 +91,9 @@ final class FlyWP_Plugin {
      * @return void
      */
     public function deactivate() {
-        if ( $timestamp = wp_next_scheduled( FlyWP\Api\UpdatesData::CRON_HOOK ) ) {
+        $timestamp = wp_next_scheduled( FlyWP\Api\UpdatesData::CRON_HOOK );
+    
+        if ( $timestamp ) {
             wp_unschedule_event( $timestamp, FlyWP\Api\UpdatesData::CRON_HOOK );
         }
     }
