@@ -86,12 +86,15 @@ final class FlyWP_Plugin {
     }
 
     /**
-     * Plugin activation hook.
+     * Plugin deactivation hook.
      *
      * @return void
      */
     public function deactivate() {
-        ( new FlyWP\Api\UpdatesData() )->deactivate();
+        $timestamp = wp_next_scheduled( FlyWP\Api\UpdatesData::CRON_HOOK );
+        if ( $timestamp ) {
+            wp_unschedule_event( $timestamp, FlyWP\Api\UpdatesData::CRON_HOOK );
+        }
     }
 
     /**
