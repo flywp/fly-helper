@@ -120,9 +120,9 @@ class Fastcgi_Cache {
     public function purge_cache_by_url( $url ) {
         $parsed = wp_parse_url( $url );
         $path   = isset( $parsed['path'] ) ? $parsed['path'] : '';
-        
+
         // Ensure path ends with trailing slash
-        if (substr($path, -1) !== '/') {
+        if ( substr( $path, -1 ) !== '/' ) {
             $path .= '/';
         }
 
