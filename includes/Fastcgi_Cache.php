@@ -121,6 +121,11 @@ class Fastcgi_Cache {
         $parsed = wp_parse_url( $url );
         $path   = isset( $parsed['path'] ) ? $parsed['path'] : '';
 
+        // Ensure path ends with trailing slash
+        if ( substr( $path, -1 ) !== '/' ) {
+            $path .= '/';
+        }
+
         // cache key format (without space): $protocal $method $host $path
         // because of nginx-proxy, all request will be http, so we don't need to check protocal
         // $method is always GET as we only cache GET request
