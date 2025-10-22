@@ -60,13 +60,13 @@ So I can = Expected Outcome
 **T = Testable**—With clear acceptance criteria, both the happy path and error conditions can be tested.
 
 
-## Requirements & Goals
-
+Requirements & Goals\
 Requirements for the different teams which participate at the specific story
+----------------------------------------------------------------------------
 
-## Workflows & Scenarios
-
+Workflows & Scenarios\
 List rules to guide design and development
+------------------------------------------
 
 1. Address common scenarios and edge cases
 
@@ -92,20 +92,19 @@ The preconditions required before the use case can begin
 
 ## Featured Workflows & Key Features
 
-## Concept & Mockups
-
-Requirements for the different teams which participate at the specific story
-
-### Known Limitations
+Concept & Mockups\
+Requirements for the different teams which participate at the specific story\
+Known Limitations
+-----------------
 
 Brainstorm things that could go wrong with your team and partner teams. For each risk, plan appropriate mitigations.\
 **Rough Scoping & Timeline**
 
 At a high level, what's included in V1 vs. later versions? How big of a project is this? What's the roll out / testing plan? Consider the major pieces of functionality, Mobile, Platform, Internationalization, Entry Points, User Onboarding, Premium.
 
-This is part of  the feasibility and Stakeholders of all departments have to attend and be accountable for their department decisions. 
+This is part of  the feasibility and Stakeholders of all departments have to attend and be accountable for their department decisions. 
 
-## Success Criteria
+**Success Criteria**
 
 What does success look like? Include quant and qual metrics as appropriate.
 
@@ -114,7 +113,7 @@ What does success look like? Include quant and qual metrics as appropriate.
 | **Metric** | **Baseline (Date)** | **Target (Date)** | **Latest (Updated On)** |
 |            |                     |                   |                         |
 
-## Definition of Done
+**Definition of Done**
 
 e.g. What does it take for the Development team to put the Product into Production?
 
@@ -130,7 +129,7 @@ the DoD consists of 3 main components:
 
 - Non-Functional Requirements
 
-## Roll out Plan
+**Roll out Plan**
 
 Put details and a complete plan how the roll-out will be developed from the Engineering team.
 
@@ -177,7 +176,7 @@ And – used to continue any of three previous statements
 
 Add revisions that are mentioned on comments and we keep them here for better organizing
 
-## Appendix: Research
+**Appendix: Research**
 
 Include useful research, such as competitive analysis, metrics, or surveys.
 
