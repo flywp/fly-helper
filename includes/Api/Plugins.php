@@ -33,9 +33,10 @@ class Plugins {
             wp_update_plugins();
         }
 
-        $response = [];
-        $plugins  = get_plugins();
-        $updates  = get_plugin_updates();
+        $response       = [];
+        $plugins        = get_plugins();
+        $updates        = get_plugin_updates();
+        $auto_updates   = get_site_option( 'auto_update_plugins', [] );
 
         foreach ( $plugins as $file => $details ) {
             $plugin_status = $this->get_status( $file );
@@ -58,6 +59,7 @@ class Plugins {
                 'textdomain'       => $details['TextDomain'],
                 'description'      => $details['Description'],
                 'php'              => $details['RequiresPHP'],
+                'auto_update'      => in_array( $file, $auto_updates, true ),
             ];
         }
 
