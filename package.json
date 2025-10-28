@@ -1,6 +1,6 @@
 {
   "name": "flywp",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Helper plugin for FlyWP",
   "main": "index.js",
   "repository": "https://github.com/flywp/fly-helper.git",
@@ -18,5 +18,6 @@
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "uglify-js": "^3.17.4"
-  }
+  },
+  "dependencies": {}
 }
