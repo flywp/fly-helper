@@ -129,9 +129,7 @@ class Admin {
 
             set_transient( $transient_key, $site_info, DAY_IN_SECONDS );
 
-            // Persist site_id as a durable option so site-specific URLs
-            // remain correct even when the transient expires or the API
-            // is temporarily unreachable.
+            // Persist site_id so site-specific URLs survive transient expiry or API downtime.
             if ( ! empty( $site_info['id'] ) ) {
                 update_option( 'flywp_site_id', (int) $site_info['id'], false );
             }
