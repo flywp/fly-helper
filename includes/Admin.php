@@ -128,6 +128,13 @@ class Admin {
             }
 
             set_transient( $transient_key, $site_info, DAY_IN_SECONDS );
+
+            // Persist site_id as a durable option so site-specific URLs
+            // remain correct even when the transient expires or the API
+            // is temporarily unreachable.
+            if ( ! empty( $site_info['id'] ) ) {
+                update_option( 'flywp_site_id', (int) $site_info['id'], false );
+            }
         }
 
         return $site_info;
@@ -141,13 +148,12 @@ class Admin {
      * @return string
      */
     private function get_site_url( $info ) {
-        if ( ! $info ) {
+        $site_id = ! empty( $info['id'] ) ? (int) $info['id'] : (int) get_option( 'flywp_site_id', 0 );
+
+        if ( ! $site_id ) {
             return 'https://app.flywp.com';
         }
 
-        return sprintf(
-            'https://app.flywp.com/site/%d',
-            $info['id']
-        );
+        return sprintf( 'https://app.flywp.com/site/%d', $site_id );
     }
 }
