@@ -35,7 +35,7 @@
 
                 <div class="fw-flex-1">
                     <div class="fw-font-medium fw-text-gray-700 fw-mb-1">
-                        <?php echo esc_html( __( 'Enable WordPress Optimizations', 'flywp ' ) ); ?>
+                        <?php echo esc_html( __( 'Enable WordPress Optimizations', 'flywp' ) ); ?>
                     </div>
 
                     <div class="fw-text-gray-500">

@@ -110,7 +110,7 @@ class Updates {
             $version = $updates[0]->current;
         }
 
-        $update  = find_core_update( $version, $locale );
+        $update = find_core_update( $version, $locale );
 
         if ( ! $update ) {
             wp_send_json_error( [
@@ -171,9 +171,9 @@ class Updates {
         $skin = new WP_Ajax_Upgrader_Skin();
 
         if ( $type === 'plugin' ) {
-            $upgrader  = new Plugin_Upgrader( $skin );
+            $upgrader = new Plugin_Upgrader( $skin );
         } elseif ( $type === 'theme' ) {
-            $upgrader  = new Theme_Upgrader( $skin );
+            $upgrader = new Theme_Upgrader( $skin );
         } else {
             throw new Exception( 'Invalid update type' );
         }
@@ -240,7 +240,7 @@ class Updates {
             require_once ABSPATH . 'wp-admin/includes/update.php';
         }
 
-        $updates  = get_plugin_updates();
+        $updates = get_plugin_updates();
 
         if ( $updates && is_array( $updates ) && count( $updates ) > 0 ) {
             return count( $updates );

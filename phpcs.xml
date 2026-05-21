@@ -38,7 +38,7 @@
 	<!-- Rules: WordPress Coding Standards -->
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
-	<config name="minimum_supported_wp_version" value="4.4"/>
+	<config name="minimum_wp_version" value="4.4"/>
     <rule ref="WordPress-Core"/>
 	<rule ref="WordPress">
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
@@ -46,13 +46,36 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<!-- Value: replace the text domain used. -->
-			<property name="text_domain" type="array" value="flywp"/>
+			<property name="text_domain" type="array">
+				<element value="flywp"/>
+			</property>
 		</properties>
 	</rule>
 	<rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
 		<properties>
 			<property name="blank_line_check" value="true"/>
 		</properties>
+	</rule>
+
+	<!--
+	These files read superglobals for presentation or API-key authenticated
+	flows, not WordPress form submissions:
+	  - views/*            presentation templates that only display notices
+	  - Router.php         API router, authenticated by API key
+	  - MagicLogin.php     magic login endpoint, authenticated by API key
+	  - Admin.php          reads $_GET['tab'] only to pick which tab to render
+	Nonce verification does not apply to them.
+	-->
+	<rule ref="WordPress.Security.NonceVerification">
+		<exclude-pattern>*/views/*</exclude-pattern>
+		<exclude-pattern>*/includes/Router.php</exclude-pattern>
+		<exclude-pattern>*/includes/Admin.php</exclude-pattern>
+		<exclude-pattern>*/includes/Frontend/MagicLogin.php</exclude-pattern>
+	</rule>
+
+	<!-- The main plugin file intentionally defines the bootstrap function alongside the plugin class. -->
+	<rule ref="Universal.Files.SeparateFunctionsFromOO">
+		<exclude-pattern>*/flywp.php</exclude-pattern>
 	</rule>
 
     <rule ref="Squiz.Commenting">
@@ -103,7 +126,7 @@
 	<rule ref="WordPress.PHP.StrictInArray.MissingTrueStrict">
 		<type>error</type>
 	</rule>
-	<rule ref="WordPress.PHP.StrictComparisons.LooseComparison">
+	<rule ref="Universal.Operators.StrictComparisons.LooseComparison">
 		<type>error</type>
 	</rule>
 	<rule ref="WordPress.DB.DirectDatabaseQuery.DirectQuery">
@@ -118,7 +141,7 @@
 	<rule ref="WordPress.PHP.DevelopmentFunctions.error_log_var_export">
 		<severity>0</severity>
 	</rule>
-	<rule ref="Generic.Arrays.DisallowShortArraySyntax">
+	<rule ref="Universal.Arrays.DisallowShortArraySyntax">
 		<severity>0</severity>
 	</rule>
 </ruleset>

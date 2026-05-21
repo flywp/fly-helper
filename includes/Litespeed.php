@@ -28,7 +28,7 @@ class Litespeed {
 
         $plugins = get_plugins();
 
-        return isset( $plugins[self::PLUGIN_SLUG] );
+        return isset( $plugins[ self::PLUGIN_SLUG ] );
     }
 
     /**

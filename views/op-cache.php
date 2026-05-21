@@ -1,15 +1,17 @@
 <?php
 
-$notice = '';
-$status = flywp()->opcache->get_status();
-$config = flywp()->opcache->get_config();
+$notice         = '';
+$opcache_status = flywp()->opcache->get_status();
+$config         = flywp()->opcache->get_config();
 
 $cache_messages = [
-    'opcache-purged'   => __( 'PHP OPcache has been cleared.', 'flywp' ),
+    'opcache-purged' => __( 'PHP OPcache has been cleared.', 'flywp' ),
 ];
 
-if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice'] ] ) ) {
-    $notice = $cache_messages[ $_GET['fly-notice'] ];
+$fly_notice = isset( $_GET['fly-notice'] ) ? sanitize_key( wp_unslash( $_GET['fly-notice'] ) ) : '';
+
+if ( $fly_notice && isset( $cache_messages[ $fly_notice ] ) ) {
+    $notice = $cache_messages[ $fly_notice ];
 }
 ?>
 
@@ -49,27 +51,27 @@ if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice']
                         <dl class="fw-m-0 fw-mt-2">
                             <div class="fw-flex fw-justify-between sm:fw-justify-normal">
                                 <dt class="fw-font-medium fw-text-gray-900 sm:fw-w-32 sm:fw-flex-none sm:fw-pr-6"><?php esc_html_e( 'Hit Rate', 'flywp' ); ?></dt>
-                                <dd><?php echo number_format( $status['opcache_statistics']['opcache_hit_rate'], 2 ) . '%'; ?></dd>
+                                <dd><?php echo number_format( $opcache_status['opcache_statistics']['opcache_hit_rate'], 2 ) . '%'; ?></dd>
                             </div>
 
                             <div class="fw-flex fw-justify-between sm:fw-justify-normal">
                                 <dt class="fw-font-medium fw-text-gray-900 sm:fw-w-32 sm:fw-pr-6"><?php esc_html_e( 'Cached Scripts', 'flywp' ); ?></dt>
-                                <dd><?php echo $status['opcache_statistics']['num_cached_scripts']; ?></dd>
+                                <dd><?php echo $opcache_status['opcache_statistics']['num_cached_scripts']; ?></dd>
                             </div>
 
                             <div class="fw-flex fw-justify-between sm:fw-justify-normal">
                                 <dt class="fw-font-medium fw-text-gray-900 sm:fw-w-32 sm:fw-pr-6"><?php esc_html_e( 'Memory', 'flywp' ); ?></dt>
-                                <dd><?php echo sprintf( '%s of %s', size_format( $status['memory_usage']['used_memory'] ), size_format( $config['directives']['opcache.memory_consumption'] ) ); ?></dd>
+                                <dd><?php printf( '%s of %s', size_format( $opcache_status['memory_usage']['used_memory'] ), size_format( $config['directives']['opcache.memory_consumption'] ) ); ?></dd>
                             </div>
 
                             <div class="fw-flex fw-justify-between sm:fw-justify-normal">
                                 <dt class="fw-font-medium fw-text-gray-900 sm:fw-w-32 sm:fw-pr-6"><?php esc_html_e( 'Keys', 'flywp' ); ?></dt>
-                                <dd><?php echo sprintf( '%d of %d', $status['opcache_statistics']['num_cached_keys'], $status['opcache_statistics']['max_cached_keys'] ); ?></dd>
+                                <dd><?php printf( '%d of %d', $opcache_status['opcache_statistics']['num_cached_keys'], $opcache_status['opcache_statistics']['max_cached_keys'] ); ?></dd>
                             </div>
 
                             <div class="fw-flex fw-justify-between sm:fw-justify-normal">
                                 <dt class="fw-font-medium fw-text-gray-900 sm:fw-w-32 sm:fw-pr-6"><?php esc_html_e( 'Engine', 'flywp' ); ?></dt>
-                                <dd><?php echo sprintf( '%s (%s)', $config['version']['opcache_product_name'], $config['version']['version'] ); ?></dd>
+                                <dd><?php printf( '%s (%s)', $config['version']['opcache_product_name'], $config['version']['version'] ); ?></dd>
                             </div>
                         </dl>
                     </div>

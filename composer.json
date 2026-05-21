@@ -25,7 +25,7 @@
     },
     "require-dev": {
         "tareq1988/wp-php-cs-fixer": "dev-master",
-        "wp-coding-standards/wpcs": "dev-master",
+        "wp-coding-standards/wpcs": "^3.0",
         "phpcompatibility/php-compatibility": "9.*",
         "phpcompatibility/phpcompatibility-wp": "*",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7"

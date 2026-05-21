@@ -23,7 +23,7 @@ class Opcache {
             return;
         }
 
-        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( $_GET['_wpnonce'], 'fly-opcache-purge' ) ) {
+        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'fly-opcache-purge' ) ) {
             wp_die( __( 'Nonce verification failed.', 'flywp' ) );
         }
 

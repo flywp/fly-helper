@@ -45,7 +45,7 @@ class Fastcgi_Cache {
             return;
         }
 
-        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( $_GET['_wpnonce'], 'fly-fastcgi-purge-cache' ) ) {
+        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'fly-fastcgi-purge-cache' ) ) {
             return;
         }
 
@@ -75,7 +75,7 @@ class Fastcgi_Cache {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_POST['flywp-fastcgi-nonce'], 'flywp-fastcgi-nonce' ) ) {
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['flywp-fastcgi-nonce'] ) ), 'flywp-fastcgi-nonce' ) ) {
             return;
         }
 
@@ -85,10 +85,8 @@ class Fastcgi_Cache {
 
         $settings = [];
         $keys     = [
-            'home-purge-created'  => 'home_created',
-            'home-purge-deleted'  => 'home_deleted',
-            // 'single-post-created' => 'single_modified',
-            // 'single-post-comment' => 'single_comment',
+            'home-purge-created' => 'home_created',
+            'home-purge-deleted' => 'home_deleted',
         ];
 
         foreach ( $keys as $form_key => $settings_key ) {
@@ -114,7 +112,7 @@ class Fastcgi_Cache {
             return;
         }
 
-        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( $_GET['_wpnonce'], 'fly-fastcgi-toggle-cache' ) ) {
+        if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'fly-fastcgi-toggle-cache' ) ) {
             return;
         }
 
@@ -123,7 +121,8 @@ class Fastcgi_Cache {
         }
 
         $valid_types = [ 'enable', 'disable' ];
-        $type        = isset( $_GET['type'] ) && in_array( $_GET['type'], $valid_types ) ? $_GET['type'] : 'enable';
+        $type        = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : 'enable';
+        $type        = in_array( $type, $valid_types, true ) ? $type : 'enable';
 
         $settings            = flywp()->fastcgi->settings();
         $settings['enabled'] = $type === 'enable' ? true : false;

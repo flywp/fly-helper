@@ -28,7 +28,7 @@ class Optimizations {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_POST['flywp-optimizations-nonce'], 'flywp-optimizations-settings' ) ) {
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['flywp-optimizations-nonce'] ) ), 'flywp-optimizations-settings' ) ) {
             wp_die( 'Error: Invalid nonce specified in request', 'Invalid Request', 403 );
         }
 

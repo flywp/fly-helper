@@ -9,8 +9,10 @@ $cache_messages = [
     'fastcgi-disabled' => __( 'Page Caching has been disabled.', 'flywp' ),
 ];
 
-if ( isset( $_GET['fly-notice'] ) && isset( $cache_messages[ $_GET['fly-notice'] ] ) ) {
-    $notice = $cache_messages[ $_GET['fly-notice'] ];
+$fly_notice = isset( $_GET['fly-notice'] ) ? sanitize_key( wp_unslash( $_GET['fly-notice'] ) ) : '';
+
+if ( $fly_notice && isset( $cache_messages[ $fly_notice ] ) ) {
+    $notice = $cache_messages[ $fly_notice ];
 }
 ?>
 

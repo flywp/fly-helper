@@ -102,7 +102,6 @@ class Admin {
             'optimizations' => __( 'Optimizations', 'flywp' ),
         ];
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $tab          = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
         $active_tab   = array_key_exists( $tab, $tabs ) ? $tab : 'cache';
         $site_info    = $this->fetch_site_info();

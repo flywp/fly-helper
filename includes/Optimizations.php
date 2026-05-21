@@ -47,15 +47,15 @@ class Optimizations {
     /**
      * Get option.
      *
-     * @param string $key     option key
-     * @param mixed  $default default value
+     * @param string $key      option key
+     * @param mixed  $fallback default value
      *
      * @return mixed
      */
-    public function get_option( $key, $default = null ) {
+    public function get_option( $key, $fallback = null ) {
         $options = $this->get_options();
 
-        return $options[ $key ] ?? $default;
+        return $options[ $key ] ?? $fallback;
     }
 
     /**

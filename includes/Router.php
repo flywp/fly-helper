@@ -157,6 +157,8 @@ class Router {
     private function get_request_args( $request_method ) {
         $request_args = [];
 
+        // Requests to this router are authenticated by API key inside the route
+        // callbacks, not by WordPress nonces, so nonce verification is not applicable here.
         if ( 'GET' === $request_method ) {
             $request_args = wp_unslash( $_GET );
         } elseif ( 'POST' === $request_method ) {

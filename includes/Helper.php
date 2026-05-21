@@ -7,21 +7,21 @@ class Helper {
     /**
      * Print_r with pre tags.
      *
-     * @param mixed $var
+     * @param mixed $data
      */
-    public static function print_r( $var = null ) {
+    public static function print_r( $data = null ) {
         echo '<pre>';
-        print_r( $var );
+        print_r( $data );
         echo '</pre>';
     }
 
     /**
      * Var_dump and die.
      *
-     * @param mixed $var
+     * @param mixed $data
      */
-    public static function dd( $var = null ) {
-        self::print_r( $var );
+    public static function dd( $data = null ) {
+        self::print_r( $data );
         die();
     }
 
@@ -31,7 +31,7 @@ class Helper {
      * @return bool
      */
     public static function is_nginx() {
-        return isset( $_SERVER['SERVER_SOFTWARE'] ) && false !== strpos( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ), 'nginx' );
+        return isset( $_SERVER['SERVER_SOFTWARE'] ) && false !== strpos( sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ), 'nginx' );
     }
 
     /**
@@ -40,6 +40,6 @@ class Helper {
      * @return bool
      */
     public static function is_litespeed() {
-        return isset( $_SERVER['SERVER_SOFTWARE'] ) && false !== strpos( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ), 'LiteSpeed' );
+        return isset( $_SERVER['SERVER_SOFTWARE'] ) && false !== strpos( sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ), 'LiteSpeed' );
     }
 }

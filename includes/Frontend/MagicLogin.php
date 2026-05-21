@@ -57,10 +57,8 @@ class MagicLogin {
             return;
         }
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
         $api_key  = isset( $_POST['api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) : '';
         $username = isset( $_POST['username'] ) ? sanitize_text_field( wp_unslash( $_POST['username'] ) ) : '';
-        // phpcs:enable WordPress.Security.NonceVerification.Missing
 
         if ( ! $api_key || ! $username ) {
             $this->redirect_to_home();

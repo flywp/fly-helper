@@ -23,8 +23,6 @@ class Fastcgi_Cache {
     public function __construct() {
         add_action( 'save_post', [ $this, 'on_save_post' ], 10, 2 );
         add_action( 'delete_post', [ $this, 'wp_trash_post' ], 10, 2 );
-        // add_action( 'edited_term', [ $this, 'purge_taxonomy_cache' ], 10, 2 );
-        // add_action( 'wp_update_nav_menu', [ $this, 'purge_home_cache' ], 10, 2 );
     }
 
     /**
@@ -58,11 +56,9 @@ class Fastcgi_Cache {
      */
     public function settings() {
         $default = [
-            'enabled'         => true,
-            'home_created'    => true,
-            'home_deleted'    => true,
-            // 'single_modified' => true,
-            // 'single_comment'  => true,
+            'enabled'      => true,
+            'home_created' => true,
+            'home_deleted' => true,
         ];
 
         return get_option( self::SETTINGS_KEY, $default );
@@ -134,7 +130,7 @@ class Fastcgi_Cache {
         $cache_path = self::CACHE_PATH . '/' . substr( $hash, -1 ) . '/' . substr( $hash, -3, 2 ) . '/' . $hash;
 
         if ( file_exists( $cache_path ) ) {
-            unlink( $cache_path );
+            wp_delete_file( $cache_path );
         }
     }
 

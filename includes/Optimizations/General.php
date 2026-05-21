@@ -138,7 +138,7 @@ class General extends Base {
     public function remove_rss_feed() {
         add_action( 'template_redirect', function () {
             if ( is_feed() ) {
-                wp_redirect( home_url(), 301 );
+                wp_safe_redirect( home_url(), 301 );
                 exit;
             }
         }, 1 );
