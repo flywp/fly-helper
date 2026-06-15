@@ -4,7 +4,7 @@ Tags: OPcache, Optimize, cache, page cache, performance
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4 or higher
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -253,6 +253,12 @@ FlyWP is a product of weDevs. We have very popular products like Dokan Multivend
 1. FlyWP settings page.
 
 == Changelog ==
+
+= v1.5.2 (15 June, 2026) =
+
+ * **Fix:** Resolved a fatal error on PHP 8.5 that could crash the site when the "Clean Navigation Menu" optimization was used with some page builders.
+ * **Fix:** "Clean Navigation Menu" no longer removes menu item IDs, restoring compatibility with themes and scripts that rely on them.
+ * **Improvement:** The "Clean Navigation Menu" optimization is now turned off by default to avoid theme compatibility issues. Existing settings are preserved.
 
 = v1.5.1 (21 May, 2026) =
 
