@@ -72,7 +72,7 @@ class Optimizations {
                 'self_ping'      => true,
                 'comments'       => false,
                 'jquery_migrate' => true,
-                'clean_nav_menu' => true,
+                'clean_nav_menu' => false,
                 'rss_feed'       => false,
                 'xmlrpc'         => true,
             ],

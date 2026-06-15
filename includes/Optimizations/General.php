@@ -119,6 +119,10 @@ class General extends Base {
      */
     public function clean_nav_menu() {
         add_filter( 'nav_menu_css_class', function ( $classes ) {
+            if ( ! is_array( $classes ) ) {
+                return $classes;
+            }
+
             return array_intersect( $classes, [
                 'current-menu-item',
                 'menu-item-has-children',
@@ -126,8 +130,6 @@ class General extends Base {
                 'current-menu-ancestor',
             ] );
         } );
-
-        add_filter( 'nav_menu_item_id', '__return_null' );
     }
 
     /**
