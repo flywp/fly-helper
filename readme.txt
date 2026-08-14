@@ -4,7 +4,7 @@ Tags: OPcache, Optimize, cache, page cache, performance
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4 or higher
-Stable tag: 1.5.2
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -253,6 +253,13 @@ FlyWP is a product of weDevs. We have very popular products like Dokan Multivend
 1. FlyWP settings page.
 
 == Changelog ==
+
+= v1.6.0 (14 August, 2026) =
+
+ * **Security:** Magic login now accepts a signed, single-use token that names the user it is good for and expires shortly after it is issued. The site's API key is no longer part of the request.
+ * **Security:** A magic login naming an unknown user is refused, rather than falling back to an administrator account.
+ * **Security:** Credential comparisons in magic login and the FlyWP API are now constant time.
+ * **Improvement:** Magic login runs later during load so security plugins can inspect the request, fires actions for accepted and refused attempts, and rate limits repeated failures.
 
 = v1.5.2 (15 June, 2026) =
 

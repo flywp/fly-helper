@@ -2,12 +2,29 @@
 
 namespace FlyWP\Frontend;
 
+use FlyWP\MagicLoginToken;
+use WP_User;
+
 /**
  * Magic Login.
+ *
+ * Signs a user in from a signed, single-use token minted by the FlyWP control plane. The token
+ * names the user it is good for, so the request cannot choose one; an unknown user is refused
+ * rather than substituted for an administrator.
  *
  * @since 1.0.0
  */
 class MagicLogin {
+
+    /**
+     * Path this handler answers on.
+     */
+    const PATH = '/flywp-magic-login';
+
+    /**
+     * Option prefix recording tokens that have already been spent.
+     */
+    const SPENT_PREFIX = 'flywp_ml_used_';
 
     /**
      * Plugin Constructor.
@@ -15,6 +32,13 @@ class MagicLogin {
      * @return void
      */
     public function __construct() {
+        // `setup_theme` deliberately, and it must stay that way. WordPress includes the active
+        // theme's functions.php *after* this hook and before `init`, so running any later means a
+        // theme with a fatal, an early redirect, or stray output past its closing tag takes magic
+        // login down with it — and getting into wp-admin to fix exactly that is what this is for.
+        //
+        // Moving later buys nothing for security plugins either: `plugins_loaded` fires before
+        // `setup_theme`, so they have already loaded and can hook here too.
         add_action( 'setup_theme', [ $this, 'login_user' ] );
     }
 
@@ -24,7 +48,21 @@ class MagicLogin {
      * @return bool
      */
     private function is_valid_request() {
-        return isset( $_SERVER['REQUEST_URI'] ) && isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_URI'] === '/flywp-magic-login' && $_SERVER['REQUEST_METHOD'] === 'POST';
+        if ( ! isset( $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'] ) ) {
+            return false;
+        }
+
+        if ( wp_unslash( $_SERVER['REQUEST_METHOD'] ) !== 'POST' ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            return false;
+        }
+
+        // Compared as a path, not as text. `sanitize_text_field()` strips percent-encoded octets
+        // and tags, so it would let `/flywp-magic-login%20` and friends match here while WordPress
+        // itself would 404 them — quietly defeating any nginx `location =`, WAF rule or allowlist
+        // a host puts in front of this endpoint.
+        $path = wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+        return $path === self::PATH;
     }
 
     /**
@@ -57,43 +95,139 @@ class MagicLogin {
             return;
         }
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
-        $api_key  = isset( $_POST['api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) : '';
-        $username = isset( $_POST['username'] ) ? sanitize_text_field( wp_unslash( $_POST['username'] ) ) : '';
-        // phpcs:enable WordPress.Security.NonceVerification.Missing
+        $token = $this->post_field( 'token' );
 
-        if ( ! $api_key || ! $username ) {
-            $this->redirect_to_home();
+        if ( $token === '' ) {
+            $this->refuse( 'missing_token' );
         }
 
-        if ( $api_key !== flywp()->get_key() ) {
-            $this->redirect_to_home();
+        $claims = MagicLoginToken::parse( $token, flywp()->get_key(), time() );
+
+        if ( ! $claims ) {
+            $this->refuse( 'invalid_token' );
         }
 
-        if ( is_user_logged_in() ) {
-            $this->redirect_to_admin();
+        if ( ! $this->spend_token( $claims['jti'], $claims['exp'] ) ) {
+            $this->refuse( 'token_already_used', $claims['sid'] );
         }
 
-        $user = get_user_by( 'login', $username );
+        $user = get_user_by( 'login', $claims['sub'] );
 
-        // if user not found, use the first admin
-        if ( ! $user ) {
-            $admins = get_users( [
-                'role'   => 'administrator',
-                'mumber' => 1,
-            ] );
-
-            if ( ! $admins ) {
-                $this->redirect_to_home();
-            }
-
-            $user = $admins[0];
+        if ( ! $user instanceof WP_User ) {
+            // Fail closed. This used to fall through to the first administrator on the site,
+            // which turned a wrong username into an administrator session.
+            $this->refuse( 'unknown_user', $claims['sid'] );
         }
 
         wp_set_current_user( $user->ID, $user->user_login );
         wp_set_auth_cookie( $user->ID );
 
-        // redirect to admin
+        /**
+         * Fires after magic login has signed a user in.
+         *
+         * @since 1.6.0
+         *
+         * @param int    $user_id    ID of the user signed in.
+         * @param string $user_login Login name of the user signed in.
+         * @param int    $site_id    FlyWP site id the token was minted for.
+         */
+        do_action( 'flywp_magic_login_success', $user->ID, $user->user_login, $claims['sid'] );
+
         $this->redirect_to_admin();
+    }
+
+    /**
+     * Mark a token as spent, refusing a second use of the same one.
+     *
+     * Written before the cookie is issued, so a replay racing the original loses.
+     *
+     * Deliberately an options row rather than a transient. A transient lives in the object cache
+     * when one is installed — which FlyWP installs on both stacks — where it can be evicted under
+     * memory pressure or dropped by a cache flush, and the read-then-write a transient needs is a
+     * race in its own right. The unique index on `option_name` settles both: the insert either
+     * wins or it does not, and it survives a cache flush either way.
+     *
+     * @param string $jti Token identifier.
+     * @param int    $exp Token expiry, as a unix timestamp.
+     *
+     * @return bool False when this token has been used already, or the marker could not be stored.
+     */
+    private function spend_token( $jti, $exp ) {
+        global $wpdb;
+
+        $this->forget_spent_tokens();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $inserted = $wpdb->query(
+            $wpdb->prepare(
+                "INSERT IGNORE INTO {$wpdb->options} ( option_name, option_value, autoload ) VALUES ( %s, %s, 'no' )",
+                self::SPENT_PREFIX . $jti,
+                (string) $exp
+            )
+        );
+
+        // 0 rows means the marker was already there; false means the write failed. Neither is a
+        // login: a token we cannot prove is unused is a token we refuse.
+        return $inserted === 1;
+    }
+
+    /**
+     * Drop spent-token markers that have outlived the tokens they describe.
+     *
+     * Options carry no expiry of their own, so nothing else would ever collect these.
+     *
+     * @return void
+     */
+    private function forget_spent_tokens() {
+        global $wpdb;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s AND CAST( option_value AS UNSIGNED ) < %d",
+                $wpdb->esc_like( self::SPENT_PREFIX ) . '%',
+                time() - MagicLoginToken::DEFAULT_SKEW
+            )
+        );
+    }
+
+    /**
+     * Turn away a request, recording why. Never returns.
+     *
+     * @param string   $reason  Machine-readable reason, for logs and listeners.
+     * @param int|null $site_id FlyWP site id, when the token got far enough to name one.
+     *
+     * @return void
+     */
+    private function refuse( $reason, $site_id = null ) {
+        /**
+         * Fires when magic login turns a request away.
+         *
+         * @since 1.6.0
+         *
+         * @param string   $reason  Machine-readable reason the request was refused.
+         * @param int|null $site_id FlyWP site id, when the token got far enough to name one.
+         */
+        do_action( 'flywp_magic_login_failed', $reason, $site_id );
+
+        // Behind WP_DEBUG_LOG: this endpoint is unauthenticated, so an unconditional write here is
+        // a disk-fill anyone can drive. Listeners on the action above get every attempt regardless.
+        if ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) {
+            error_log( sprintf( 'FlyWP magic login refused (%s) for site %s', $reason, $site_id === null ? 'unknown' : $site_id ) );
+        }
+
+        $this->redirect_to_home();
+    }
+
+    /**
+     * Read a field from the request body.
+     *
+     * @param string $field Field name.
+     *
+     * @return string
+     */
+    private function post_field( $field ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        return isset( $_POST[ $field ] ) ? sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) : '';
     }
 }
