@@ -2,7 +2,7 @@
     "name": "flywp/flywp",
     "description": "Helper plugin for FlyWP",
     "type": "wordpress-plugin",
-    "version": "1.5.2",
+    "version": "1.6.0",
     "authors": [
         {
             "name": "FlyWP",
@@ -13,11 +13,19 @@
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "platform": {
+            "php": "7.4"
         }
     },
     "autoload": {
         "psr-4": {
             "FlyWP\\": "includes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FlyWP\\Tests\\": "tests/"
         }
     },
     "require": {
@@ -28,6 +36,7 @@
         "wp-coding-standards/wpcs": "dev-master",
         "phpcompatibility/php-compatibility": "9.*",
         "phpcompatibility/phpcompatibility-wp": "*",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7"
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "phpunit/phpunit": "^9.6@stable"
     }
 }
