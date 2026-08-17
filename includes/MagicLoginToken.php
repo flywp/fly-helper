@@ -5,25 +5,22 @@ namespace FlyWP;
 /**
  * Verifier for the signed, single-use tokens the FlyWP control plane mints for magic login.
  *
- * The token format is a contract shared with the control plane, so it lives in one place with
- * no WordPress dependency at all — it can be reasoned about, and tested, on its own.
+ * The format is a contract shared with the control plane, so it lives in one place with no
+ * WordPress dependency and can be tested on its own.
  *
- *     flywp1.<b64url(payload_json)>.<b64url(hmac_sha256)>
+ *     flywp2.<b64url(payload_json)>.<b64url(ed25519_signature)>
  *
- * Two properties of that shape are deliberate. The version prefix is part of the signed
- * material, so the scheme cannot be downgraded by rewriting it. And the signature is verified
- * against the payload bytes exactly as they arrived, never against a re-encoding of the decoded
- * claims — the control plane runs PHP 8.3 and sites run anything from 7.4 up, and JSON
- * canonicalisation is not worth betting a login on.
+ * Two rules when changing this: the prefix is part of the signed material, and the signature is
+ * verified against the payload bytes as received, never against a re-encoding of the claims.
  *
- * @since 1.6.0
+ * @since 1.7.0
  */
 class MagicLoginToken {
 
     /**
      * Token version. Part of the signed material.
      */
-    const VERSION = 'flywp1';
+    const VERSION = 'flywp2';
 
     /**
      * Longest token accepted, in bytes. Bounds the work done before the signature check.
@@ -43,19 +40,23 @@ class MagicLoginToken {
     /**
      * Verify a token and return the claims it carries.
      *
-     * @param string $token   Raw token as it arrived in the request.
-     * @param string $api_key This site's FLYWP_API_KEY.
-     * @param int    $now     Current unix timestamp.
-     * @param int    $skew    Clock drift to tolerate, in seconds.
+     * @param string $token      Raw token as it arrived in the request.
+     * @param string $public_key This site's FLYWP_LOGIN_PUBLIC_KEY (base64).
+     * @param int    $now        Current unix timestamp.
+     * @param int    $skew       Clock drift to tolerate, in seconds.
      *
      * @return array|null The claims, or null when the token is not acceptable for any reason.
      */
-    public static function parse( $token, $api_key, $now, $skew = self::DEFAULT_SKEW ) {
-        if ( ! is_string( $token ) || ! is_string( $api_key ) || $api_key === '' ) {
+    public static function parse( $token, $public_key, $now, $skew = self::DEFAULT_SKEW ) {
+        if ( ! is_string( $token ) || ! is_string( $public_key ) || $public_key === '' ) {
             return null;
         }
 
         if ( $token === '' || strlen( $token ) > self::MAX_LENGTH ) {
+            return null;
+        }
+
+        if ( ! function_exists( 'sodium_crypto_sign_verify_detached' ) ) {
             return null;
         }
 
@@ -66,14 +67,13 @@ class MagicLoginToken {
         }
 
         $signature = self::base64url_decode( $parts[2] );
+        $raw_public_key = self::raw_public_key( $public_key );
 
-        if ( $signature === null ) {
+        if ( $signature === null || $raw_public_key === null ) {
             return null;
         }
 
-        $expected = hash_hmac( 'sha256', $parts[0] . '.' . $parts[1], self::signing_key( $api_key ), true );
-
-        if ( ! hash_equals( $expected, $signature ) ) {
+        if ( ! sodium_crypto_sign_verify_detached( $signature, $parts[0] . '.' . $parts[1], $raw_public_key ) ) {
             return null;
         }
 
@@ -97,20 +97,6 @@ class MagicLoginToken {
     }
 
     /**
-     * The key tokens are actually signed with, derived from the site's API key.
-     *
-     * The API key authenticates the REST API and the site's calls back to the control plane;
-     * deriving a subkey keeps a magic-login signature from being usable as anything else.
-     *
-     * @param string $api_key This site's FLYWP_API_KEY.
-     *
-     * @return string Raw binary key.
-     */
-    public static function signing_key( $api_key ) {
-        return hash_hmac( 'sha256', 'flywp-magic-login-v1', $api_key, true );
-    }
-
-    /**
      * Whether every claim is present and of the right type.
      *
      * @param array $claims Decoded claims.
@@ -118,7 +104,7 @@ class MagicLoginToken {
      * @return bool
      */
     private static function has_valid_claims( array $claims ) {
-        foreach ( [ 'sub', 'sid', 'iat', 'exp', 'jti' ] as $claim ) {
+        foreach ( [ 'sub', 'sid', 'iat', 'exp', 'jti', 'flywp_user_id' ] as $claim ) {
             if ( ! isset( $claims[ $claim ] ) ) {
                 return false;
             }
@@ -128,7 +114,7 @@ class MagicLoginToken {
             return false;
         }
 
-        if ( ! is_int( $claims['sid'] ) || ! is_int( $claims['iat'] ) || ! is_int( $claims['exp'] ) ) {
+        if ( ! is_int( $claims['sid'] ) || ! is_int( $claims['iat'] ) || ! is_int( $claims['exp'] ) || ! is_int( $claims['flywp_user_id'] ) ) {
             return false;
         }
 
@@ -151,15 +137,26 @@ class MagicLoginToken {
             return false;
         }
 
-        // Both ends, not just expiry. Checking only the upper bound means a site whose clock runs
-        // behind accepts a token for as long as the drift lasts rather than for its lifetime: to
-        // such a site every token looks like it expires comfortably in the future. A site drifted
-        // further than the grace now refuses tokens outright, which is the safe direction to fail.
         if ( $now + $skew < $claims['iat'] ) {
             return false;
         }
 
         return $now <= ( $claims['exp'] + $skew );
+    }
+
+    /**
+     * @param string $encoded Base64 public key.
+     *
+     * @return string|null 32 raw bytes, or null.
+     */
+    private static function raw_public_key( $encoded ) {
+        $raw = base64_decode( $encoded, true );
+
+        if ( $raw === false || strlen( $raw ) !== SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES ) {
+            return null;
+        }
+
+        return $raw;
     }
 
     /**
@@ -174,8 +171,15 @@ class MagicLoginToken {
             return null;
         }
 
+        $padded = strtr( $value, '-_', '+/' );
+        $remainder = strlen( $padded ) % 4;
+
+        if ( $remainder !== 0 ) {
+            $padded .= str_repeat( '=', 4 - $remainder );
+        }
+
         // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-        $decoded = base64_decode( strtr( $value, '-_', '+/' ), true );
+        $decoded = base64_decode( $padded, true );
 
         return $decoded === false ? null : $decoded;
     }

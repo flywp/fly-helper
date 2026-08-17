@@ -2,7 +2,7 @@
     "name": "flywp/flywp",
     "description": "Helper plugin for FlyWP",
     "type": "wordpress-plugin",
-    "version": "1.6.0",
+    "version": "1.7.0",
     "authors": [
         {
             "name": "FlyWP",
