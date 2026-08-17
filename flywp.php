@@ -107,11 +107,9 @@ final class FlyWP_Plugin {
      * @return void
      */
     public function init_plugin() {
-        // Magic login verifies a panel-signed token with FLYWP_LOGIN_PUBLIC_KEY, so it
-        // must load even when FLYWP_API_KEY is missing or has been reset by hand.
-        if ( ! is_admin() ) {
-            new FlyWP\Frontend\MagicLogin();
-        }
+        // Loaded ahead of the API-key gate below, as it does not use the API key. It answers
+        // one POST path and does nothing on any other request.
+        new FlyWP\Frontend\MagicLogin();
 
         if ( ! $this->has_key() ) {
             $this->add_action( 'admin_notices', 'admin_notice' );
@@ -168,8 +166,8 @@ final class FlyWP_Plugin {
     /**
      * Public key used to verify magic-login tokens.
      *
-     * Classic WordPress defines this in wp-config.php. Bedrock keeps it in `.env`,
-     * so fall back to the environment when the constant is empty.
+     * Set as a constant on classic WordPress. On Bedrock it may only be present in the
+     * environment, so fall back to `getenv()`.
      *
      * @return string
      */
@@ -180,7 +178,7 @@ final class FlyWP_Plugin {
 
         $from_env = getenv( 'FLYWP_LOGIN_PUBLIC_KEY' );
 
-        return is_string( $from_env ) ? $from_env : '';
+        return $from_env === false ? '' : $from_env;
     }
 }
 

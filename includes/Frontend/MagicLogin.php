@@ -100,7 +100,7 @@ class MagicLogin {
 
         $claims = MagicLoginToken::parse( $token, flywp()->get_login_public_key(), time() );
 
-        if ( ! $claims ) {
+        if ( $claims === null ) {
             $this->refuse( 'invalid_token' );
         }
 

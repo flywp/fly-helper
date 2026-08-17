@@ -48,15 +48,7 @@ class MagicLoginToken {
      * @return array|null The claims, or null when the token is not acceptable for any reason.
      */
     public static function parse( $token, $public_key, $now, $skew = self::DEFAULT_SKEW ) {
-        if ( ! is_string( $token ) || ! is_string( $public_key ) || $public_key === '' ) {
-            return null;
-        }
-
-        if ( $token === '' || strlen( $token ) > self::MAX_LENGTH ) {
-            return null;
-        }
-
-        if ( ! function_exists( 'sodium_crypto_sign_verify_detached' ) ) {
+        if ( ! is_string( $token ) || $token === '' || strlen( $token ) > self::MAX_LENGTH ) {
             return null;
         }
 
@@ -66,34 +58,57 @@ class MagicLoginToken {
             return null;
         }
 
-        $signature = self::base64url_decode( $parts[2] );
-        $raw_public_key = self::raw_public_key( $public_key );
-
-        if ( $signature === null || $raw_public_key === null ) {
-            return null;
-        }
-
-        if ( ! sodium_crypto_sign_verify_detached( $signature, $parts[0] . '.' . $parts[1], $raw_public_key ) ) {
+        // Verify before reading any claim.
+        if ( ! self::verify( $parts[0] . '.' . $parts[1], $parts[2], $public_key ) ) {
             return null;
         }
 
         $payload = self::base64url_decode( $parts[1] );
-
-        if ( $payload === null ) {
-            return null;
-        }
-
-        $claims = json_decode( $payload, true );
+        $claims  = $payload === null ? null : json_decode( $payload, true );
 
         if ( ! is_array( $claims ) || ! self::has_valid_claims( $claims ) ) {
             return null;
         }
 
-        if ( ! self::is_fresh( $claims, (int) $now, (int) $skew ) ) {
-            return null;
+        return self::is_fresh( $claims, (int) $now, (int) $skew ) ? $claims : null;
+    }
+
+    /**
+     * Whether this site's key vouches for the signature over $signed_material.
+     *
+     * Lengths are checked before the libsodium call, which throws on a wrong-size key or
+     * signature. Keep those checks.
+     *
+     * @param string $signed_material   Bytes the signature is supposed to cover.
+     * @param string $encoded_signature Signature segment, base64url.
+     * @param string $public_key        This site's FLYWP_LOGIN_PUBLIC_KEY (base64).
+     *
+     * @return bool
+     */
+    private static function verify( $signed_material, $encoded_signature, $public_key ) {
+        // A host can be built without sodium; refuse rather than skip the check.
+        if ( ! function_exists( 'sodium_crypto_sign_verify_detached' ) ) {
+            return false;
         }
 
-        return $claims;
+        if ( ! is_string( $public_key ) || $public_key === '' ) {
+            return false;
+        }
+
+        $signature = self::base64url_decode( $encoded_signature );
+
+        // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+        $raw_public_key = base64_decode( $public_key, true );
+
+        if ( $signature === null || strlen( $signature ) !== SODIUM_CRYPTO_SIGN_BYTES ) {
+            return false;
+        }
+
+        if ( $raw_public_key === false || strlen( $raw_public_key ) !== SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES ) {
+            return false;
+        }
+
+        return sodium_crypto_sign_verify_detached( $signature, $signed_material, $raw_public_key );
     }
 
     /**
@@ -105,7 +120,7 @@ class MagicLoginToken {
      */
     private static function has_valid_claims( array $claims ) {
         foreach ( [ 'sub', 'sid', 'iat', 'exp', 'jti', 'flywp_user_id' ] as $claim ) {
-            if ( ! isset( $claims[ $claim ] ) ) {
+            if ( ! array_key_exists( $claim, $claims ) ) {
                 return false;
             }
         }
@@ -145,21 +160,6 @@ class MagicLoginToken {
     }
 
     /**
-     * @param string $encoded Base64 public key.
-     *
-     * @return string|null 32 raw bytes, or null.
-     */
-    private static function raw_public_key( $encoded ) {
-        $raw = base64_decode( $encoded, true );
-
-        if ( $raw === false || strlen( $raw ) !== SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES ) {
-            return null;
-        }
-
-        return $raw;
-    }
-
-    /**
      * Decode base64url, rejecting anything outside the alphabet.
      *
      * @param string $value Encoded segment.
@@ -171,7 +171,7 @@ class MagicLoginToken {
             return null;
         }
 
-        $padded = strtr( $value, '-_', '+/' );
+        $padded    = strtr( $value, '-_', '+/' );
         $remainder = strlen( $padded ) % 4;
 
         if ( $remainder !== 0 ) {

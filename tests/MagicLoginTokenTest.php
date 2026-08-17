@@ -108,6 +108,22 @@ class MagicLoginTokenTest extends TestCase {
         $this->assertNull( MagicLoginToken::parse( $this->token(), '', self::NOW ) );
     }
 
+    public function test_it_rejects_a_public_key_of_the_wrong_length() {
+        $this->assertNull( MagicLoginToken::parse( $this->token(), base64_encode( 'not-32-bytes' ), self::NOW ) );
+    }
+
+    /**
+     * libsodium throws on a signature that is not exactly SODIUM_CRYPTO_SIGN_BYTES, and this
+     * endpoint is unauthenticated — so a hand-written token must come back null, not fatal.
+     */
+    public function test_it_rejects_a_signature_of_the_wrong_length() {
+        $parts = explode( '.', $this->token() );
+
+        $parts[2] = 'aaaa';
+
+        $this->assertNull( MagicLoginToken::parse( implode( '.', $parts ), self::PUBLIC_KEY, self::NOW ) );
+    }
+
     public function test_it_rejects_a_correctly_signed_token_that_is_too_long() {
         $token = $this->token( [ 'sub' => str_repeat( 'a', MagicLoginToken::MAX_LENGTH ) ] );
 
@@ -147,6 +163,7 @@ class MagicLoginTokenTest extends TestCase {
             'four segments'   => [ 'flywp2.abc.def.ghi' ],
             'not base64url'   => [ 'flywp2.not base64!.also+not/base64url' ],
             'over max length' => [ 'flywp2.' . str_repeat( 'a', MagicLoginToken::MAX_LENGTH ) . '.aaa' ],
+            'stub segments'   => [ 'flywp2.abc.aaa' ],
         ];
     }
 
