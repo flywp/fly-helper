@@ -8,7 +8,7 @@ namespace FlyWP;
  * The format is a contract shared with the control plane, so it lives in one place with no
  * WordPress dependency and can be tested on its own.
  *
- *     flywp2.<b64url(payload_json)>.<b64url(ed25519_signature)>
+ *     flywp-ed25519.<b64url(payload_json)>.<b64url(ed25519_signature)>
  *
  * Two rules when changing this: the prefix is part of the signed material, and the signature is
  * verified against the payload bytes as received, never against a re-encoding of the claims.
@@ -20,7 +20,7 @@ class MagicLoginToken {
     /**
      * Token version. Part of the signed material.
      */
-    const VERSION = 'flywp2';
+    const VERSION = 'flywp-ed25519';
 
     /**
      * Longest token accepted, in bytes. Bounds the work done before the signature check.

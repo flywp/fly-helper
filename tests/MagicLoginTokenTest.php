@@ -26,7 +26,7 @@ class MagicLoginTokenTest extends TestCase {
      * which means the control plane has to change with it.
      */
     public function test_it_matches_the_control_plane_vector() {
-        $token = 'flywp2.eyJzdWIiOiJhZG1pbiIsInNpZCI6NDIsImlhdCI6MTc3MDAwMDAwMCwiZXhwIjoxNzcwMDAwMDkwLCJqdGkiOiIwMTIzNDU2Nzg5YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZiIsImZseXdwX3VzZXJfaWQiOjd9.qaPDb1wTVHusfNt-CNA9rIavqf0Zyb_G8lD68crmHIgTAqCyrM1Ps0MrEztknDW7F-UmR7LsL5pxeNumwQEFDA';
+        $token = 'flywp-ed25519.eyJzdWIiOiJhZG1pbiIsInNpZCI6NDIsImlhdCI6MTc3MDAwMDAwMCwiZXhwIjoxNzcwMDAwMDkwLCJqdGkiOiIwMTIzNDU2Nzg5YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZiIsImZseXdwX3VzZXJfaWQiOjd9.pRON6XIm0djixhkDMlsuTaIiP19R1dBcIPxxRNhY6F-iM2jkDhMQukVOny6JlJ5YvVu1Y6d9DWov5oF_wEpbCg';
 
         $claims = MagicLoginToken::parse( $token, self::PUBLIC_KEY, self::NOW );
 
@@ -87,7 +87,7 @@ class MagicLoginTokenTest extends TestCase {
     public function test_it_rejects_another_version_prefix() {
         $parts = explode( '.', $this->token() );
 
-        $parts[0] = 'flywp1';
+        $parts[0] = 'flywp2';
 
         $this->assertNull( MagicLoginToken::parse( implode( '.', $parts ), self::PUBLIC_KEY, self::NOW ) );
     }
@@ -158,12 +158,12 @@ class MagicLoginTokenTest extends TestCase {
         return [
             'empty'           => [ '' ],
             'not a string'    => [ null ],
-            'no segments'     => [ 'flywp2' ],
-            'two segments'    => [ 'flywp2.abc' ],
-            'four segments'   => [ 'flywp2.abc.def.ghi' ],
-            'not base64url'   => [ 'flywp2.not base64!.also+not/base64url' ],
-            'over max length' => [ 'flywp2.' . str_repeat( 'a', MagicLoginToken::MAX_LENGTH ) . '.aaa' ],
-            'stub segments'   => [ 'flywp2.abc.aaa' ],
+            'no segments'     => [ 'flywp-ed25519' ],
+            'two segments'    => [ 'flywp-ed25519.abc' ],
+            'four segments'   => [ 'flywp-ed25519.abc.def.ghi' ],
+            'not base64url'   => [ 'flywp-ed25519.not base64!.also+not/base64url' ],
+            'over max length' => [ 'flywp-ed25519.' . str_repeat( 'a', MagicLoginToken::MAX_LENGTH ) . '.aaa' ],
+            'stub segments'   => [ 'flywp-ed25519.abc.aaa' ],
         ];
     }
 
