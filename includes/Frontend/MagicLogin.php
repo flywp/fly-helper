@@ -56,10 +56,7 @@ class MagicLogin {
             return false;
         }
 
-        // Compared as a path, not as text. `sanitize_text_field()` strips percent-encoded octets
-        // and tags, so it would let `/flywp-magic-login%20` and friends match here while WordPress
-        // itself would 404 them — quietly defeating any nginx `location =`, WAF rule or allowlist
-        // a host puts in front of this endpoint.
+        // Compared as a path. Do not swap in `sanitize_text_field()`, which alters the value.
         $path = wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
         return $path === self::PATH;
@@ -101,9 +98,9 @@ class MagicLogin {
             $this->refuse( 'missing_token' );
         }
 
-        $claims = MagicLoginToken::parse( $token, flywp()->get_key(), time() );
+        $claims = MagicLoginToken::parse( $token, flywp()->get_login_public_key(), time() );
 
-        if ( ! $claims ) {
+        if ( $claims === null ) {
             $this->refuse( 'invalid_token' );
         }
 
@@ -114,8 +111,7 @@ class MagicLogin {
         $user = get_user_by( 'login', $claims['sub'] );
 
         if ( ! $user instanceof WP_User ) {
-            // Fail closed. This used to fall through to the first administrator on the site,
-            // which turned a wrong username into an administrator session.
+            // Fail closed on an unknown user; never substitute another account.
             $this->refuse( 'unknown_user', $claims['sid'] );
         }
 
@@ -139,13 +135,8 @@ class MagicLogin {
     /**
      * Mark a token as spent, refusing a second use of the same one.
      *
-     * Written before the cookie is issued, so a replay racing the original loses.
-     *
-     * Deliberately an options row rather than a transient. A transient lives in the object cache
-     * when one is installed — which FlyWP installs on both stacks — where it can be evicted under
-     * memory pressure or dropped by a cache flush, and the read-then-write a transient needs is a
-     * race in its own right. The unique index on `option_name` settles both: the insert either
-     * wins or it does not, and it survives a cache flush either way.
+     * Written before the cookie is issued. Uses an options row rather than a transient so the
+     * unique index on `option_name` decides the outcome; keep it that way.
      *
      * @param string $jti Token identifier.
      * @param int    $exp Token expiry, as a unix timestamp.
@@ -210,8 +201,7 @@ class MagicLogin {
          */
         do_action( 'flywp_magic_login_failed', $reason, $site_id );
 
-        // Behind WP_DEBUG_LOG: this endpoint is unauthenticated, so an unconditional write here is
-        // a disk-fill anyone can drive. Listeners on the action above get every attempt regardless.
+        // Behind WP_DEBUG_LOG. Listeners on the action above get every attempt regardless.
         if ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) {
             error_log( sprintf( 'FlyWP magic login refused (%s) for site %s', $reason, $site_id === null ? 'unknown' : $site_id ) );
         }

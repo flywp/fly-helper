@@ -3,7 +3,7 @@
  * Plugin Name: FlyWP
  * Plugin URI: https://flywp.com
  * Description: Helper plugin for FlyWP
- * Version: 1.6.0
+ * Version: 1.7.0
  * Author: FlyWP
  * Author URI: https://flywp.com/?utm_source=wporg&utm_medium=banner&utm_campaign=author-uri
  * License: GPL2
@@ -41,7 +41,7 @@ final class FlyWP_Plugin {
      *
      * @var string
      */
-    public $version = '1.6.0';
+    public $version = '1.7.0';
 
     /**
      * Plugin Constructor.
@@ -70,6 +70,10 @@ final class FlyWP_Plugin {
 
         if ( ! defined( 'FLYWP_API_KEY' ) ) {
             define( 'FLYWP_API_KEY', '' );
+        }
+
+        if ( ! defined( 'FLYWP_LOGIN_PUBLIC_KEY' ) ) {
+            define( 'FLYWP_LOGIN_PUBLIC_KEY', '' );
         }
     }
 
@@ -103,6 +107,10 @@ final class FlyWP_Plugin {
      * @return void
      */
     public function init_plugin() {
+        // Loaded ahead of the API-key gate below, as it does not use the API key. It answers
+        // one POST path and does nothing on any other request.
+        new FlyWP\Frontend\MagicLogin();
+
         if ( ! $this->has_key() ) {
             $this->add_action( 'admin_notices', 'admin_notice' );
 
@@ -153,6 +161,24 @@ final class FlyWP_Plugin {
      */
     public function get_key() {
         return FLYWP_API_KEY;
+    }
+
+    /**
+     * Public key used to verify magic-login tokens.
+     *
+     * Set as a constant on classic WordPress. On Bedrock it may only be present in the
+     * environment, so fall back to `getenv()`.
+     *
+     * @return string
+     */
+    public function get_login_public_key() {
+        if ( FLYWP_LOGIN_PUBLIC_KEY !== '' ) {
+            return FLYWP_LOGIN_PUBLIC_KEY;
+        }
+
+        $from_env = getenv( 'FLYWP_LOGIN_PUBLIC_KEY' );
+
+        return $from_env === false ? '' : $from_env;
     }
 }
 
