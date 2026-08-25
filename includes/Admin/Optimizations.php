@@ -72,7 +72,7 @@ class Optimizations {
                     ],
                     'oembed' => [
                         'label'       => __( 'Disable Embeds', 'flywp' ),
-                        'description' => __( 'Prevent others from embedding your site.', 'flywp' ),
+                        'description' => __( 'Remove WordPress embed JavaScript, disable oEmbed REST API route, and prevent others from embedding your site.', 'flywp' ),
                     ],
                     'self_ping' => [
                         'label'       => __( 'Disable Self Pingbacks', 'flywp' ),
