@@ -14,6 +14,32 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/*
+ * Stand down when this plugin is already loaded from somewhere else.
+ *
+ * A site can carry two copies. On Bedrock the plugin directory belongs to Composer, so FlyWP
+ * keeps its own copy outside the checkout and mounts it in under a second slug. If both are
+ * active, `FlyWP_Plugin`, `flywp()` and the bundled Composer autoloader's init class are each
+ * declared twice and the site fatals.
+ *
+ * Whichever copy runs second gives way. That is deliberately all this decides: it needs no
+ * knowledge of what the other copy is called, so a customer whose Composer install lands in a
+ * directory named anything at all is still protected. Which copy *should* win is settled by
+ * FlyWP before either is activated, by activating exactly one.
+ *
+ * Both conditions are checked because they become true at different moments, and this has to
+ * run before `vendor/autoload.php` -- requiring a second copy of the autoloader is itself one
+ * of the redeclarations being avoided.
+ *
+ * Known gap: a copy that stands down here has not called `register_activation_hook()`, so if
+ * WordPress activates it during this same request its `activate()` never runs. Both copies
+ * register the same rewrite endpoint and the next request loads the survivor normally, so
+ * nothing is lost today -- but an activation-only step added later would not run.
+ */
+if ( defined( 'FLYWP_VERSION' ) || class_exists( 'FlyWP_Plugin', false ) ) {
+    return;
+}
+
 require __DIR__ . '/vendor/autoload.php';
 
 use WeDevs\WpUtils\ContainerTrait;
@@ -111,6 +137,19 @@ final class FlyWP_Plugin {
         // one POST path and does nothing on any other request.
         new FlyWP\Frontend\MagicLogin();
 
+        // The router and the API also load ahead of the gate. `Router::register_routes()` is
+        // what registers `fly-api` as a public query variable, and it has to run on every
+        // request; when it does not, `WP::parse_request()` drops the unknown variable and
+        // WordPress serves the front page instead. That is a 200 carrying the theme, which
+        // reads to a caller as a working site rather than a plugin with no key. Loading these
+        // unconditionally means an unkeyed site answers `/fly-api/*` with JSON and says so.
+        //
+        // This exposes nothing new: `Api` registers only the unauthenticated `ping` route
+        // until a valid bearer token is presented, and every other route stays behind either
+        // that check or the key gate below.
+        $this->router = new FlyWP\Router();
+        $this->rest   = new FlyWP\Api();
+
         if ( ! $this->has_key() ) {
             $this->add_action( 'admin_notices', 'admin_notice' );
 
@@ -123,8 +162,6 @@ final class FlyWP_Plugin {
             $this->frontend = new FlyWP\Frontend();
         }
 
-        $this->router       = new FlyWP\Router();
-        $this->rest         = new FlyWP\Api();
         $this->fastcgi      = new FlyWP\Fastcgi_Cache();
         $this->opcache      = new FlyWP\Opcache();
         $this->flyapi       = new FlyWP\FlyApi();
@@ -151,7 +188,7 @@ final class FlyWP_Plugin {
      * @return bool
      */
     public function has_key() {
-        return FLYWP_API_KEY !== '';
+        return $this->get_key() !== '';
     }
 
     /**
@@ -160,25 +197,16 @@ final class FlyWP_Plugin {
      * @return string
      */
     public function get_key() {
-        return FLYWP_API_KEY;
+        return FlyWP\KeyResolver::resolve( FLYWP_API_KEY, 'FLYWP_API_KEY' );
     }
 
     /**
      * Public key used to verify magic-login tokens.
      *
-     * Set as a constant on classic WordPress. On Bedrock it may only be present in the
-     * environment, so fall back to `getenv()`.
-     *
      * @return string
      */
     public function get_login_public_key() {
-        if ( FLYWP_LOGIN_PUBLIC_KEY !== '' ) {
-            return FLYWP_LOGIN_PUBLIC_KEY;
-        }
-
-        $from_env = getenv( 'FLYWP_LOGIN_PUBLIC_KEY' );
-
-        return $from_env === false ? '' : $from_env;
+        return FlyWP\KeyResolver::resolve( FLYWP_LOGIN_PUBLIC_KEY, 'FLYWP_LOGIN_PUBLIC_KEY' );
     }
 }
 
