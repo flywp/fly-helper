@@ -183,9 +183,9 @@ class ChangeSetBuilder {
 
             if ( null !== $url ) {
                 $set->lists[] = [
-					'url' => $url,
-					'pages' => $pages,
-				];
+                    'url'   => $url,
+                    'pages' => $pages,
+                ];
             }
         }
 
