@@ -5,8 +5,3 @@ yarn-error.log
 dev-config.json
 build
 .phpunit.result.cache
-
-
-# Engine Build folders (the root "build" rule matches them on case-insensitive file systems)
-!/includes/StaticSite/Engine/Build
-!/tests/StaticSite/Engine/Build
