@@ -182,7 +182,10 @@ class ChangeSetBuilder {
             $url = $origin->rebase( $link );
 
             if ( null !== $url ) {
-                $set->lists[] = [ 'url' => $url, 'pages' => $pages ];
+                $set->lists[] = [
+					'url' => $url,
+					'pages' => $pages,
+				];
             }
         }
 
@@ -252,7 +255,9 @@ class ChangeSetBuilder {
 
         self::add_to( $this->urls, $permalink );
 
-        for ( $page = 2; $page <= min( (int) ( $post['pages'] ?? 1 ), self::MAX_LIST_PAGES ); $page++ ) {
+        $last_page = min( (int) ( $post['pages'] ?? 1 ), self::MAX_LIST_PAGES );
+
+        for ( $page = 2; $page <= $last_page; $page++ ) {
             self::add_to( $this->urls, $this->wp->post_page_url( $permalink, $page ) );
         }
 
@@ -263,7 +268,9 @@ class ChangeSetBuilder {
         $count = $this->wp->approved_comment_count( $post['id'], (bool) $this->wp->option( 'thread_comments' ) );
         $pages = Pagination::page_count( $count, $this->wp->option( 'comments_per_page' ) );
 
-        for ( $page = 1; $pages > 1 && $page <= min( $pages, self::MAX_LIST_PAGES ); $page++ ) {
+        $last_page = min( $pages, self::MAX_LIST_PAGES );
+
+        for ( $page = 1; $pages > 1 && $page <= $last_page; $page++ ) {
             self::add_to( $this->urls, $this->wp->comment_page_url( $permalink, $page ) );
         }
     }

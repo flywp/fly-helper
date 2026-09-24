@@ -252,7 +252,7 @@ class RedirectSourceUrls {
 
         $redirects = srm_get_redirects(
             [
-                'posts_per_page' => srm_get_max_redirects(),
+                'posts_per_page' => srm_get_max_redirects(), // phpcs:ignore WordPress.WP.PostsPerPage -- the limit of Safe Redirect Manager itself.
                 'post_status'    => 'publish',
             ]
         );

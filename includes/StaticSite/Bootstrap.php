@@ -68,7 +68,7 @@ class Bootstrap {
             $noise = (string) ob_get_clean();
 
             if ( $noise !== '' ) {
-                fwrite( $stream ? $stream : STDERR, $noise );
+                fwrite( $stream ? $stream : STDERR, $noise ); // phpcs:ignore WordPress.WP.AlternativeFunctions -- a CLI stream, not a file.
             }
         }
     }

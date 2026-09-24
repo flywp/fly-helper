@@ -53,7 +53,10 @@ class RobotsMeta {
         foreach ( $option as $taxonomy => $term_meta ) {
             foreach ( (array) $term_meta as $term_id => $meta ) {
                 if ( is_array( $meta ) && 'noindex' === ( $meta['wpseo_noindex'] ?? '' ) ) {
-                    $terms[] = [ 'id' => (int) $term_id, 'taxonomy' => (string) $taxonomy ];
+                    $terms[] = [
+						'id' => (int) $term_id,
+						'taxonomy' => (string) $taxonomy,
+					];
                 }
             }
         }

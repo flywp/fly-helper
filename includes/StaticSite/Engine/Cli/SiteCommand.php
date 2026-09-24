@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.WP.AlternativeFunctions -- WP-CLI command: STDERR and one local output file, no WP_Filesystem.
 
 namespace FlyWP\StaticSite\Engine\Cli;
 

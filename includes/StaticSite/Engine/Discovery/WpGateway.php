@@ -69,11 +69,11 @@ class WpGateway implements WordPressGateway {
 
         $this->flush_runtime_cache();
 
-        $placeholders = implode( ', ', array_fill( 0, count( $post_types ), '%s' ) );
-        $rows         = $wpdb->get_results(
+        $rows = $wpdb->get_results(
             $wpdb->prepare(
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $placeholders holds only %s markers.
-                "SELECT ID, post_type, post_password, post_modified_gmt FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type IN ( {$placeholders} ) AND ID > %d ORDER BY ID ASC LIMIT %d",
+                "SELECT ID, post_type, post_password, post_modified_gmt FROM {$wpdb->posts}
+                WHERE post_status = 'publish' AND post_type IN ( " . implode( ', ', array_fill( 0, count( $post_types ), '%s' ) ) . ' ) AND ID > %d
+                ORDER BY ID ASC LIMIT %d',
                 array_merge( array_values( $post_types ), [ (int) $after_id, (int) $limit ] )
             ),
             ARRAY_A
@@ -116,13 +116,11 @@ class WpGateway implements WordPressGateway {
             return [];
         }
 
-        $ids          = implode( ', ', array_map( 'intval', $post_ids ) );
-        $placeholders = implode( ', ', array_fill( 0, count( $keys ), '%s' ) );
-        $rows         = $wpdb->get_results(
+        $rows = $wpdb->get_results(
             $wpdb->prepare(
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $ids holds only integers, $placeholders only %s markers.
-                "SELECT post_id, meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id IN ( {$ids} ) AND meta_key IN ( {$placeholders} )",
-                $keys
+                "SELECT post_id, meta_key, meta_value FROM {$wpdb->postmeta}
+                WHERE post_id IN ( " . implode( ', ', array_fill( 0, count( $post_ids ), '%d' ) ) . ' ) AND meta_key IN ( ' . implode( ', ', array_fill( 0, count( $keys ), '%s' ) ) . ' )',
+                array_merge( array_map( 'intval', $post_ids ), $keys )
             ),
             ARRAY_A
         );
@@ -250,11 +248,9 @@ class WpGateway implements WordPressGateway {
             return null;
         }
 
-        $placeholders = implode( ', ', array_fill( 0, count( $post_types ), '%s' ) );
-        $value        = $wpdb->get_var(
+        $value = $wpdb->get_var(
             $wpdb->prepare(
-                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $placeholders holds only %s markers.
-                "SELECT MAX(post_modified_gmt) FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type IN ( {$placeholders} )",
+                "SELECT MAX(post_modified_gmt) FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type IN ( " . implode( ', ', array_fill( 0, count( $post_types ), '%s' ) ) . ' )',
                 array_values( $post_types )
             )
         );

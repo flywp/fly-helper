@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.WP.AlternativeFunctions -- WP-CLI output: STDOUT and plain JSON lines, no WP_Filesystem.
 
 namespace FlyWP\StaticSite\Engine\Cli;
 
