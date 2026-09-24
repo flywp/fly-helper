@@ -81,6 +81,7 @@ class WpChangeStore implements ChangeStore {
         $table = self::table();
         $rows  = $wpdb->get_results(
             $wpdb->prepare(
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is the prefix and a constant.
                 "SELECT id, kind, object_type, object_id, url, reason FROM {$table} WHERE id > %d AND id <= %d ORDER BY id ASC LIMIT %d",
                 (int) $after_id,
                 (int) $up_to_id,
@@ -110,6 +111,7 @@ class WpChangeStore implements ChangeStore {
 
         return (bool) $wpdb->get_var(
             $wpdb->prepare(
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is the prefix and a constant.
                 "SELECT id FROM {$table} WHERE kind = 'global' AND id > %d AND id <= %d LIMIT 1",
                 (int) $after_id,
                 (int) $up_to_id
@@ -125,6 +127,7 @@ class WpChangeStore implements ChangeStore {
 
         $table = self::table();
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is the prefix and a constant.
         return (int) $wpdb->get_var( "SELECT MAX(id) FROM {$table}" );
     }
 
@@ -136,6 +139,7 @@ class WpChangeStore implements ChangeStore {
 
         $table = self::table();
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table is the prefix and a constant.
         return false !== $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id <= %d", (int) $change_id ) );
     }
 }
