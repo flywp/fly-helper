@@ -39,9 +39,10 @@ class Admin {
      * Register admin page.
      */
     public function register_admin_page() {
+        // WordPress prints a menu title as HTML: the brand's name is text.
         $hook = add_dashboard_page(
-            flywp()->brand()->name(),
-            flywp()->brand()->name(),
+            esc_html( flywp()->brand()->name() ),
+            esc_html( flywp()->brand()->name() ),
             'manage_options',
             self::PAGE_SLUG,
             [ $this, 'render_admin_page' ]

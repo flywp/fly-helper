@@ -75,8 +75,9 @@ class Brand {
             return $brand;
         }
 
-        // Control characters would break a header line or an email line; a name is one line.
-        $name = isset( $data['name'] ) && is_string( $data['name'] ) ? trim( (string) preg_replace( '/[\x00-\x1F\x7F]+/u', ' ', $data['name'] ) ) : '';
+        // A name is one line of text: no control characters to break a header or an email line,
+        // and no tags, whichever screen forgets to escape it. Each screen still escapes it.
+        $name = isset( $data['name'] ) && is_string( $data['name'] ) ? trim( (string) preg_replace( '/[\x00-\x1F\x7F]+/u', ' ', strip_tags( $data['name'] ) ) ) : '';
         $url  = self::https( isset( $data['url'] ) ? $data['url'] : null );
 
         if ( $name === '' || $url === '' ) {
