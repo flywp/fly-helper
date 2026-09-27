@@ -39,6 +39,11 @@ class Plugins {
         $auto_updates   = get_site_option( 'auto_update_plugins', [] );
 
         foreach ( $plugins as $file => $details ) {
+            // `get_plugins()` does not apply the `all_plugins` filter: this plugin's own row takes the brand here.
+            if ( $file === FLYWP_PLUGIN_BASENAME ) {
+                $details = \FlyWP\Branding::row( $details );
+            }
+
             $plugin_status = $this->get_status( $file );
             $update        = $this->get_update( $file, $updates );
 
