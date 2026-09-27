@@ -72,6 +72,14 @@ class BrandTest extends TestCase {
         $this->assertTrue( Brand::decode( $this->encode( [ 'name' => 'Acme', 'url' => 'https://acme.test', 'icon' => null ] ) )->is_set() );
     }
 
+    public function test_a_name_is_text_with_no_tags() {
+        $brand = Brand::decode( $this->encode( [ 'name' => '<script>alert(1)</script>Acme <b>Cloud</b> & "Co"', 'url' => 'https://acme.test' ] ) );
+
+        $this->assertSame( 'alert(1)Acme Cloud & "Co"', $brand->name() );
+        // Nothing left but tags is no name: no brand.
+        $this->assertFalse( Brand::decode( $this->encode( [ 'name' => '<img src=x onerror=alert(1)>', 'url' => 'https://acme.test' ] ) )->is_set() );
+    }
+
     public function test_a_name_is_one_line_and_a_url_has_no_trailing_slash() {
         $brand = Brand::decode( $this->encode( [ 'name' => " Acme\r\nHosting\t", 'url' => 'https://acme.test/' ] ) );
 
