@@ -72,7 +72,8 @@ class Email {
         $to      = isset( $_POST['to_email'] ) ? sanitize_email( $_POST['to_email'] ) : '';
         $is_html = isset( $_POST['html_email'] ) ? true : false;
 
-        $subject = __( 'Test Email from FlyWP', 'flywp' );
+        /* translators: %s: the plugin's name */
+        $subject = sprintf( __( 'Test Email from %s', 'flywp' ), flywp()->brand()->name() );
         $headers = [];
         $message = $this->get_mail_body( $is_html );
 
@@ -97,23 +98,25 @@ class Email {
      * @return string
      */
     private function get_mail_body( $is_html = false ) {
+        $brand = flywp()->brand();
+
         if ( !$is_html ) {
             $message = <<<EOT
 Hello,
 
-This is a test email sent from FlyWP to verify the email functionality of your WordPress site.
+This is a test email sent from {$brand->name()} to verify the email functionality of your WordPress site.
 
 If you have received this email, it means the email sending feature is working as expected.
 
-Thank you for using FlyWP.
+Thank you for using {$brand->name()}.
 
 Best regards,
-FlyWP Team
+{$brand->name()} Team
 EOT;
-        } else {
-            $message = file_get_contents( FLYWP_PLUGIN_DIR . 'views/email-template.html' );
+
+            return $message;
         }
 
-        return $message;
+        return $brand->email_html( (string) file_get_contents( FLYWP_PLUGIN_DIR . 'views/email-template.html' ) );
     }
 }
