@@ -21,7 +21,7 @@ class Branding {
 
         add_filter( 'all_plugins', [ $this, 'all_plugins' ] );
         add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
-        add_filter( 'auto_plugin_theme_update_email', [ $this, 'update_email' ] );
+        add_filter( 'auto_plugin_theme_update_email', [ $this, 'update_email' ], 10, 4 );
         add_filter( 'debug_information', [ $this, 'site_health' ] );
     }
 
@@ -64,15 +64,48 @@ class Branding {
     }
 
     /**
-     * Core's plugin update email, with the brand on this plugin's lines.
+     * Core's plugin update email, with the brand on this plugin's line and without its wp.org link.
+     *
+     * The line is rebuilt the way core builds it, with core's own translated format, so it is
+     * found in any language and only for this plugin, never for another one named "FlyWP …".
      *
      * @param array $email
+     * @param string $type
+     * @param array $successful
+     * @param array $failed
      *
      * @return array
      */
-    public function update_email( $email ) {
-        if ( isset( $email['body'] ) && is_string( $email['body'] ) ) {
-            $email['body'] = flywp()->brand()->update_email_body( $email['body'] );
+    public function update_email( $email, $type = '', $successful = [], $failed = [] ) {
+        if ( ! isset( $email['body'] ) || ! is_string( $email['body'] ) ) {
+            return $email;
+        }
+
+        foreach ( [ $successful, $failed ] as $updates ) {
+            foreach ( isset( $updates['plugin'] ) && is_array( $updates['plugin'] ) ? $updates['plugin'] : [] as $item ) {
+                if ( ! isset( $item->item->plugin ) || $item->item->plugin !== FLYWP_PLUGIN_BASENAME ) {
+                    continue;
+                }
+
+                $url  = empty( $item->item->url ) ? '' : ' : ' . esc_url( $item->item->url );
+                $name = flywp()->brand()->name();
+
+                // phpcs:disable WordPress.WP.I18n.MissingArgDomain -- core's own strings, to match core's line.
+                if ( ! empty( $item->item->current_version ) ) {
+                    /* translators: 1: Plugin name, 2: Current version number, 3: New version number, 4: Plugin URL. */
+                    $format = __( '- %1$s (from version %2$s to %3$s)%4$s' );
+                    $core   = sprintf( $format, html_entity_decode( $item->name ), $item->item->current_version, $item->item->new_version, $url );
+                    $brand  = sprintf( $format, $name, $item->item->current_version, $item->item->new_version, '' );
+                } else {
+                    /* translators: 1: Plugin name, 2: Version number, 3: Plugin URL. */
+                    $format = __( '- %1$s version %2$s%3$s' );
+                    $core   = sprintf( $format, html_entity_decode( $item->name ), $item->item->new_version, $url );
+                    $brand  = sprintf( $format, $name, $item->item->new_version, '' );
+                }
+                // phpcs:enable
+
+                $email['body'] = str_replace( $core, $brand, $email['body'] );
+            }
         }
 
         return $email;

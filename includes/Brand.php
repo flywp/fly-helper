@@ -67,8 +67,9 @@ class Brand {
             return $brand;
         }
 
-        // Hex, not base64: `base64_decode()` reads as obfuscation to a plugin reviewer.
-        $json = ctype_xdigit( $encoded ) && strlen( $encoded ) % 2 === 0 ? hex2bin( $encoded ) : false;
+        // Hex is letters and digits only, so the control plane writes it into wp-config.php, a
+        // Bedrock .env and a shell with no escaping.
+        $json = preg_match( '/\A(?:[0-9a-f]{2})+\z/i', $encoded ) === 1 ? hex2bin( $encoded ) : false;
         $data = $json === false ? null : json_decode( $json, true );
 
         if ( ! is_array( $data ) ) {
@@ -77,8 +78,9 @@ class Brand {
 
         // A name is one line of text: no control characters to break a header or an email line,
         // and no tags, whichever screen forgets to escape it. Each screen still escapes it.
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- no WordPress in this class, by design.
         $name = isset( $data['name'] ) && is_string( $data['name'] ) ? trim( (string) preg_replace( '/[\x00-\x1F\x7F]+/u', ' ', strip_tags( $data['name'] ) ) ) : '';
-        $url  = self::https( isset( $data['url'] ) ? $data['url'] : null );
+        $url  = self::https( isset( $data['url'] ) ? $data['url'] : null, false );
 
         if ( $name === '' || $url === '' ) {
             return $brand;
@@ -86,7 +88,7 @@ class Brand {
 
         $brand->name = $name;
         $brand->url  = rtrim( $url, '/' );
-        $brand->icon = self::https( isset( $data['icon'] ) ? $data['icon'] : null );
+        $brand->icon = self::https( isset( $data['icon'] ) ? $data['icon'] : null, true );
 
         return $brand;
     }
@@ -133,7 +135,7 @@ class Brand {
     public function dashboard_url( $site_id = null ) {
         $base = $this->is_set() ? $this->url : self::DEFAULT_DASHBOARD_URL;
 
-        return $site_id ? $base . '/site/' . (int) $site_id : $base;
+        return $site_id === null ? $base : $base . '/site/' . (int) $site_id;
     }
 
     /**
@@ -160,28 +162,6 @@ class Brand {
                 'PluginURI'   => $this->url,
                 'Description' => $description,
             ]
-        );
-    }
-
-    /**
-     * WordPress core's plugin update email names each plugin by its header, and links to its
-     * wp.org page. On this plugin's lines, the brand takes the name and the link goes.
-     *
-     * @param string $body
-     *
-     * @return string
-     */
-    public function update_email_body( $body ) {
-        if ( ! $this->is_set() ) {
-            return $body;
-        }
-
-        $name = str_replace( [ '\\', '$' ], [ '\\\\', '\\$' ], $this->name );
-
-        return (string) preg_replace(
-            '/^- ' . preg_quote( self::DEFAULT_NAME, '/' ) . ' (.*?)(?: : ' . preg_quote( self::WPORG_URL, '/' ) . '?)?$/m',
-            '- ' . $name . ' $1',
-            $body
         );
     }
 
@@ -241,20 +221,30 @@ class Brand {
             }
         }
 
-        unset( $info['wp-plugins-active']['fields'][ self::DEFAULT_NAME ] );
-        $info['wp-plugins-active']['fields'][ $this->name ] = $field;
+        // The entry keeps its place in the list.
+        $fields = [];
+
+        foreach ( $info['wp-plugins-active']['fields'] as $key => $value ) {
+            $fields[ $key === self::DEFAULT_NAME ? $this->name : $key ] = $key === self::DEFAULT_NAME ? $field : $value;
+        }
+
+        $info['wp-plugins-active']['fields'] = $fields;
 
         return $info;
     }
 
     /**
-     * An https URL with nothing that could leave an HTML attribute or a CSS `url()`, or ''.
+     * An https URL with a host and nothing that could leave an HTML attribute or a CSS `url()`, or
+     * ''. The brand's address takes no query or fragment either: a path is added to it.
      *
      * @param mixed $value
+     * @param bool  $query whether a query or fragment may follow the path
      *
      * @return string
      */
-    private static function https( $value ) {
-        return is_string( $value ) && preg_match( '#^https://[^\s"\'<>`()\\\\]+$#i', $value ) === 1 ? $value : '';
+    private static function https( $value, $query ) {
+        $path = $query ? '[^\s"\'<>`()\\\\]*' : '[^\s"\'<>`()\\\\?#]*';
+
+        return is_string( $value ) && preg_match( '~\Ahttps://[a-z0-9.-]+(?::[0-9]+)?(?:/' . $path . ')?\z~i', $value ) === 1 ? $value : '';
     }
 }
