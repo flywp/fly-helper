@@ -205,8 +205,14 @@ final class FlyWP_Plugin {
      */
     public function brand() {
         if ( $this->brand === null ) {
-            $value       = FLYWP_BRAND !== '' ? FLYWP_BRAND : getenv( 'FLYWP_BRAND' );
-            $this->brand = FlyWP\Brand::decode( $value === false ? '' : $value );
+            $value = FLYWP_BRAND !== '' ? FLYWP_BRAND : getenv( 'FLYWP_BRAND' );
+
+            // A Bedrock that loads its .env without `putenv()` has it in `$_ENV` or `$_SERVER` only.
+            if ( $value === false || $value === '' ) {
+                $value = isset( $_ENV['FLYWP_BRAND'] ) ? $_ENV['FLYWP_BRAND'] : ( isset( $_SERVER['FLYWP_BRAND'] ) ? sanitize_text_field( wp_unslash( $_SERVER['FLYWP_BRAND'] ) ) : '' );
+            }
+
+            $this->brand = FlyWP\Brand::decode( $value );
         }
 
         return $this->brand;
