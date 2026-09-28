@@ -53,15 +53,33 @@ class BrandTest extends TestCase {
             'no name'         => [ $this->encode( [ 'url' => 'https://acme.test' ] ) ],
             'a blank name'    => [ $this->encode( [ 'name' => " \n ", 'url' => 'https://acme.test' ] ) ],
             'a name as array' => [ $this->encode( [ 'name' => [ 'Acme' ], 'url' => 'https://acme.test' ] ) ],
-            'no URL'          => [ $this->encode( [ 'name' => 'Acme' ] ) ],
-            'an http URL'     => [ $this->encode( [ 'name' => 'Acme', 'url' => 'http://acme.test' ] ) ],
-            'a script URL'    => [ $this->encode( [ 'name' => 'Acme', 'url' => 'javascript:alert(1)' ] ) ],
-            'a quote in URL'  => [ $this->encode( [ 'name' => 'Acme', 'url' => 'https://acme.test/"onmouseover' ] ) ],
-            'no host'         => [ $this->encode( [ 'name' => 'Acme', 'url' => 'https:///' ] ) ],
-            'a newline after' => [ $this->encode( [ 'name' => 'Acme', 'url' => "https://acme.test\n" ] ) ],
-            'a query'         => [ $this->encode( [ 'name' => 'Acme', 'url' => 'https://acme.test/?a=1' ] ) ],
-            'a fragment'      => [ $this->encode( [ 'name' => 'Acme', 'url' => 'https://acme.test/#top' ] ) ],
             'uppercase hex'   => [ strtoupper( bin2hex( '{}' ) ) ],
+        ];
+    }
+
+    /**
+     * @dataProvider no_url
+     */
+    public function test_a_brand_without_an_https_url_links_to_no_dashboard( $url ) {
+        $brand = Brand::decode( $this->encode( [ 'name' => 'Acme', 'url' => $url ] ) );
+
+        $this->assertTrue( $brand->is_set() );
+        $this->assertSame( 'Acme', $brand->name() );
+        $this->assertSame( '', $brand->url() );
+        $this->assertSame( '', $brand->dashboard_url( 42 ) );
+        $this->assertSame( '', $brand->dashboard_url() );
+    }
+
+    public function no_url() {
+        return [
+            'none'            => [ null ],
+            'an http URL'     => [ 'http://acme.test' ],
+            'a script URL'    => [ 'javascript:alert(1)' ],
+            'a quote in URL'  => [ 'https://acme.test/"onmouseover' ],
+            'no host'         => [ 'https:///' ],
+            'a newline after' => [ "https://acme.test\n" ],
+            'a query'         => [ 'https://acme.test/?a=1' ],
+            'a fragment'      => [ 'https://acme.test/#top' ],
         ];
     }
 

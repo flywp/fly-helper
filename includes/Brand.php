@@ -6,13 +6,14 @@ namespace FlyWP;
  * The brand a FlyWP White Label reseller gives the sites of their customers.
  *
  * The control plane writes it to the site's config as one constant, `FLYWP_BRAND`: the hex of a
- * JSON object with a `name`, an https `url` and an optional https `icon`. The format is a contract
+ * JSON object with a `name`, an https `url` (null until the reseller's address is live) and an
+ * optional https `icon`. The format is a contract
  * with the control plane, which lives in another repository, so `BrandTest` pins one fixed vector
  * that the control plane's own suite asserts too.
  *
  * No WordPress function is called here, so the rules are unit tested without WordPress. A value
- * that does not decode to a name and an https URL is no brand: the plugin then shows FlyWP, the
- * same as before brands existed.
+ * that does not decode to a name is no brand: the plugin then shows FlyWP, the same as before
+ * brands existed. A brand with no https URL links to no dashboard.
  */
 class Brand {
 
@@ -80,14 +81,12 @@ class Brand {
         // and no tags, whichever screen forgets to escape it. Each screen still escapes it.
         // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- no WordPress in this class, by design.
         $name = isset( $data['name'] ) && is_string( $data['name'] ) ? trim( (string) preg_replace( '/[\x00-\x1F\x7F]+/u', ' ', strip_tags( $data['name'] ) ) ) : '';
-        $url  = self::https( isset( $data['url'] ) ? $data['url'] : null, false );
-
-        if ( $name === '' || $url === '' ) {
+        if ( $name === '' ) {
             return $brand;
         }
 
         $brand->name = $name;
-        $brand->url  = rtrim( $url, '/' );
+        $brand->url  = rtrim( self::https( isset( $data['url'] ) ? $data['url'] : null, false ), '/' );
         $brand->icon = self::https( isset( $data['icon'] ) ? $data['icon'] : null, true );
 
         return $brand;
@@ -110,6 +109,8 @@ class Brand {
     }
 
     /**
+     * The brand's address, or '' for a brand with none.
+     *
      * @return string
      */
     public function url() {
@@ -127,6 +128,7 @@ class Brand {
 
     /**
      * Where the dashboard button goes: the site's page in the dashboard its owner signs in to.
+     * '' for a brand with no address: then there is no button.
      *
      * @param int|null $site_id
      *
@@ -135,7 +137,7 @@ class Brand {
     public function dashboard_url( $site_id = null ) {
         $base = $this->is_set() ? $this->url : self::DEFAULT_DASHBOARD_URL;
 
-        return $site_id === null ? $base : $base . '/site/' . (int) $site_id;
+        return $site_id === null || $base === '' ? $base : $base . '/site/' . (int) $site_id;
     }
 
     /**

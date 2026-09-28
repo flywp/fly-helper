@@ -18,10 +18,12 @@ use FlyWP\Helper;
                     <?php } ?>
                 </h1>
 
+                <?php if ( $app_site_url !== '' ) { ?>
                 <div class="">
                     <?php /* translators: %s: the plugin's name */ ?>
                     <a href="<?php echo esc_url( $app_site_url ); ?>" target="_blank" class="button button-secondary"><span class="dashicons dashicons-external fw-mt-1"></span> <?php echo esc_html( sprintf( __( '%s Dashboard', 'flywp' ), flywp()->brand()->name() ) ); ?></a>
                 </div>
+                <?php } ?>
             </div>
 
             <div class="fw-flex -fw-mb-px fw-gap-2">
