@@ -7,24 +7,16 @@ class UpdatesData {
     public const CRON_INTERVAL = 'twicedaily';
 
     /**
-     * UpdatesData constructor.
+     * Register the API route.
      */
-    public function __construct() {
-        $this->initialize_routes();
-        $this->initialize_cron_job();
-    }
-
-    /**
-     * Initialize API routes.
-     */
-    private function initialize_routes(): void {
+    public function register_route(): void {
         flywp()->router->get( 'updates-data', [ $this, 'respond' ] );
     }
 
     /**
-     * Initialize cron job for sending updates data.
+     * Register the cron job that sends updates data.
      */
-    private function initialize_cron_job(): void {
+    public function register_cron(): void {
         add_action( self::CRON_HOOK, [ $this, 'send_updates_data_to_api' ] );
 
         if ( ! wp_next_scheduled( self::CRON_HOOK ) ) {

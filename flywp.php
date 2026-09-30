@@ -132,6 +132,7 @@ final class FlyWP_Plugin {
         $this->optimize     = new FlyWP\Optimizations();
         $this->litespeed    = new FlyWP\Litespeed();
         $this->updates_data = new FlyWP\Api\UpdatesData();
+        $this->updates_data->register_cron();
     }
 
     /**
