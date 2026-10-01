@@ -3,7 +3,7 @@
  * Plugin Name: FlyWP
  * Plugin URI: https://flywp.com
  * Description: Helper plugin for FlyWP
- * Version: 1.7.1
+ * Version: 1.8.0
  * Author: FlyWP
  * Author URI: https://flywp.com/?utm_source=wporg&utm_medium=banner&utm_campaign=author-uri
  * License: GPL2
@@ -41,7 +41,7 @@ final class FlyWP_Plugin {
      *
      * @var string
      */
-    public $version = '1.7.1';
+    public $version = '1.8.0';
 
     /**
      * Plugin Constructor.
@@ -87,6 +87,8 @@ final class FlyWP_Plugin {
         $router->register_routes();
 
         flush_rewrite_rules( false );
+
+        FlyWP\StaticSite\Bootstrap::install();
     }
 
     /**
@@ -111,6 +113,9 @@ final class FlyWP_Plugin {
         // one POST path and does nothing on any other request.
         new FlyWP\Frontend\MagicLogin();
 
+        // The static site CLI commands do not use the API key.
+        FlyWP\StaticSite\Bootstrap::register_cli();
+
         if ( ! $this->has_key() ) {
             $this->add_action( 'admin_notices', 'admin_notice' );
 
@@ -132,6 +137,7 @@ final class FlyWP_Plugin {
         $this->optimize     = new FlyWP\Optimizations();
         $this->litespeed    = new FlyWP\Litespeed();
         $this->updates_data = new FlyWP\Api\UpdatesData();
+        $this->static_site  = new FlyWP\StaticSite\Bootstrap();
     }
 
     /**
