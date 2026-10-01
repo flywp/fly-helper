@@ -254,7 +254,7 @@ FlyWP is a product of weDevs. We have very popular products like Dokan Multivend
 
 == Changelog ==
 
-= v1.8.0 (11 September, 2026) =
+= v1.8.0 (01 October, 2026) =
 
  * **New:** Static site support for FlyWP. The plugin records content changes and gives FlyWP the site URLs (`wp flywp static site`, `wp flywp static changes clear`). FlyWP builds and publishes the static copy.
 
