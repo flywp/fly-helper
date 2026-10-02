@@ -44,6 +44,13 @@ final class FlyWP_Plugin {
     public $version = '1.8.0';
 
     /**
+     * The reseller's brand, read once per request.
+     *
+     * @var FlyWP\Brand|null
+     */
+    private $brand = null;
+
+    /**
      * Plugin Constructor.
      *
      * @return void
@@ -74,6 +81,10 @@ final class FlyWP_Plugin {
 
         if ( ! defined( 'FLYWP_LOGIN_PUBLIC_KEY' ) ) {
             define( 'FLYWP_LOGIN_PUBLIC_KEY', '' );
+        }
+
+        if ( ! defined( 'FLYWP_BRAND' ) ) {
+            define( 'FLYWP_BRAND', '' );
         }
     }
 
@@ -112,6 +123,8 @@ final class FlyWP_Plugin {
         // Loaded ahead of the API-key gate below, as it does not use the API key. It answers
         // one POST path and does nothing on any other request.
         new FlyWP\Frontend\MagicLogin();
+        // Also ahead of the gate: the Plugins list and core's update email read the header anyway.
+        new FlyWP\Branding();
 
         // The static site CLI commands do not use the API key.
         FlyWP\StaticSite\Bootstrap::register_cli();
@@ -146,7 +159,8 @@ final class FlyWP_Plugin {
      * @return void
      */
     public function admin_notice() {
-        $message = __( 'Missing FlyWP API key, plugin requires an API key.', 'flywp' );
+        /* translators: %s: the plugin's name */
+        $message = sprintf( __( 'Missing %s API key, plugin requires an API key.', 'flywp' ), $this->brand()->name() );
 
         echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
     }
@@ -185,6 +199,29 @@ final class FlyWP_Plugin {
         $from_env = getenv( 'FLYWP_LOGIN_PUBLIC_KEY' );
 
         return $from_env === false ? '' : $from_env;
+    }
+
+    /**
+     * The brand of the reseller who hosts this site, if one does. Without one, FlyWP.
+     *
+     * Set as a constant on classic WordPress. On Bedrock it may only be present in the
+     * environment, so fall back to `getenv()`.
+     *
+     * @return FlyWP\Brand
+     */
+    public function brand() {
+        if ( $this->brand === null ) {
+            $value = FLYWP_BRAND !== '' ? FLYWP_BRAND : getenv( 'FLYWP_BRAND' );
+
+            // A Bedrock that loads its .env without `putenv()` has it in `$_ENV` or `$_SERVER` only.
+            if ( $value === false || $value === '' ) {
+                $value = isset( $_ENV['FLYWP_BRAND'] ) ? $_ENV['FLYWP_BRAND'] : ( isset( $_SERVER['FLYWP_BRAND'] ) ? sanitize_text_field( wp_unslash( $_SERVER['FLYWP_BRAND'] ) ) : '' );
+            }
+
+            $this->brand = FlyWP\Brand::decode( $value );
+        }
+
+        return $this->brand;
     }
 }
 

@@ -8,12 +8,14 @@ $settings = flywp()->email->settings();
                 <?php esc_html_e( 'Email Settings', 'flywp' ); ?>
             </h3>
 
+            <?php if ( $app_site_url !== '' ) { ?>
             <div class="">
                 <a href="<?php echo esc_url( $app_site_url ); ?>/email" target="_blank" class="fw-no-underline fw-text-indigo-600">
                     <span class="dashicons dashicons-external"></span>
                     <?php esc_html_e( 'SMTP Configuration', 'flywp' ); ?>
                 </a>
             </div>
+            <?php } ?>
         </div>
 
         <?php if ( isset( $_GET['message'] ) && $_GET['message'] === 'email-settings-saved' ) { ?>
@@ -26,7 +28,8 @@ $settings = flywp()->email->settings();
             <div class="fw-mt-2 fw-px-6 fw-py-4 fw-fw-sm:p-6 fw-text-sm fw-text-gray-500">
 
                 <div class="fw-text-sm fw-border fw-border-indigo-200 fw-rounded fw-px-4 fw-py-4 fw-bg-indigo-100 fw-text-indigo-900 fw-mb-4">
-                    <?php esc_html_e( 'With FlyWP, you don’t need a 3rd-party SMTP plugin to send emails. Just configure your connection from the FlyWP site dashboard, all your emails will go through the configured gateway without needing a plugin.', 'flywp' ); ?>
+                    <?php /* translators: %s: the plugin's name */ ?>
+                    <?php echo esc_html( sprintf( __( 'With %1$s, you don’t need a 3rd-party SMTP plugin to send emails. Just configure your connection from the %1$s site dashboard, all your emails will go through the configured gateway without needing a plugin.', 'flywp' ), flywp()->brand()->name() ) ); ?>
                 </div>
 
                 <div class="fw-mb-4">

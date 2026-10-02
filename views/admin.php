@@ -8,12 +8,22 @@ use FlyWP\Helper;
         <div class="fw-max-w-xl fw-mx-auto fw-px-4 sm:fw-px-0">
             <div class="fw-flex fw-py-2 fw-items-center fw-justify-between">
                 <h1 class="fw-text-2xl fw-font-semibold fw-flex-1">
-                    <img src="<?php echo esc_url( FLYWP_PLUGIN_URL . 'assets/images/flywp-logo.svg' ); ?>" alt="FlyWP" class="fw-h-11 fw-mr-2 fw-inline-block">
+                    <?php if ( ! flywp()->brand()->is_set() ) { ?>
+                        <img src="<?php echo esc_url( FLYWP_PLUGIN_URL . 'assets/images/flywp-logo.svg' ); ?>" alt="FlyWP" class="fw-h-11 fw-mr-2 fw-inline-block">
+                    <?php } else { ?>
+                        <?php if ( flywp()->brand()->icon() !== '' ) { ?>
+                            <img src="<?php echo esc_url( flywp()->brand()->icon() ); ?>" alt="" class="fw-h-11 fw-mr-2 fw-inline-block">
+                        <?php } ?>
+                        <?php echo esc_html( flywp()->brand()->name() ); ?>
+                    <?php } ?>
                 </h1>
 
+                <?php if ( $app_site_url !== '' ) { ?>
                 <div class="">
-                    <a href="<?php echo esc_url( $app_site_url ); ?>" target="_blank" class="button button-secondary"><span class="dashicons dashicons-external fw-mt-1"></span> <?php esc_html_e( 'FlyWP Dashboard', 'flywp' ); ?></a>
+                    <?php /* translators: %s: the plugin's name */ ?>
+                    <a href="<?php echo esc_url( $app_site_url ); ?>" target="_blank" class="button button-secondary"><span class="dashicons dashicons-external fw-mt-1"></span> <?php echo esc_html( sprintf( __( '%s Dashboard', 'flywp' ), flywp()->brand()->name() ) ); ?></a>
                 </div>
+                <?php } ?>
             </div>
 
             <div class="fw-flex -fw-mb-px fw-gap-2">

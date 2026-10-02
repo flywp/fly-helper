@@ -104,7 +104,8 @@ class UpdatesData {
         $formatted_plugins = [];
 
         foreach ( $plugin_updates as $plugin_file => $plugin_data ) {
-            $plugin_info = $all_plugins[ $plugin_file ];
+            // `get_plugins()` does not apply the `all_plugins` filter: this plugin's own row takes the brand here.
+            $plugin_info = $plugin_file === FLYWP_PLUGIN_BASENAME ? \FlyWP\Branding::row( $all_plugins[ $plugin_file ] ) : $all_plugins[ $plugin_file ];
             $slug        = dirname( $plugin_file );
 
             $formatted_plugins[] = $this->format_plugin_data( $plugin_info, $plugin_data, $plugin_file, $slug );
