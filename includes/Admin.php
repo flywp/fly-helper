@@ -39,9 +39,10 @@ class Admin {
      * Register admin page.
      */
     public function register_admin_page() {
+        // WordPress prints a menu title as HTML: the brand's name is text.
         $hook = add_dashboard_page(
-            __( 'FlyWP', 'flywp' ),
-            __( 'FlyWP', 'flywp' ),
+            esc_html( flywp()->brand()->name() ),
+            esc_html( flywp()->brand()->name() ),
             'manage_options',
             self::PAGE_SLUG,
             [ $this, 'render_admin_page' ]
@@ -141,13 +142,6 @@ class Admin {
      * @return string
      */
     private function get_site_url( $info ) {
-        if ( ! $info ) {
-            return 'https://app.flywp.com';
-        }
-
-        return sprintf(
-            'https://app.flywp.com/site/%d',
-            $info['id']
-        );
+        return flywp()->brand()->dashboard_url( $info ? $info['id'] : null );
     }
 }
