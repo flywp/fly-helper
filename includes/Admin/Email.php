@@ -24,7 +24,7 @@ class Email {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_POST['flywp-email-nonce'], 'flywp-email-settings' ) ) {
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['flywp-email-nonce'] ) ), 'flywp-email-settings' ) ) {
             return;
         }
 
@@ -32,8 +32,8 @@ class Email {
             return;
         }
 
-        $from_name  = isset( $_POST['from_name'] ) ? sanitize_text_field( $_POST['from_name'] ) : '';
-        $from_email = isset( $_POST['from_email'] ) ? sanitize_email( $_POST['from_email'] ) : '';
+        $from_name  = isset( $_POST['from_name'] ) ? sanitize_text_field( wp_unslash( $_POST['from_name'] ) ) : '';
+        $from_email = isset( $_POST['from_email'] ) ? sanitize_email( wp_unslash( $_POST['from_email'] ) ) : '';
 
         update_option(
             'flywp_email_settings',
@@ -61,7 +61,7 @@ class Email {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_POST['flywp-email-test-nonce'], 'flywp-email-test' ) ) {
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['flywp-email-test-nonce'] ) ), 'flywp-email-test' ) ) {
             return;
         }
 
@@ -69,7 +69,7 @@ class Email {
             return;
         }
 
-        $to      = isset( $_POST['to_email'] ) ? sanitize_email( $_POST['to_email'] ) : '';
+        $to      = isset( $_POST['to_email'] ) ? sanitize_email( wp_unslash( $_POST['to_email'] ) ) : '';
         $is_html = isset( $_POST['html_email'] ) ? true : false;
 
         /* translators: %s: the plugin's name */
@@ -100,7 +100,7 @@ class Email {
     private function get_mail_body( $is_html = false ) {
         $brand = flywp()->brand();
 
-        if ( !$is_html ) {
+        if ( ! $is_html ) {
             $message = <<<EOT
 Hello,
 
