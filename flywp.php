@@ -123,6 +123,8 @@ final class FlyWP_Plugin {
         new FlyWP\Frontend\MagicLogin();
         // Also ahead of the gate: the Plugins list and core's update email read the header anyway.
         new FlyWP\Branding();
+        // Also ahead of the gate: a full disk refuses uploads whether or not the key is set.
+        new FlyWP\Uploads();
 
         if ( ! $this->has_key() ) {
             $this->add_action( 'admin_notices', 'admin_notice' );
