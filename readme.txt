@@ -4,7 +4,7 @@ Tags: OPcache, Optimize, cache, page cache, performance
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4 or higher
-Stable tag: 1.8.0
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -253,6 +253,11 @@ FlyWP is a product of weDevs. We have very popular products like Dokan Multivend
 1. FlyWP settings page.
 
 == Changelog ==
+
+= v1.9.0 (20 October, 2026) =
+
+ * **New:** White Label support. On sites hosted by a FlyWP reseller, the plugin shows the reseller's brand instead of FlyWP in the admin bar, settings page, plugins list, emails and Site Health.
+ * **New:** When a White Label customer's disk space is full, new uploads are paused with a clear message. Existing files and the site keep working.
 
 = v1.8.0 (01 October, 2026) =
 
