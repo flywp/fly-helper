@@ -353,6 +353,13 @@ class FakeWordPressGateway implements WordPressGateway {
         return $this->site_icons;
     }
 
+    /** @var string[] */
+    public $root_files = [];
+
+    public function root_file_urls() {
+        return $this->root_files;
+    }
+
     public function theme_stylesheet_urls() {
         return $this->stylesheets;
     }

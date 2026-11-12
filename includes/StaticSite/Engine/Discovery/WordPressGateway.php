@@ -326,6 +326,16 @@ interface WordPressGateway {
     public function site_icon_urls();
 
     /**
+     * Files in the site root that no page links, and that exist as a file: ads.txt, app-ads.txt,
+     * verification files of search engines and similar.
+     *
+     * @since 1.10.0
+     *
+     * @return string[]
+     */
+    public function root_file_urls();
+
+    /**
      * @return string[] style.css of the active theme and of its parent theme.
      */
     public function theme_stylesheet_urls();

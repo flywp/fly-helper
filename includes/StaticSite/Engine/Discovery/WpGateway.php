@@ -599,6 +599,32 @@ class WpGateway implements WordPressGateway {
 
     /**
      * {@inheritdoc}
+     *
+     * - Only fixed names and fixed patterns in the root folder. No scan of other folders.
+     * - Only a file that exists. A name that WordPress serves with a rewrite rule (robots.txt) is not here.
+     */
+    public function root_file_urls() {
+        $names = [ 'ads.txt', 'app-ads.txt', 'sellers.json', 'security.txt', '.well-known/security.txt', 'humans.txt', 'llms.txt', 'manifest.json', 'site.webmanifest', 'browserconfig.xml', 'BingSiteAuth.xml' ];
+
+        foreach ( [ 'google*.html', 'yandex_*.html', 'pinterest-*.html', 'apple-touch-icon*.png' ] as $pattern ) {
+            foreach ( (array) glob( ABSPATH . $pattern ) as $file ) {
+                $names[] = basename( $file );
+            }
+        }
+
+        $urls = [];
+
+        foreach ( array_unique( $names ) as $name ) {
+            if ( is_file( ABSPATH . $name ) ) {
+                $urls[] = home_url( '/' . $name );
+            }
+        }
+
+        return $this->links( $urls );
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function theme_stylesheet_urls() {
         $urls = [ get_stylesheet_uri() ];

@@ -3,11 +3,12 @@
 namespace FlyWP\StaticSite\Engine\Discovery;
 
 /**
- * Files that pages do not always link: robots.txt, favicon.ico, the site icon and the theme style.css.
+ * Files that pages do not always link: robots.txt, favicon.ico, the site icon, the theme style.css,
+ * and files in the site root such as ads.txt.
  *
  * - WordPress serves robots.txt and favicon.ico through rewrite rules under the home path, also in a subdirectory install.
  * - Multisite is out of scope. The engine builds one site: the site of the current home URL.
- * - No directory scan. Only style.css of the theme and the parent theme.
+ * - No directory scan. Only style.css of the theme and the parent theme, and fixed names in the site root.
  *
  * @since 1.8.0
  */
@@ -34,6 +35,10 @@ class SiteFileSource implements UrlSource {
         if ( '' !== (string) $this->wp->option( 'permalink_structure' ) ) {
             yield new DiscoveredUrl( $home . 'robots.txt', 'file' );
             yield new DiscoveredUrl( $home . 'favicon.ico', 'file' );
+        }
+
+        foreach ( $this->wp->root_file_urls() as $url ) {
+            yield new DiscoveredUrl( $url, 'file' );
         }
 
         foreach ( array_merge( $this->wp->site_icon_urls(), $this->wp->theme_stylesheet_urls() ) as $url ) {

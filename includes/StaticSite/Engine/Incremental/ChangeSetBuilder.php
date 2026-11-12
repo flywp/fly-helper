@@ -77,6 +77,13 @@ class ChangeSetBuilder {
     private $large_list = false;
 
     /**
+     * The first list with more than MAX_LIST_PAGES pages.
+     *
+     * @var array{url:string, pages:int}|null
+     */
+    private $largest_list_cause = null;
+
+    /**
      * Cached counts, by key.
      *
      * @var array<string, int>
@@ -112,6 +119,7 @@ class ChangeSetBuilder {
 
         if ( $this->store->has_global( $since, $set->max_change_id ) ) {
             $set->full_reason = 'global_change';
+            $set->full_cause  = $this->global_cause( $since, $set->max_change_id );
 
             return $set;
         }
@@ -120,6 +128,8 @@ class ChangeSetBuilder {
         $this->deleted    = [];
         $this->lists      = [];
         $this->large_list = false;
+
+        $this->largest_list_cause = null;
 
         $posts         = [];
         $terms         = [];
@@ -170,6 +180,7 @@ class ChangeSetBuilder {
 
         if ( $this->large_list ) {
             $set->full_reason = 'large_list';
+            $set->full_cause  = array_merge( [ 'reason' => 'large_list' ], (array) $this->largest_list_cause );
 
             return $set;
         }
@@ -193,7 +204,35 @@ class ChangeSetBuilder {
     }
 
     /**
-     * Pages that show every change: home, feeds and sitemaps.
+     * The reason of the first global change row in the range.
+     *
+     * @param int $after_id Lowest ID, not included.
+     * @param int $up_to_id Highest ID, included.
+     *
+     * @return array{reason:string}|null
+     */
+    private function global_cause( $after_id, $up_to_id ) {
+        $last_id = (int) $after_id;
+
+        do {
+            $rows       = $this->store->rows( $last_id, $up_to_id, self::BATCH_SIZE );
+            $full_batch = count( $rows ) === self::BATCH_SIZE;
+
+            foreach ( $rows as $row ) {
+                if ( 'global' === $row['kind'] ) {
+                    return [ 'reason' => (string) $row['reason'] ];
+                }
+
+                $last_id = (int) $row['id'];
+            }
+        } while ( $full_batch );
+
+        return null;
+    }
+
+    /**
+     * Pages that show every change: home, feeds and sitemaps. Also the files in the site root that no page
+     * links, because a change of such a file makes no change row.
      *
      * @return void
      */
@@ -201,6 +240,10 @@ class ChangeSetBuilder {
         self::add_to( $this->urls, $this->wp->home_url() );
         self::add_to( $this->urls, $this->wp->feed_link() );
         self::add_to( $this->urls, $this->wp->feed_link( 'comments_' ) );
+
+        foreach ( $this->wp->root_file_urls() as $url ) {
+            self::add_to( $this->urls, $url );
+        }
 
         foreach ( $this->wp->sitemap_urls() as $url ) {
             self::add_to( $this->urls, $url );
@@ -346,6 +389,13 @@ class ChangeSetBuilder {
         $pages = Pagination::page_count( $item_count, $this->wp->option( 'posts_per_page' ) );
 
         if ( $pages > self::MAX_LIST_PAGES ) {
+            if ( ! $this->large_list ) {
+                $this->largest_list_cause = [
+                    'url'   => $link,
+                    'pages' => $pages,
+                ];
+            }
+
             $this->large_list = true;
 
             return;

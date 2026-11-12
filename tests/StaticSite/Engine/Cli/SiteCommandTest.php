@@ -88,7 +88,7 @@ class SiteCommandTest extends TestCase {
         $site = $this->snapshot( 'incremental' );
 
         $this->assertSame( 2, $site['max_change_id'] );
-        $this->assertSame( [ 'full_reason', 'urls', 'deleted_urls', 'lists' ], array_keys( $site['change_set'] ) );
+        $this->assertSame( [ 'full_reason', 'full_cause', 'urls', 'deleted_urls', 'lists' ], array_keys( $site['change_set'] ) );
         $this->assertNull( $site['change_set']['full_reason'] );
         $this->assertContains( 'https://wp.test/hello/', $site['change_set']['urls'] );
         $this->assertSame( [ 'https://wp.test/gone/' ], $site['change_set']['deleted_urls'] );
@@ -103,6 +103,7 @@ class SiteCommandTest extends TestCase {
         $site = $this->snapshot( 'incremental' );
 
         $this->assertSame( 'global_change', $site['change_set']['full_reason'] );
+        $this->assertSame( [ 'reason' => 'switch_theme' ], $site['change_set']['full_cause'] );
         $this->assertSame( 2, $site['max_change_id'] );
     }
 

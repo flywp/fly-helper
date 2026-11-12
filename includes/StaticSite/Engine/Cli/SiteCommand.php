@@ -189,6 +189,7 @@ class SiteCommand extends JsonCommand {
             $max_change_id = $set->max_change_id;
             $change_set    = [
                 'full_reason'  => $set->full_reason,
+                'full_cause'   => $set->full_cause,
                 'urls'         => $set->urls,
                 'deleted_urls' => $set->deleted_urls,
                 'lists'        => $set->lists,
