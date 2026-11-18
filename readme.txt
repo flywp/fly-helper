@@ -4,7 +4,7 @@ Tags: OPcache, Optimize, cache, page cache, performance
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4 or higher
-Stable tag: 1.9.1
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -253,6 +253,11 @@ FlyWP is a product of weDevs. We have very popular products like Dokan Multivend
 1. FlyWP settings page.
 
 == Changelog ==
+
+= v1.10.0 (18 November, 2026) =
+
+ * **New:** Static sites now include root files such as `ads.txt` and `app-ads.txt` when they exist, and update them on each deploy.
+ * **Improvement:** FlyWP can now show why a static site deploy rebuilt all pages.
 
 = v1.9.1 (06 November, 2026) =
 
