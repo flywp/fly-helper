@@ -20,6 +20,16 @@ class ChangeSet {
     public $full_reason = null;
 
     /**
+     * The change that made $full_reason, for the user: the reason of the first global change row
+     * ("activated_plugin", "option:blogname"), or the list that has too many pages.
+     *
+     * @since 1.10.0
+     *
+     * @var array{reason:string, url?:string, pages?:int}|null
+     */
+    public $full_cause = null;
+
+    /**
      * Absolute URLs to rebuild. All pages of each list in $lists are included.
      *
      * @var string[]

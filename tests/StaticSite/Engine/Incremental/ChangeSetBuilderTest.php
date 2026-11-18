@@ -98,7 +98,20 @@ class ChangeSetBuilderTest extends TestCase {
         $set = $this->builder()->build( 0 );
 
         $this->assertSame( 'large_list', $set->full_reason );
+        $this->assertSame( 'large_list', $set->full_cause['reason'] );
+        $this->assertStringContainsString( 'news', $set->full_cause['url'] );
+        $this->assertGreaterThan( 50, $set->full_cause['pages'] );
         $this->assertSame( [], $set->urls );
+    }
+
+    public function test_root_files_are_in_each_incremental_set() {
+        $this->wp->root_files = [ 'https://wp.test/ads.txt' ];
+        $this->wp->add_post( 5 );
+        $this->store->add( 'url', 'post', 5, 'https://wp.test/post-5/' );
+
+        $set = $this->builder()->build( 0 );
+
+        $this->assertContains( 'https://wp.test/ads.txt', $set->urls );
     }
 
     public function test_global_change_forces_full_build() {
@@ -109,6 +122,7 @@ class ChangeSetBuilderTest extends TestCase {
         $set = $this->builder()->build( 0 );
 
         $this->assertSame( 'global_change', $set->full_reason );
+        $this->assertSame( [ 'reason' => 'switch_theme' ], $set->full_cause );
         $this->assertSame( [], $set->urls );
         $this->assertSame( 2, $set->max_change_id );
     }
