@@ -30,12 +30,35 @@ class UpdatesData {
         if ( ! wp_next_scheduled( self::CRON_HOOK ) ) {
             wp_schedule_event( time(), self::CRON_INTERVAL, self::CRON_HOOK );
         }
+
+        // An update or a delete outside FlyWP left the dashboard stale for up to 12 hours (client-issues#173).
+        add_action( 'upgrader_process_complete', [ $this, 'schedule_push' ] );
+        add_action( 'deleted_plugin', [ $this, 'schedule_push' ] );
+        add_action( 'deleted_theme', [ $this, 'schedule_push' ] );
+    }
+
+    /**
+     * Queue one push for the next cron run.
+     *
+     * A new process reads the new core version, and the request that made the change does not
+     * wait for the app. WordPress refuses the same event again within 10 minutes, so a bulk run
+     * sends one push.
+     */
+    public function schedule_push(): void {
+        wp_schedule_single_event( time(), self::CRON_HOOK );
     }
 
     /**
      * Send updates data to the remote API.
      */
     public function send_updates_data_to_api(): void {
+        // An upgrade deletes the update transients, and only wp-admin fills them again. Without
+        // this, the push reads nothing and clears the pending updates. Each check asks
+        // wordpress.org only when its data is gone, a version changed, or the data is old.
+        // Not wp_version_check(): in cron it also starts the background auto-updates.
+        wp_update_plugins();
+        wp_update_themes();
+
         $updates_data = $this->get_updates_data();
         flywp()->flyapi->post( '/updates-data', $updates_data );
     }
