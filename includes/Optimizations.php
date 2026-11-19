@@ -68,7 +68,7 @@ class Optimizations {
             'enabled' => true,
             'general' => [
                 'emoji'          => true,
-                'oembed'         => true,
+                'oembed'         => false,
                 'self_ping'      => true,
                 'comments'       => false,
                 'jquery_migrate' => true,
